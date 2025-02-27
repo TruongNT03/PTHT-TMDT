@@ -1,21 +1,34 @@
 import { FaFacebookSquare } from "react-icons/fa";
 import { ImGoogle2 } from "react-icons/im";
 import { Link } from "react-router-dom";
-import { useController, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 
 import Button from "../../components/button/Button";
 import Input from "../../components/inpput/Input";
+import { useState } from "react";
 
 const Login = () => {
   const {
     register,
     handleSubmit,
     formState: { errors },
+    watch,
   } = useForm();
 
   const onSubmit = (data) => {
-    console.log("Dữ liệu đăng nhập:", data);
+    if (data.remail) {
+      console.log(data.remail);
+    }
   };
+
+  const [displayForgotPassword, setdisplayForgotPassword] = useState(false);
+  const handleDisplayForgotPassword = () => {
+    setdisplayForgotPassword((prev) => !prev);
+  };
+
+  const email = watch("email");
+  const password = watch("password");
+  const remail = watch("remail");
 
   return (
     <div className="w-full mt-16">
@@ -26,14 +39,19 @@ const Login = () => {
         <div className="text-[26px] uppercase">Đăng nhập</div>
         <div className="text-[14px]">
           Nếu bạn chưa có tài khoản,{" "}
-          <Link className="text-primary">đăng ký tại đây</Link>
+          <Link className="text-primary" to={"/register"}>
+            đăng ký tại đây
+          </Link>
         </div>
         <Input
           className="w-full"
           label="Email"
           type="email"
           register={register("email", {
-            required: "Vui lòng nhập email",
+            validate: (value) => {
+              if (!remail && !value) return "Vui lòng nhập email";
+              return true;
+            },
             pattern: {
               value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/,
               message: "Email không hợp lệ",
@@ -46,22 +64,53 @@ const Login = () => {
           label={"Mật khẩu"}
           type="password"
           register={register("password", {
-            required: "Vui lòng nhập mật khẩu",
+            validate: (value) => {
+              if (!remail && !value) return "Vui lòng nhập email";
+              return true;
+            },
             minLength: { value: 6, message: "Mật khẩu ít nhất 6 ký tự" },
           })}
           errorMessage={errors.password?.message}
         />
-        <div className="h-11 w-full font-normal">
-          <Button label={"Đăng nhập"} />
+        <Button label={"Đăng nhập"} />
+        <div
+          className="cursor-pointer hover:text-secondary"
+          onClick={handleDisplayForgotPassword}
+        >
+          Quên mật khẩu
         </div>
-        <div>Quên mật khẩu</div>
+        {!displayForgotPassword ? (
+          <></>
+        ) : (
+          <div className="w-full">
+            <Input
+              label={"Email"}
+              className={"w-full mt-3"}
+              type="email"
+              register={register("remail", {
+                validate: (value) => {
+                  if ((email || password) && value)
+                    return "Vui lòng nhập email";
+                  return true;
+                },
+                pattern: {
+                  value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/,
+                  message: "Email không hợp lệ",
+                },
+              })}
+              errorMessage={errors.remail?.message}
+            />
+            <Button label={"Lấy lại mật khẩu"} className={"mt-[15px]"} />
+          </div>
+        )}
+
         <div>Hoặc đăng nhập bằng</div>
-        <div className="w-full p-3 flex items-center justify-center gap-2 bg-[#4267B2] rounded-xl text-white">
-          <FaFacebookSquare />
+        <div className="w-full p-2 flex items-center justify-center gap-2 bg-[#4267B2] rounded-xl text-white">
+          <FaFacebookSquare fontSize={32} />
           Facebook
         </div>
-        <div className="w-full p-3 flex items-center justify-center gap-2 bg-[#DB4437] rounded-xl text-white">
-          <ImGoogle2 />
+        <div className="w-full p-2 flex items-center justify-center gap-2 bg-[#DB4437] rounded-xl text-white">
+          <ImGoogle2 fontSize={32} />
           Google
         </div>
       </form>
