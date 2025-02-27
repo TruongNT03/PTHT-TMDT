@@ -21,7 +21,7 @@ const Register = ({ classname }) => {
   const password = watch("password");
 
   return (
-    <div className={`${classname}w-full mt-16`}>
+    <div className={`${classname}w-full py-16`}>
       <form
         onSubmit={handleSubmit(onSubmit)}
         className="flex flex-col w-[368px] items-center gap-[15px] p-6 rounded-xl mx-auto shadow-2xl"
@@ -38,6 +38,10 @@ const Register = ({ classname }) => {
           className={"w-full"}
           register={register("firstName", {
             required: "Vui lòng nhập họ",
+            pattern: {
+              value: /^[A-Za-zÀ-Ỹà-ỹĂăÂâĐđÊêÔôƠơƯư\s]+$/,
+              message: "Tên chỉ gồm các chữ cái",
+            },
           })}
           errorMessage={errors.firstName?.message}
         />
@@ -45,6 +49,10 @@ const Register = ({ classname }) => {
           label={"Tên"}
           className={"w-full"}
           register={register("lastName", {
+            pattern: {
+              value: /^[A-Za-zÀ-Ỹà-ỹĂăÂâĐđÊêÔôƠơƯư\s]+$/,
+              message: "Tên chỉ gồm các chữ cái",
+            },
             required: "Vui lòng nhập tên",
           })}
           errorMessage={errors.lastName?.message}
@@ -65,6 +73,10 @@ const Register = ({ classname }) => {
           label={"Số điện thoại"}
           className={"w-full"}
           register={register("phoneNumber", {
+            pattern: {
+              value: /^[0-9]+$/,
+              message: "Số điện thoại chỉ chứa các chữ số",
+            },
             required: "Vui lòng nhập số điện thoại",
           })}
           errorMessage={errors.phoneNumber?.message}

@@ -31,7 +31,7 @@ const Login = () => {
   const remail = watch("remail");
 
   return (
-    <div className="w-full mt-16">
+    <div className="w-full py-16">
       <form
         onSubmit={handleSubmit(onSubmit)}
         className="flex flex-col w-[368px] items-center gap-[15px] p-6 rounded-xl mx-auto shadow-2xl"

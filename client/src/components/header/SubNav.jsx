@@ -1,23 +1,34 @@
-import { IoMdArrowDropdown, IoMdArrowDropup } from "react-icons/io";
+import { IoMdArrowDropdown } from "react-icons/io";
+import { Link } from "react-router-dom";
 
 const SubNav = () => {
   return (
     <div className="w-full max-w-[1140px] px-[15px] flex justify-between font-semibold text-[15px] text-primary">
       <ul className="flex gap-9 items-center">
-        <li className="border-b-[3px] border-secondary text-secondary py-1">
+        <Link
+          to={"/"}
+          className="border-b-[3px] border-t-[3px] border-secondary border-t-transparent text-secondary py-1"
+        >
           Trang chủ
-        </li>
-        <li className="py-1 flex items-center gap-1">
-          Thời trang Nam <IoMdArrowDropdown />
-        </li>
-        <li className="py-1 flex items-center gap-1">
+        </Link>
+        <Link className="py-1 flex items-center gap-1 hover:text-secondary group">
+          Thời trang Nam{" "}
+          <IoMdArrowDropdown
+            fontSize={20}
+            className="group-hover:rotate-180 transition duration-700 ease-in-out"
+          />
+        </Link>
+        <Link className="py-1 flex items-center gap-1 hover:text-secondary group">
           Sản phẩm
-          <IoMdArrowDropup />
-        </li>
-        <li className="py-1">Bé trai</li>
-        <li className="py-1">Bé gái</li>
-        <li className="py-1">Tin tức</li>
-        <li className="py-1">Liên hệ</li>
+          <IoMdArrowDropdown
+            fontSize={20}
+            className="group-hover:rotate-180 transition duration-700 ease-in-out"
+          />
+        </Link>
+        <Link className="py-1 hover:text-secondary">Bé trai</Link>
+        <Link className="py-1 hover:text-secondary">Bé gái</Link>
+        <Link className="py-1 hover:text-secondary">Tin tức</Link>
+        <Link className="py-1 hover:text-secondary">Liên hệ</Link>
       </ul>
       <div className="flex items-center gap-2 before:content-[''] before:w-[1px] before:h-[24px] before:inline-block before:bg-primary before:mr-6">
         <svg

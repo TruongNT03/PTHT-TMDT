@@ -1,3 +1,4 @@
+import Footer from "../components/footer/Footer";
 import Header from "../components/header/Header";
 import SubNav from "../components/header/SubNav";
 import { Outlet } from "react-router-dom";
@@ -14,6 +15,7 @@ const MainLayout = () => {
       <div className="w-full">
         <Outlet />
       </div>
+      <Footer className="w-full h-[300px]" />
     </div>
   );
 };
