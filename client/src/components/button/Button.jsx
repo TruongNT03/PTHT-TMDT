@@ -1,6 +1,6 @@
-const Button = ({ label, variant = "green" }) => {
+const Button = ({ label, variant = "green", type = "submit", className }) => {
   const baseStyles =
-    "flex items-center justify-center h-full w-full font-bold hover:bg-secondary text-[18px] rounded-xl";
+    "flex items-center justify-center h-full w-full hover:bg-secondary text-[18px] rounded-xl";
   const variants = {
     green: "bg-primary text-white",
     white:
@@ -9,7 +9,13 @@ const Button = ({ label, variant = "green" }) => {
   };
 
   return (
-    <button className={`${baseStyles} ${variants[variant]}`}>{label}</button>
+    <button
+      className={`${baseStyles} ${variants[variant]} ${className}`}
+      type={type}
+      cla
+    >
+      {label}
+    </button>
   );
 };
 

@@ -1,5 +1,4 @@
-import { CiUser } from "react-icons/ci";
-import { BsCart4 } from "react-icons/bs";
+import { Link } from "react-router-dom";
 
 const Nav = () => {
   return (
@@ -21,9 +20,9 @@ const Nav = () => {
           fill="white"
         ></path>
       </svg>
-      <a href="/" className="hover:text-[#FE9614] ml-[4px]">
+      <Link to={"/login"} className="hover:text-[#FE9614] ml-[4px]">
         Đăng nhập
-      </a>
+      </Link>
       <p className="mx-1">/</p>
       <a
         href="/"
