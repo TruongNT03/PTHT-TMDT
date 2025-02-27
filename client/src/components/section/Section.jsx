@@ -42,7 +42,7 @@ const Section = () => {
         <Card />
         <Card />
       </div>
-      <div className="w-[241px] h-[62px] mx-auto mt-10">
+      <div className="w-[241px] h-[62px] mx-auto mt-10 font-bold">
         <Button label={"Xem tất cả"} />
       </div>
     </div>

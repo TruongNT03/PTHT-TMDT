@@ -1,6 +1,6 @@
 import Header from "../components/header/Header";
 import SubNav from "../components/header/SubNav";
-import Home from "../page/Home";
+import { Outlet } from "react-router-dom";
 
 const MainLayout = () => {
   return (
@@ -12,7 +12,7 @@ const MainLayout = () => {
         <SubNav />
       </nav>
       <div className="w-full">
-        <Home />
+        <Outlet />
       </div>
     </div>
   );

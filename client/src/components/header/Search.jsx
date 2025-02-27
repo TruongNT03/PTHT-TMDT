@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { FaSearch } from "react-icons/fa";
 
 const Search = () => {
   const [show, setShow] = useState(false);
