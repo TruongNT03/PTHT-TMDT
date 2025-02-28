@@ -2,12 +2,15 @@ import { FaFacebookSquare } from "react-icons/fa";
 import { ImGoogle2 } from "react-icons/im";
 import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
+import { useEffect, useState } from "react";
 
 import Button from "../../components/button/Button";
 import Input from "../../components/inpput/Input";
-import { useState } from "react";
+import login from "../../services/authService/login";
 
 const Login = () => {
+  useEffect(() => {}, []);
+
   const {
     register,
     handleSubmit,
@@ -16,9 +19,7 @@ const Login = () => {
   } = useForm();
 
   const onSubmit = (data) => {
-    if (data.remail) {
-      console.log(data.remail);
-    }
+    login(data.email, data.password);
   };
 
   const [displayForgotPassword, setdisplayForgotPassword] = useState(false);
