@@ -33,7 +33,7 @@ const register = async (req, res) => {
 const login = async (req, res) => {
   const user = await users.findOne({
     where: {
-      username: req.body.username,
+      email: req.body.email,
     },
   });
   if (user) {
