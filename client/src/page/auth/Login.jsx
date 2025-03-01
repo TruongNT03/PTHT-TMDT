@@ -1,15 +1,15 @@
 import { FaFacebookSquare } from "react-icons/fa";
 import { ImGoogle2 } from "react-icons/im";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import Button from "../../components/button/Button";
 import Input from "../../components/inpput/Input";
 import login from "../../services/authService/login";
 
 const Login = () => {
-  useEffect(() => {}, []);
+  const navigate = useNavigate();
 
   const {
     register,
@@ -18,8 +18,13 @@ const Login = () => {
     watch,
   } = useForm();
 
-  const onSubmit = (data) => {
-    login(data.email, data.password);
+  const onSubmit = async (data) => {
+    const res = await login(data.email, data.password);
+    if (res.token) {
+      navigate("/");
+    } else {
+      window.alert("Tài khoản mật khẩu không chính xác!");
+    }
   };
 
   const [displayForgotPassword, setdisplayForgotPassword] = useState(false);
