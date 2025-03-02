@@ -3,7 +3,7 @@ import jwt from "jsonwebtoken";
 
 import UserSchema from "../dtos/User.js";
 import db from "../models/index.js";
-import { where } from "sequelize";
+
 const saltRounds = 10;
 
 const register = async (req, res) => {
