@@ -24,12 +24,12 @@ const Nav = () => {
         Đăng nhập
       </Link>
       <p className="mx-1">/</p>
-      <a
-        href="/"
+      <Link
+        to={"/register"}
         className="flex items-center hover:text-[#FE9614] after:content-[''] after:mx-[20px] after:h-6 after:w-[1px] after:bg-white after:block"
       >
         Đăng ký
-      </a>
+      </Link>
       {/* <BsCart4 className="text-[24px]" /> */}
       <svg
         xmlns="http://www.w3.org/2000/svg"

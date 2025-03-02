@@ -1,13 +1,7 @@
-import { MdLocalShipping } from "react-icons/md";
-import { AiOutlineTransaction } from "react-icons/ai";
-import { RiVipLine } from "react-icons/ri";
-import { GiSewingMachine } from "react-icons/gi";
-
 const Service = () => {
   return (
     <div className="w-full max-w-[1140px] flex justify-between items-center mx-auto font-bold text-white py-5">
       <div className="flex flex-col items-center gap-1">
-        {/* <MdLocalShipping fontSize={"54px"} /> */}
         <img
           src="https://bizweb.dktcdn.net/100/455/315/themes/894917/assets/image_service1.png?1724746453440
 "
@@ -18,7 +12,6 @@ const Service = () => {
       </div>
 
       <div className="flex flex-col items-center gap-1">
-        {/* <AiOutlineTransaction fontSize={"54px"} /> */}
         <img
           src="	https://bizweb.dktcdn.net/100/455/315/themes/894917/assets/image_service2.png?1724746453440"
           alt=""
@@ -27,7 +20,6 @@ const Service = () => {
         <p className="text-[12px]">Thanh toán khi nhận hàng {"COD"}</p>
       </div>
       <div className="flex flex-col items-center gap-1">
-        {/* <RiVipLine fontSize={"54px"} /> */}
         <img
           src="	https://bizweb.dktcdn.net/100/455/315/themes/894917/assets/image_service3.png?1724746453440"
           alt=""
@@ -36,7 +28,6 @@ const Service = () => {
         <p className="text-[12px]">Ưu đãi dành cho khách hàng VIP</p>
       </div>
       <div className="flex flex-col items-center gap-1">
-        {/* <GiSewingMachine fontSize={"54px"} /> */}
         <img
           src="	https://bizweb.dktcdn.net/100/455/315/themes/894917/assets/image_service4.png?1724746453440"
           alt=""
