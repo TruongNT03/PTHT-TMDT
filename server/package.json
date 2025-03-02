@@ -3,9 +3,11 @@
   "version": "1.0.0",
   "description": "ShopApp",
   "main": "index.js",
-  "type": "module",
+  "engines": {
+    "node": "22.x"
+  },
   "scripts": {
-    "start": "nodemon index.js",
+    "start": "nodemon --exec babel-node index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "TruongNT",
@@ -21,6 +23,9 @@
     "sqlite3": "^5.1.7"
   },
   "devDependencies": {
+    "@babel/core": "^7.26.9",
+    "@babel/node": "^7.26.0",
+    "@babel/preset-env": "^7.26.9",
     "nodemon": "^3.1.9"
   }
 }

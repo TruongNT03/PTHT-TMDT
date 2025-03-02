@@ -1,8 +1,0 @@
-npx sequelize-cli model:generate --name users --attributes username:string,email:string,fullname:string,password:string,role:string,avatar:string,address:string
-
-
-npx sequelize-cli db:migrate
-npx sequelize-cli db:migrate:undo
-
-
-
