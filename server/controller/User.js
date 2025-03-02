@@ -2,19 +2,27 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
 import UserSchema from "../dtos/User.js";
-import { users } from "../models/users.js";
-
+import db from "../models/index.js";
+import { where } from "sequelize";
 const saltRounds = 10;
 
 const register = async (req, res) => {
   const { error } = UserSchema.validate(req.body);
   if (error) {
-    return res.status(400).send({
+    return res.status(400).json({
       errors: error,
     });
   }
+  const user = await db.users.findOne({
+    where: {
+      email: req.body.email,
+    },
+  });
+  if (user) {
+    return res.status(400).json({ message: "Email đã tồn tại." });
+  }
   const password = await bcrypt.hash(req.body.password, saltRounds);
-  const newUser = await users.create({
+  const newUser = await db.users.create({
     ...req.body,
     password: password,
     role: "user",
@@ -31,9 +39,9 @@ const register = async (req, res) => {
 };
 
 const login = async (req, res) => {
-  const user = await users.findOne({
+  const user = await db.users.findOne({
     where: {
-      username: req.body.username,
+      email: req.body.email,
     },
   });
   if (user) {
@@ -53,6 +61,13 @@ const login = async (req, res) => {
     return res.status(200).json({
       message: "Đăng nhập thành công.",
       token: token,
+      date: {
+        firstName: user.firstName,
+        lastName: user.lastName,
+        role: user.role,
+        avatar: user.vavatar,
+        address: user.address,
+      },
     });
   }
 };
