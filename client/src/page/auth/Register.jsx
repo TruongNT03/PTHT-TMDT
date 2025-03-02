@@ -1,12 +1,15 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { FaFacebookSquare } from "react-icons/fa";
 import { ImGoogle2 } from "react-icons/im";
 import { useForm } from "react-hook-form";
 
-import Input from "../../components/inpput/Input";
+import Input from "../../components/input/Input";
 import Button from "../../components/button/Button";
+import signIn from "../../services/authService/register";
 
 const Register = ({ classname }) => {
+  const navigate = useNavigate();
+
   const {
     register,
     handleSubmit,
@@ -14,8 +17,14 @@ const Register = ({ classname }) => {
     watch,
   } = useForm();
 
-  const onSubmit = (data) => {
-    console.log(data);
+  const onSubmit = async (data) => {
+    const response = await signIn(data);
+    if (response?.data) {
+      alert("Đăng ký thành công");
+      navigate("/login");
+    } else {
+      alert(response.message);
+    }
   };
 
   const password = watch("password");
@@ -69,7 +78,7 @@ const Register = ({ classname }) => {
           })}
           errorMessage={errors.email?.message}
         />
-        <Input
+        {/* <Input
           label={"Số điện thoại"}
           className={"w-full"}
           register={register("phoneNumber", {
@@ -80,7 +89,7 @@ const Register = ({ classname }) => {
             required: "Vui lòng nhập số điện thoại",
           })}
           errorMessage={errors.phoneNumber?.message}
-        />
+        /> */}
         <Input
           label={"Mật khẩu"}
           type="password"

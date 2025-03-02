@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import { useState } from "react";
 
 import Button from "../../components/button/Button";
-import Input from "../../components/inpput/Input";
+import Input from "../../components/input/Input";
 import login from "../../services/authService/login";
 
 const Login = () => {
@@ -19,11 +19,11 @@ const Login = () => {
   } = useForm();
 
   const onSubmit = async (data) => {
-    const res = await login(data.email, data.password);
-    if (res.token) {
+    const res = await login(data);
+    if (res?.token) {
       navigate("/");
     } else {
-      window.alert("Tài khoản mật khẩu không chính xác!");
+      alert("Tài khoản mật khẩu không chính xác!");
     }
   };
 
