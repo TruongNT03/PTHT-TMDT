@@ -15,7 +15,7 @@ instance.interceptors.request.use(
     return config;
   },
   (error) => {
-    return Promise.reject(error);
+    return error.response.data;
   }
 );
 
@@ -24,7 +24,7 @@ instance.interceptors.response.use(
     return response.data;
   },
   (error) => {
-    return Promise.reject(error);
+    return error.response.data;
   }
 );
 
