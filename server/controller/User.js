@@ -3,13 +3,13 @@ import jwt from "jsonwebtoken";
 
 import UserSchema from "../dtos/User.js";
 import db from "../models/index.js";
-import { where } from "sequelize";
+
 const saltRounds = 10;
 
 const register = async (req, res) => {
   const { error } = UserSchema.validate(req.body);
   if (error) {
-    return res.status(400).json({
+    return res.status(401).json({
       errors: error,
     });
   }
@@ -19,7 +19,7 @@ const register = async (req, res) => {
     },
   });
   if (user) {
-    return res.status(400).json({ message: "Email đã tồn tại." });
+    return res.status(401).json({ message: "Email đã tồn tại." });
   }
   const password = await bcrypt.hash(req.body.password, saltRounds);
   const newUser = await db.users.create({
