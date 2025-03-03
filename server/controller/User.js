@@ -3,6 +3,7 @@ import jwt from "jsonwebtoken";
 
 import UserSchema from "../dtos/User.js";
 import db from "../models/index.js";
+import { where } from "sequelize";
 
 const saltRounds = 10;
 
@@ -52,7 +53,7 @@ const login = async (req, res) => {
       });
     }
     const token = jwt.sign(
-      { id: user.id, username: user.username },
+      { id: user.id, email: user.email },
       process.env.JWT_PRIVATE_KEY,
       {
         expiresIn: "30d",
@@ -61,7 +62,7 @@ const login = async (req, res) => {
     return res.status(200).json({
       message: "Đăng nhập thành công.",
       token: token,
-      date: {
+      data: {
         firstName: user.firstName,
         lastName: user.lastName,
         role: user.role,
@@ -72,4 +73,25 @@ const login = async (req, res) => {
   }
 };
 
-export { register, login };
+const getUserData = async (req, res) => {
+  const user = await db.users.findOne({
+    where: {
+      id: req.user.id,
+      email: req.user.email,
+    },
+  });
+
+  res.status(200).json({
+    message: "Successfully",
+    data: {
+      email: user.email,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      role: user.role,
+      avatar: user.avatar,
+      address: user.address,
+    },
+  });
+};
+
+export { register, login, getUserData };
