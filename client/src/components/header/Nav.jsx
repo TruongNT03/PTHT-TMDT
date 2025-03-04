@@ -1,9 +1,15 @@
+import { useContext } from "react";
 import { Link } from "react-router-dom";
+import { UserContext } from "../../contexts/userContext";
 
 const Nav = () => {
+  const { user, setUser } = useContext(UserContext);
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    setUser("");
+  };
   return (
     <div className="flex h-full items-center text-white pr-[15px]">
-      {/* <CiUser className="text-[24px]" /> */}
       <svg
         xmlns="http://www.w3.org/2000/svg"
         width="24"
@@ -20,17 +26,32 @@ const Nav = () => {
           fill="white"
         ></path>
       </svg>
-      <Link to={"/login"} className="hover:text-[#FE9614] ml-[4px]">
-        Đăng nhập
-      </Link>
+      {user ? (
+        <Link to={"/profile"} className="hover:text-[#FE9614] ml-[4px]">
+          {user}
+        </Link>
+      ) : (
+        <Link to={"/login"} className="hover:text-[#FE9614] ml-[4px]">
+          Đăng nhập
+        </Link>
+      )}
       <p className="mx-1">/</p>
-      <Link
-        to={"/register"}
-        className="flex items-center hover:text-[#FE9614] after:content-[''] after:mx-[20px] after:h-6 after:w-[1px] after:bg-white after:block"
-      >
-        Đăng ký
-      </Link>
-      {/* <BsCart4 className="text-[24px]" /> */}
+      {user ? (
+        <Link
+          to={"/"}
+          onClick={handleLogout}
+          className="flex items-center hover:text-[#FE9614] after:content-[''] after:mx-[20px] after:h-6 after:w-[1px] after:bg-white after:block"
+        >
+          Đăng xuất
+        </Link>
+      ) : (
+        <Link
+          to={"/register"}
+          className="flex items-center hover:text-[#FE9614] after:content-[''] after:mx-[20px] after:h-6 after:w-[1px] after:bg-white after:block"
+        >
+          Đăng ký
+        </Link>
+      )}
       <svg
         xmlns="http://www.w3.org/2000/svg"
         width="24"
