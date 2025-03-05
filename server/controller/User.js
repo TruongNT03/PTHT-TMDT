@@ -94,4 +94,20 @@ const getUserData = async (req, res) => {
   });
 };
 
-export { register, login, getUserData };
+const changePassword = async (req, res) => {
+  const { id, email } = req.user;
+  const user = await db.users.findOne({
+    where: {
+      id: id,
+      email: email,
+    },
+  });
+  if (user) {
+    user.password = bcrypt.hash(req.body.newPassword, saltRounds);
+  }
+  res.status(200).json({
+    message: "Đổi mật khẩu thành công",
+  });
+};
+
+export { register, login, getUserData, changePassword };
