@@ -1,11 +1,14 @@
 import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
+import { useContext } from "react";
 
 import Input from "../input/Input";
 import Button from "../button/Button";
 import changePassword from "../../services/authService/changePassword";
-import { useNavigate } from "react-router-dom";
+import { UserContext } from "../../contexts/userContext";
 
 const ChangePassword = ({ className }) => {
+  const { setUser } = useContext(UserContext);
   const navigate = useNavigate();
   const {
     register,
@@ -18,6 +21,7 @@ const ChangePassword = ({ className }) => {
     const response = await changePassword(data);
     if (response.message === "Đổi mật khẩu thành công") {
       alert(response.message);
+      setUser("");
       localStorage.removeItem("token");
       navigate("/");
     }
@@ -66,7 +70,7 @@ const ChangePassword = ({ className }) => {
         </div>
         <Button
           label={"Đặt lại mật khẩu"}
-          className={"uppercase w-[200px] text-sm font-bold mt-4 rounded-md"}
+          className={"w-[250px] uppercase text-sm font-bold mt-4 rounded-md"}
         />
       </form>
     </div>
