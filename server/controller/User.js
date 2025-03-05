@@ -103,7 +103,11 @@ const changePassword = async (req, res) => {
     },
   });
   if (user) {
-    user.password = bcrypt.hash(req.body.newPassword, saltRounds);
+    const newPassword = await bcrypt.hash(req.body.newPassword, saltRounds);
+    await user.update({
+      password: newPassword,
+    });
+    await user.save();
   }
   res.status(200).json({
     message: "Đổi mật khẩu thành công",
