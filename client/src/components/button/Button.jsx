@@ -1,6 +1,6 @@
 const Button = ({ label, variant = "green", type = "submit", className }) => {
   const baseStyles =
-    "w-full flex items-center justify-center h-full hover:bg-secondary text-[18px] rounded-xl py-3";
+    "flex items-center justify-center h-full hover:bg-secondary text-[18px] rounded-xl py-3";
   const variants = {
     green: "bg-primary text-white",
     white:

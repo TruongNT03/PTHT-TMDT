@@ -28,7 +28,7 @@ const ChangePassword = ({ className }) => {
   };
   return (
     <div className={`flex flex-col gap-4 ${className}`}>
-      <div className="uppercase text-[19px]">Đổi Mật Khẩu</div>
+      <div className="uppercase text-xl">Đổi Mật Khẩu</div>
       <form onSubmit={handleSubmit(onSubmit)}>
         <div>
           <div className="my-3">Mật khẩu cũ *</div>
@@ -70,7 +70,7 @@ const ChangePassword = ({ className }) => {
         </div>
         <Button
           label={"Đặt lại mật khẩu"}
-          className={"w-[250px] uppercase text-sm font-bold mt-4 rounded-md"}
+          className={"w-[200px] uppercase text-sm font-bold mt-4 rounded-md"}
         />
       </form>
     </div>

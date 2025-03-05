@@ -80,7 +80,7 @@ const Login = () => {
           })}
           errorMessage={errors.password?.message}
         />
-        <Button label={"Đăng nhập"} />
+        <Button label={"Đăng nhập"} className={"w-full"} />
         <div
           className="cursor-pointer hover:text-secondary"
           onClick={handleDisplayForgotPassword}

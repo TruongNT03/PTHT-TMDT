@@ -111,7 +111,7 @@ const Register = ({ classname }) => {
           })}
           errorMessage={errors.rePassword?.message}
         />
-        <Button label={"Đăng ký"} />
+        <Button label={"Đăng ký"} className={"w-full"} />
         <div>Hoặc đăng nhập bằng</div>
         <div className="w-full p-2 flex items-center justify-center gap-2 bg-[#4267B2] rounded-xl text-white">
           <FaFacebookSquare fontSize={32} />

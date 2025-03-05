@@ -2,7 +2,7 @@ import Footer from "../components/footer/Footer";
 import Header from "../components/header/Header";
 import SubNav from "../components/header/SubNav";
 import { Outlet } from "react-router-dom";
-import Navigate from "../components/navigate/Navigate";
+// import Navigate from "../components/navigate/Navigate";
 
 const MainLayout = () => {
   return (
@@ -14,7 +14,7 @@ const MainLayout = () => {
         <SubNav />
       </nav>
       <div className="w-full">
-        <Navigate className={"w-full max-w-[1110px] mx-auto text-sm py-8"} />
+        {/* <Navigate className={"w-full max-w-[1110px] mx-auto text-sm py-8"} /> */}
         <Outlet />
       </div>
       <Footer className="w-full h-[300px]" />

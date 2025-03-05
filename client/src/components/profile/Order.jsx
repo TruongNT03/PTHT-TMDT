@@ -1,7 +1,7 @@
 const Order = ({ className }) => {
   return (
     <div className={` ${className}`}>
-      <div className="uppercase text-[19px]">Đơn hàng của bạn</div>
+      <div className="uppercase text-xl">Đơn hàng của bạn</div>
       <table className="w-full table-auto mt-8 font-semibold text-sm text-white border border-gray-light">
         <thead>
           <tr className="">
