@@ -1,23 +1,45 @@
 import { IoCloseOutline } from "react-icons/io5";
+import { useContext } from "react";
+import { useForm } from "react-hook-form";
 
 import Button from "../button/Button";
-import { useContext } from "react";
 import { AddressContext } from "../../contexts/AddressContext";
+import newAddress from "../../services/addressService/newAddress";
 
 const AddressDialog = ({
   name = "",
   address = "",
   phone = "",
-  defaul = false,
+  isDefault = false,
 }) => {
+  const {
+    register,
+    formState: { errors },
+    handleSubmit,
+  } = useForm({
+    defaultValues: {
+      name,
+      address,
+      phone,
+      isDefault,
+    },
+  });
+
   const { setClose } = useContext(AddressContext);
+
   const handleClose = () => {
     setClose((prev) => !prev);
   };
+
+  const onSubmit = async (data) => {
+    await newAddress(data);
+    setClose(true);
+  };
+
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
       <div className="bg-white p-5 rounded-md relative">
-        <form action="" className="w-[600px]">
+        <form action="" className="w-[600px]" onSubmit={handleSubmit(onSubmit)}>
           <div className="uppercase font-bold">Chỉnh sửa địa chỉ</div>
           <IoCloseOutline
             className="absolute top-3 right-3 cursor-pointer"
@@ -31,7 +53,9 @@ const AddressDialog = ({
               id="name"
               className="w-full border py-2 px-3 outline-none mb-8 border-gray peer"
               placeholder=""
-              value={name}
+              {...register("name", {
+                required: "Tên không được để trống",
+              })}
             />
             <label
               htmlFor="name"
@@ -46,7 +70,9 @@ const AddressDialog = ({
               id="address"
               className="w-full border py-2 px-3 outline-none mb-8 border-gray peer"
               placeholder=""
-              value={address}
+              {...register("address", {
+                required: "Địa chỉ không được để trống",
+              })}
             />
             <label
               htmlFor="address"
@@ -61,7 +87,9 @@ const AddressDialog = ({
               id="phone"
               className="w-full border py-2 px-3 outline-none mb-8 border-gray peer"
               placeholder=""
-              value={phone}
+              {...register("phone", {
+                required: "Số điện thoại không được để trống",
+              })}
             />
             <label
               htmlFor="phone"
@@ -71,7 +99,7 @@ const AddressDialog = ({
             </label>
           </div>
           <div className="flex items-center gap-3">
-            <input type="checkbox" defaultChecked={defaul} />
+            <input type="checkbox" {...register("isDefault", {})} />
             <div>Đặt làm địa chỉ mặc định</div>
           </div>
           <div className="flex justify-end">
@@ -80,10 +108,12 @@ const AddressDialog = ({
               variant="white"
               className={"w-[60px] h-10 mr-5 rounded-none"}
               onClick={handleClose}
+              type="button"
             />
             <Button
               label={"Cập nhập địa chỉ"}
               className={"w-[200px] h-10 rounded-none"}
+              type="submit"
             />
           </div>
         </form>

@@ -2,14 +2,14 @@ import { useContext } from "react";
 
 import { AddressContext } from "../../contexts/AddressContext";
 
-const AddressDetail = ({ name, address, phone, defaul, handleClose }) => {
+const AddressDetail = ({ name, address, phone, isDefault, handleClose }) => {
   const { setData } = useContext(AddressContext);
   const handleClick = () => {
     setData({
       name: name,
       address: address,
       phone: phone,
-      defaul: defaul,
+      isDefaul: isDefault,
     });
     handleClose();
   };
@@ -21,7 +21,7 @@ const AddressDetail = ({ name, address, phone, defaul, handleClose }) => {
           <div className="flex items-center font-bold mt-5">
             Họ tên:
             <div className="font-normal ml-2">{name}</div>
-            {defaul ? (
+            {isDefault ? (
               <div className="font-normal text-[10px] text-primary ml-4">
                 Địa chỉ mặc định
               </div>

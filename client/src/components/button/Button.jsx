@@ -19,6 +19,7 @@ const Button = ({
       className={`${baseStyles} ${variants[variant]} ${className}`}
       type={type}
       onClick={onClick}
+      ty
     >
       {label}
     </button>
