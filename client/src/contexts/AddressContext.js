@@ -15,7 +15,7 @@ const AddressProvider = ({ children }) => {
       name: "Trường",
       address: "",
       phone: "",
-      defaul: false,
+      defaul: true,
     },
     {
       name: "Trường Nguyễn",

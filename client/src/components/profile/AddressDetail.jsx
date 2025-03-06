@@ -2,8 +2,17 @@ import { useContext } from "react";
 
 import { AddressContext } from "../../contexts/AddressContext";
 
-const AddressDetail = ({ name, address, phone, defaul, handleClick }) => {
-  const { setClose } = useContext(AddressContext);
+const AddressDetail = ({ name, address, phone, defaul, handleClose }) => {
+  const { setData } = useContext(AddressContext);
+  const handleClick = () => {
+    setData({
+      name: name,
+      address: address,
+      phone: phone,
+      defaul: defaul,
+    });
+    handleClose();
+  };
   return (
     <div>
       <div className="h-[1px] w-full bg-dark mt-10"></div>

@@ -5,9 +5,18 @@ import { useContext, useState } from "react";
 import AddressDialog from "./AddressDialog";
 
 const Address = () => {
-  const { close, setClose, listData, setListData, data, setData } =
+  const { close, setClose, listData, data, setData } =
     useContext(AddressContext);
   const handleClose = () => {
+    setClose((prev) => !prev);
+  };
+  const handleNew = () => {
+    setData({
+      name: "",
+      address: "",
+      phone: "",
+      defaul: false,
+    });
     setClose((prev) => !prev);
   };
   return (
@@ -17,7 +26,7 @@ const Address = () => {
         label={"Thêm địa chỉ"}
         className={"w-[150px] text-sm mt-10"}
         variant="white"
-        onClick={handleClose}
+        onClick={handleNew}
       />
       {listData.map((item, index) => {
         return (
@@ -26,7 +35,7 @@ const Address = () => {
             address={item.address}
             phone={item.phone}
             defaul={item.defaul}
-            handleClick={handleClose}
+            handleClose={handleClose}
           />
         );
       })}
