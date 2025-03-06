@@ -1,6 +1,12 @@
-const Button = ({ label, variant = "green", type = "submit", className }) => {
+const Button = ({
+  label,
+  variant = "green",
+  type = "submit",
+  onClick,
+  className,
+}) => {
   const baseStyles =
-    "flex items-center justify-center h-full w-full hover:bg-secondary text-[18px] rounded-xl py-3";
+    "flex items-center justify-center h-full hover:bg-secondary text-[18px] rounded-xl py-3";
   const variants = {
     green: "bg-primary text-white",
     white:
@@ -12,7 +18,8 @@ const Button = ({ label, variant = "green", type = "submit", className }) => {
     <button
       className={`${baseStyles} ${variants[variant]} ${className}`}
       type={type}
-      cla
+      onClick={onClick}
+      ty
     >
       {label}
     </button>

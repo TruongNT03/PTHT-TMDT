@@ -8,7 +8,10 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // define association here
+      users.hasMany(models.address, {
+        foreignKey: "userId",
+        as: "addresses",
+      });
     }
   }
   users.init(
@@ -19,7 +22,6 @@ module.exports = (sequelize, DataTypes) => {
       password: DataTypes.STRING,
       role: DataTypes.STRING,
       avatar: DataTypes.STRING,
-      address: DataTypes.STRING,
     },
     {
       sequelize,

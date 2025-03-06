@@ -6,7 +6,6 @@ const UserSchema = Joi.object({
   lastName: Joi.string().optional().allow(""),
   email: Joi.string().email().required(),
   avatar: Joi.string().uri().optional().allow(""),
-  address: Joi.string().max(255).optional().allow(""),
 });
 // class UserSchema extends Joi.object{
 //   constructor(user){
@@ -19,7 +18,6 @@ const UserSchema = Joi.object({
 //   email: Joi.string().email().required(),
 //   role: Joi.string().valid("user", "admin").default("user"),
 //   avatar: Joi.string().uri().optional().allow(""),
-//   address: Joi.string().max(255).optional().allow(""),
 // }
 
 export default UserSchema;

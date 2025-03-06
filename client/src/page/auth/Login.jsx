@@ -2,15 +2,16 @@ import { FaFacebookSquare } from "react-icons/fa";
 import { ImGoogle2 } from "react-icons/im";
 import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import { useState } from "react";
+import { useContext, useState } from "react";
 
 import Button from "../../components/button/Button";
 import Input from "../../components/input/Input";
 import login from "../../services/authService/login";
+import { UserContext } from "../../contexts/userContext";
 
 const Login = () => {
   const navigate = useNavigate();
-
+  const { setUser } = useContext(UserContext);
   const {
     register,
     handleSubmit,
@@ -21,6 +22,7 @@ const Login = () => {
   const onSubmit = async (data) => {
     const res = await login(data);
     if (res?.token) {
+      setUser(res.data.firstName + " " + res.data.lastName);
       navigate("/");
     } else {
       alert("Tài khoản mật khẩu không chính xác!");
@@ -78,7 +80,7 @@ const Login = () => {
           })}
           errorMessage={errors.password?.message}
         />
-        <Button label={"Đăng nhập"} />
+        <Button label={"Đăng nhập"} className={"w-full"} />
         <div
           className="cursor-pointer hover:text-secondary"
           onClick={handleDisplayForgotPassword}

@@ -10,7 +10,7 @@ instance.interceptors.request.use(
     const token = localStorage.getItem("token");
     config.headers["Content-Type"] = "application/json";
     if (token) {
-      config.headers.Authorization = `Bearer  ${token}`;
+      config.headers.Authorization = `Bearer ${token}`;
     }
     return config;
   },
