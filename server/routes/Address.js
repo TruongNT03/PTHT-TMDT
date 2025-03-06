@@ -6,7 +6,9 @@ import * as AddressController from "../controller/Address";
 
 const route = Router();
 
-route.post("/", authorization, asyncHandler(AddressController.newAddress));
 route.get("/", authorization, asyncHandler(AddressController.getAddress));
+route.post("/", authorization, asyncHandler(AddressController.newAddress));
+route.put("/", authorization, asyncHandler(AddressController.changeAddress));
+route.delete("/", authorization, asyncHandler(AddressController.deleteAddress));
 
 export default route;

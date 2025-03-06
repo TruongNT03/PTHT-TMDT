@@ -46,4 +46,36 @@ const getAddress = async (req, res) => {
   });
 };
 
-export { newAddress, getAddress };
+const changeAddress = async (req, res) => {
+  const { id, name, address, phone, isDefault } = req.body;
+  try {
+    await db.address.update(
+      { name, address, phone, isDefault },
+      {
+        where: {
+          id: id,
+        },
+      }
+    );
+    return res.status(200).json({ message: "Cập nhập địa chỉ thành công" });
+  } catch (err) {
+    return res.status(400).json({ message: err });
+  }
+};
+
+const deleteAddress = async (req, res) => {
+  const { id } = req.params;
+  if (!id) {
+    return res
+      .status(400)
+      .json({ message: "Không tìm thấy địa chỉ trùng khớp" });
+  }
+  await db.address.destroy({
+    where: {
+      id: id,
+    },
+  });
+  return res.status(200).json({ message: "Xóa thành công" });
+};
+
+export { newAddress, getAddress, changeAddress, deleteAddress };
