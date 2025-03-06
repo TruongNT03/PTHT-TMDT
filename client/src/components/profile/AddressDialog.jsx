@@ -5,9 +5,10 @@ import { useForm } from "react-hook-form";
 import Button from "../button/Button";
 import { AddressContext } from "../../contexts/AddressContext";
 import newAddress from "../../services/addressService/newAddress";
+import changeAddress from "../../services/addressService/changeAddress";
 
 const AddressDialog = ({
-  id,
+  id = 0,
   name = "",
   address = "",
   phone = "",
@@ -33,8 +34,11 @@ const AddressDialog = ({
   };
 
   const onSubmit = async (data) => {
-    console.log(id);
-    await newAddress(data);
+    if (id !== 0) {
+      await changeAddress({ ...data, id: id });
+    } else {
+      await newAddress(data);
+    }
     setClose(true);
   };
 
@@ -50,6 +54,9 @@ const AddressDialog = ({
           />
           <div className="h-[1px] w-full bg-dark my-8"></div>
           <div className="relative">
+            <div className="absolute text-sm text-red-500 left-0 -top-7">
+              {errors?.name?.message}
+            </div>
             <input
               type="text"
               id="name"
@@ -57,6 +64,10 @@ const AddressDialog = ({
               placeholder=""
               {...register("name", {
                 required: "Tên không được để trống",
+                pattern: {
+                  value: /^[A-Za-zÀ-Ỹà-ỹĂăÂâĐđÊêÔôƠơƯư\s]+$/,
+                  message: "Tên chỉ gồm các chữ cái",
+                },
               })}
             />
             <label
@@ -67,6 +78,9 @@ const AddressDialog = ({
             </label>
           </div>
           <div className="relative">
+            <div className="absolute text-sm text-red-500 left-0 -top-7">
+              {errors?.address?.message}
+            </div>
             <input
               type="text"
               id="address"
@@ -84,6 +98,9 @@ const AddressDialog = ({
             </label>
           </div>
           <div className="relative">
+            <div className="absolute text-sm text-red-500 left-0 -top-7">
+              {errors?.phone?.message}
+            </div>
             <input
               type="text"
               id="phone"
@@ -91,6 +108,10 @@ const AddressDialog = ({
               placeholder=""
               {...register("phone", {
                 required: "Số điện thoại không được để trống",
+                pattern: {
+                  value: /^[0-9]+$/,
+                  message: "Số điện thoại chỉ chứa các chữ số",
+                },
               })}
             />
             <label

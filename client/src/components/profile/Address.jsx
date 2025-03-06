@@ -1,7 +1,7 @@
 import Button from "../button/Button";
 import AddressDetail from "./AddressDetail";
 import { AddressContext } from "../../contexts/AddressContext";
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import AddressDialog from "./AddressDialog";
 
 const Address = () => {
@@ -42,13 +42,6 @@ const Address = () => {
           />
         );
       })}
-
-      {/* <AddressDetail
-        name={"Trường"}
-        address={"Ha noi, Phường Viên Sơn, Thị xã Sơn Tây, Hà Nội, Vietnam"}
-        phone={"0334011350"}
-        defaul={false}
-      /> */}
       {close ? <></> : <AddressDialog {...data} />}
     </div>
   );

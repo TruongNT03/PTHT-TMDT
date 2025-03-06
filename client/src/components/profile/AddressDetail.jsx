@@ -1,6 +1,7 @@
 import { useContext } from "react";
 
 import { AddressContext } from "../../contexts/AddressContext";
+import deleteAddress from "../../services/addressService/deleteAddress";
 
 const AddressDetail = ({
   id,
@@ -13,12 +14,18 @@ const AddressDetail = ({
   const { setData } = useContext(AddressContext);
   const handleClick = () => {
     setData({
+      id: id,
       name: name,
       address: address,
       phone: phone,
       isDefaul: isDefault,
     });
     handleClose();
+  };
+  const handleDelete = async () => {
+    const response = await deleteAddress(id);
+    alert(response.message);
+    setData({ id: 0, name: "", address: "", phone: "", isDefault: false });
   };
   return (
     <div>
@@ -48,7 +55,9 @@ const AddressDetail = ({
           <div className="text-blue-500 cursor-pointer" onClick={handleClick}>
             Chỉnh sửa địa chỉ
           </div>
-          <div className="text-red-500">Xóa</div>
+          <div className="text-red-500 cursor-pointer" onClick={handleDelete}>
+            Xóa
+          </div>
         </div>
       </div>
     </div>
