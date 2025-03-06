@@ -64,7 +64,7 @@ const changeAddress = async (req, res) => {
 };
 
 const deleteAddress = async (req, res) => {
-  const { id } = req.params;
+  const { id } = req.query;
   if (!id) {
     return res
       .status(400)
