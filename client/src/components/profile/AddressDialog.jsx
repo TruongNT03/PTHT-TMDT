@@ -27,7 +27,7 @@ const AddressDialog = ({
     },
   });
 
-  const { setClose } = useContext(AddressContext);
+  const { setData, setClose } = useContext(AddressContext);
 
   const handleClose = () => {
     setClose((prev) => !prev);
@@ -36,8 +36,22 @@ const AddressDialog = ({
   const onSubmit = async (data) => {
     if (id !== 0) {
       await changeAddress({ ...data, id: id });
+      setData({
+        id: 0,
+        name: "",
+        address: "",
+        phone: "",
+        isDefault: false,
+      });
     } else {
       await newAddress(data);
+      setData({
+        id: 0,
+        name: "",
+        address: "",
+        phone: "",
+        isDefault: false,
+      });
     }
     setClose(true);
   };
@@ -122,7 +136,7 @@ const AddressDialog = ({
             </label>
           </div>
           <div className="flex items-center gap-3">
-            <input type="checkbox" {...register("isDefault", {})} />
+            <input type="checkbox" {...register("isDefault")} />
             <div>Đặt làm địa chỉ mặc định</div>
           </div>
           <div className="flex justify-end">

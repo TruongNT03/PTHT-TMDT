@@ -18,7 +18,7 @@ const AddressDetail = ({
       name: name,
       address: address,
       phone: phone,
-      isDefaul: isDefault,
+      isDefault: isDefault,
     });
     handleClose();
   };

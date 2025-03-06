@@ -5,13 +5,6 @@ import getAddress from "../services/addressService/getAddress";
 export const AddressContext = createContext();
 
 const AddressProvider = ({ children }) => {
-  const apiData = async () => {
-    const response = await getAddress();
-    setListData(response.data);
-  };
-  useEffect(() => {
-    apiData();
-  }, []);
   const [close, setClose] = useState(true);
   const [data, setData] = useState({
     id: 0,
@@ -21,6 +14,14 @@ const AddressProvider = ({ children }) => {
     isDefault: false,
   });
   const [listData, setListData] = useState([]);
+  const apiData = async () => {
+    const response = await getAddress();
+    setListData(response.data);
+  };
+  useEffect(() => {
+    apiData();
+  }, [data]);
+
   return (
     <AddressContext.Provider
       value={{ close, setClose, listData, setListData, data, setData }}
