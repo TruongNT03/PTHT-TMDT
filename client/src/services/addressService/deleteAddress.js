@@ -1,6 +1,6 @@
 import instance from "../../utils/axios";
 
-const deleteAddress = async ({ id }) => {
+const deleteAddress = async (id) => {
   try {
     const response = await instance.delete("/address", {
       params: {
