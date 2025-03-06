@@ -34,6 +34,7 @@ const getAddress = async (req, res) => {
     },
   });
   const resAddresses = addresses.map(({ dataValues }) => ({
+    id: dataValues.id,
     name: dataValues.name,
     phone: dataValues.phone,
     address: dataValues.address,
