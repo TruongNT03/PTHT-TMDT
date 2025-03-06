@@ -37,6 +37,7 @@ const getAddress = async (req, res) => {
     name: dataValues.name,
     phone: dataValues.phone,
     address: dataValues.address,
+    isDefault: dataValues.isDefault,
   }));
   res.status(200).json({
     message: "Thành công",
