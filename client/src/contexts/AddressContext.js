@@ -14,6 +14,7 @@ const AddressProvider = ({ children }) => {
   }, []);
   const [close, setClose] = useState(true);
   const [data, setData] = useState({
+    id: 0,
     name: "",
     address: "",
     phone: "",

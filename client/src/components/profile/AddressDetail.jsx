@@ -2,7 +2,14 @@ import { useContext } from "react";
 
 import { AddressContext } from "../../contexts/AddressContext";
 
-const AddressDetail = ({ name, address, phone, isDefault, handleClose }) => {
+const AddressDetail = ({
+  id,
+  name,
+  address,
+  phone,
+  isDefault,
+  handleClose,
+}) => {
   const { setData } = useContext(AddressContext);
   const handleClick = () => {
     setData({

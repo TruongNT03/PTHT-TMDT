@@ -7,6 +7,7 @@ import { AddressContext } from "../../contexts/AddressContext";
 import newAddress from "../../services/addressService/newAddress";
 
 const AddressDialog = ({
+  id,
   name = "",
   address = "",
   phone = "",
@@ -32,6 +33,7 @@ const AddressDialog = ({
   };
 
   const onSubmit = async (data) => {
+    console.log(id);
     await newAddress(data);
     setClose(true);
   };

@@ -12,6 +12,7 @@ const Address = () => {
   };
   const handleNew = () => {
     setData({
+      id: 0,
       name: "",
       address: "",
       phone: "",
@@ -31,6 +32,8 @@ const Address = () => {
       {listData.map((item, index) => {
         return (
           <AddressDetail
+            key={index}
+            id={item.id}
             name={item.name}
             address={item.address}
             phone={item.phone}
