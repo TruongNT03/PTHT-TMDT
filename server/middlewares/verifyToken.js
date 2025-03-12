@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
 
-const authorization = (req, res, next) => {
+const verifyToken = (req, res, next) => {
   const header = req.headers["authorization"];
   const token = header && header.split(" ")[1];
   if (!token) return res.status(401).json({ message: "Error" });
@@ -13,4 +13,4 @@ const authorization = (req, res, next) => {
   });
 };
 
-export default authorization;
+export default verifyToken;

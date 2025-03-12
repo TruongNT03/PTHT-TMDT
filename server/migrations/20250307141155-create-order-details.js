@@ -2,31 +2,32 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable("addresses", {
+    await queryInterface.createTable("orderDetails", {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER,
       },
-      userId: {
+      orderId: {
         type: Sequelize.INTEGER,
         references: {
-          model: "users",
+          model: "orders",
           key: "id",
         },
       },
-      name: {
-        type: Sequelize.STRING,
+      productId: {
+        type: Sequelize.INTEGER,
+        references: {
+          model: "products",
+          key: "id",
+        },
       },
-      phone: {
-        type: Sequelize.STRING,
+      quantity: {
+        type: Sequelize.INTEGER,
       },
-      address: {
-        type: Sequelize.STRING,
-      },
-      isDefault: {
-        type: Sequelize.BOOLEAN,
+      price: {
+        type: Sequelize.FLOAT,
       },
       createdAt: {
         allowNull: false,
@@ -39,6 +40,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable("addresses");
+    await queryInterface.dropTable("orderDetails");
   },
 };

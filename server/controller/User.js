@@ -3,32 +3,30 @@ import jwt from "jsonwebtoken";
 
 import UserSchema from "../dtos/User.js";
 import db from "../models/index.js";
-import { where } from "sequelize";
 
 const saltRounds = 10;
 
 const register = async (req, res) => {
-  const { error } = UserSchema.validate(req.body);
-  if (error) {
-    return res.status(401).json({
-      errors: error,
-    });
-  }
-  const user = await db.users.findOne({
-    where: {
-      email: req.body.email,
-    },
-  });
-  if (user) {
-    return res.status(401).json({ message: "Email đã tồn tại." });
-  }
+  // const { error } = UserSchema.validate(req.body);
+  // if (error) {
+  //   return res.status(401).json({
+  //     errors: error,
+  //   });
+  // }
+  // const user = await db.users.findOne({
+  //   where: {
+  //     email: req.body.email,
+  //   },
+  // });
+  // if (user) {
+  //   return res.status(401).json({ message: "Email đã tồn tại." });
+  // }
   const password = await bcrypt.hash(req.body.password, saltRounds);
   const newUser = await db.users.create({
     ...req.body,
     password: password,
-    role: "user",
   });
-  res.status(200).json({
+  res.status(201).json({
     message: "Đăng ký thành công!",
     data: {
       fullname: newUser.fullname,
@@ -46,14 +44,14 @@ const login = async (req, res) => {
     },
   });
   if (user) {
-    const comparePass = await bcrypt.compare(req.body.password, user.password);
+    const comparePass = bcrypt.compare(req.body.password, user.password);
     if (!comparePass) {
       return res.status(401).json({
         message: "Tài khoản mật khẩu không chính xác.",
       });
     }
     const token = jwt.sign(
-      { id: user.id, email: user.email },
+      { id: user.id, email: user.email, role: user.role },
       process.env.JWT_PRIVATE_KEY,
       {
         expiresIn: "30d",

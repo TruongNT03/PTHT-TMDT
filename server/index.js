@@ -4,6 +4,9 @@ import cors from "cors";
 
 import UserRoute from "./routes/User.js";
 import AddressRoute from "./routes/Address.js";
+import SectionRoute from "./routes/Section.js";
+import CategoryRoute from "./routes/Category.js";
+import SubCategoryRoute from "./routes/SubCategory.js";
 
 const app = express();
 dotenv.config();
@@ -13,6 +16,9 @@ app.use(cors());
 app.use(express.json());
 app.use("/api/v1/auth", UserRoute);
 app.use("/api/v1/address", AddressRoute);
+app.use("/api/v1/section", SectionRoute);
+app.use("/api/v1/category", CategoryRoute);
+app.use("/api/v1/subcategory", SubCategoryRoute);
 
 app.get("/", (req, res) => {
   res.status(200).json("Hello");

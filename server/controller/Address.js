@@ -1,7 +1,7 @@
 import AddressSchema from "../dtos/Address";
 import db from "../models/index";
 
-const newAddress = async (req, res) => {
+const insertAddress = async (req, res) => {
   const { error } = AddressSchema.validate(req.body);
   if (error) {
     return res.status(400).json({ message: error });
@@ -46,7 +46,7 @@ const getAddress = async (req, res) => {
   });
 };
 
-const changeAddress = async (req, res) => {
+const updateAddress = async (req, res) => {
   const { id, name, address, phone, isDefault } = req.body;
   try {
     await db.address.update(
@@ -78,4 +78,4 @@ const deleteAddress = async (req, res) => {
   return res.status(200).json({ message: "Xóa thành công" });
 };
 
-export { newAddress, getAddress, changeAddress, deleteAddress };
+export { insertAddress, getAddress, updateAddress, deleteAddress };

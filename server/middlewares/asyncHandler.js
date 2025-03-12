@@ -5,7 +5,7 @@ const asyncHandler = (fn) => {
     } catch (error) {
       return res.status(500).json({
         message: "500 Internal Server Error",
-        error: error,
+        error,
       });
     }
   };
