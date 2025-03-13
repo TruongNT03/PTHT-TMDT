@@ -72,22 +72,17 @@ const login = async (req, res) => {
 };
 
 const getUserData = async (req, res) => {
-  const user = await db.users.findOne({
-    where: {
-      id: req.user.id,
-      email: req.user.email,
-    },
-  });
+  const user = await db.users.findByPk(req.user.id);
 
-  res.status(200).json({
+  return res.status(200).json({
     message: "Successfully",
     data: {
+      id: user.id,
       email: user.email,
       firstName: user.firstName,
       lastName: user.lastName,
       role: user.role,
       avatar: user.avatar,
-      address: user.address,
     },
   });
 };
