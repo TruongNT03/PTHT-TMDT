@@ -10,4 +10,19 @@ const insert = Joi.object({
   sectionId: Joi.number().required(),
 });
 
-export { insert };
+const update = Joi.object({
+  id: Joi.number().required(),
+  name: Joi.string().optional(),
+  description: Joi.string().optional(),
+  price: Joi.number().min(0).optional(),
+  stock: Joi.number().min(0).optional(),
+  image: Joi.string().optional(),
+  subCategoryId: Joi.number().optional(),
+  sectionId: Joi.number().optional(),
+});
+
+const del = Joi.object({
+  id: Joi.number().required(),
+});
+
+export { insert, update, del };
