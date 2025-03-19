@@ -9,12 +9,22 @@ import UserInfo from "./components/profile/UserInfo";
 import Order from "./components/profile/Order";
 import ChangePassword from "./components/profile/ChangePassword";
 import Address from "./components/profile/Address";
+import AdminRoute from "./routes/AdminRoute";
+import AdminLayout from "./layout/AdminLayout";
+import Product from "./page/admin/Product";
+import Dashboard from "./page/admin/Dashboard";
 
 function App() {
   return (
     <UserProvider>
       <BrowserRouter>
         <Routes>
+          <Route element={<AdminRoute />}>
+            <Route path="/admin" element={<AdminLayout />}>
+              <Route path="" element={<Dashboard />} />
+              <Route path="product" element={<Product />} />
+            </Route>
+          </Route>
           <Route path="/" element={<MainLayout />}>
             <Route index element={<Home />} />
             <Route path="/login" element={<Login />} />

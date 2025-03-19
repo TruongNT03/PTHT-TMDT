@@ -33,6 +33,10 @@ module.exports = {
       },
       sectionId: {
         type: Sequelize.INTEGER,
+        references: {
+          model: "sections",
+          key: "id",
+        },
       },
       createdAt: {
         allowNull: false,

@@ -7,6 +7,7 @@ import AddressRoute from "./routes/Address.js";
 import SectionRoute from "./routes/Section.js";
 import CategoryRoute from "./routes/Category.js";
 import SubCategoryRoute from "./routes/SubCategory.js";
+import ProductRoute from "./routes/Product.js";
 
 const app = express();
 dotenv.config();
@@ -19,6 +20,7 @@ app.use("/api/v1/address", AddressRoute);
 app.use("/api/v1/section", SectionRoute);
 app.use("/api/v1/category", CategoryRoute);
 app.use("/api/v1/subcategory", SubCategoryRoute);
+app.use("/api/v1/product", ProductRoute);
 
 app.get("/", (req, res) => {
   res.status(200).json("Hello");

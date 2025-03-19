@@ -11,7 +11,7 @@ import { UserContext } from "../../contexts/userContext";
 
 const Login = () => {
   const navigate = useNavigate();
-  const { setUser } = useContext(UserContext);
+  const { handleGet } = useContext(UserContext);
   const {
     register,
     handleSubmit,
@@ -22,7 +22,7 @@ const Login = () => {
   const onSubmit = async (data) => {
     const res = await login(data);
     if (res?.token) {
-      setUser(res.data.firstName + " " + res.data.lastName);
+      handleGet();
       navigate("/");
     } else {
       alert("Tài khoản mật khẩu không chính xác!");
