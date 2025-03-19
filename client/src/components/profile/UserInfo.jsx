@@ -1,20 +1,30 @@
-import React from "react";
+import React, { useContext } from "react";
+import { UserContext } from "../../contexts/userContext";
 
 const UserInfo = ({ className }) => {
+  const { user } = useContext(UserContext);
   return (
-    <div className={`flex flex-col gap-4 text-sm ${className}`}>
-      <div className="uppercase text-xl">Thông tin tài khoản</div>
-      <div className="flex gap-1 font-bold">
-        Họ: <div className="font-normal">Nguyễn Trọng</div>
+    <div className="flex justify-between">
+      <div className={`flex flex-col gap-4 text-sm ${className}`}>
+        <div className="uppercase text-xl">Thông tin tài khoản</div>
+        <div className="flex gap-1 font-bold">
+          Họ: <div className="font-normal">{user?.firstName}</div>
+        </div>
+        <div className="flex gap-1 font-bold">
+          Tên: <div className="font-normal">{user?.lastName}</div>
+        </div>
+        <div className="flex gap-1 font-bold">
+          Email: <div className="font-normal">{user?.email}</div>
+        </div>
+        <div className="flex gap-1 font-bold">Chỉnh sửa thông tin</div>
       </div>
-      <div className="flex gap-1 font-bold">
-        Tên: <div className="font-normal">Trường</div>
-      </div>
-      <div className="flex gap-1 font-bold">
-        Email: <div className="font-normal">ntt26072003@gmail.com</div>
-      </div>
-      <div className="flex gap-1 font-bold">
-        Địa chỉ: <div className="font-normal">Ngọc Lâm, Mỹ Hào, Hưng Yên</div>
+      <div className="flex flex-col gap-4 item">
+        <img
+          src={user?.avatar}
+          alt=""
+          className="h-[200px] w-[200px] rounded-full"
+        />
+        {/* <input type="file" /> */}
       </div>
     </div>
   );
