@@ -36,6 +36,7 @@ const insertProduct = async (req, res) => {
 const updateProduct = async (req, res) => {
   const { name, description, price, stock, image, subCategoryId, sectionId } =
     req.body;
+  console.log(req.body);
   const { id } = req.body;
   const { error } = ProductSchema.update.validate(req.body);
   if (error) {

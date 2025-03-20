@@ -16,9 +16,9 @@ const update = Joi.object({
   description: Joi.string().optional(),
   price: Joi.number().min(0).optional(),
   stock: Joi.number().min(0).optional(),
-  image: Joi.string().optional(),
-  subCategoryId: Joi.number().optional(),
-  sectionId: Joi.number().optional(),
+  image: Joi.optional(),
+  subCategory: Joi.optional(),
+  section: Joi.optional(),
 });
 
 const del = Joi.object({
