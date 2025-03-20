@@ -1,5 +1,7 @@
 import db from "../models/index";
 import * as ProductSchema from "../dtos/Product";
+import totalPageCaculate from "../utils/totalPageCaculate";
+import cutListItem from "../utils/cutListItem";
 
 const insertProduct = async (req, res) => {
   const { name, description, price, stock, image, subCategoryId, sectionId } =
@@ -50,20 +52,33 @@ const updateProduct = async (req, res) => {
 };
 
 const getProduct = async (req, res) => {
-  const products = await db.products.findAll({
-    attributes: ["id", "description", "price", "stock", "image"],
+  const { page = 1 } = req.query;
+  const limit = 10;
+  const offset = (page - 1) * limit;
+  const { rows, count } = await db.products.findAndCountAll({
+    attributes: ["id", "name", "description", "price", "stock", "image"],
     include: [
       {
         model: db.subCategories,
-        attributes: ["name"],
+        attributes: ["id", "name"],
       },
       {
         model: db.sections,
-        attributes: ["name"],
+        attributes: ["id", "name"],
       },
     ],
+    limit,
+    offset,
   });
-  return res.status(200).json({ message: "Thành công", data: products });
+  const totalItem = count;
+  const totalPage = totalPageCaculate(totalItem);
+  return res.status(200).json({
+    message: "Thành công",
+    data: rows,
+    totalItem: totalItem,
+    currentPage: Number.parseInt(page),
+    totalPage: totalPage,
+  });
 };
 
 const deleteProduct = async (req, res) => {

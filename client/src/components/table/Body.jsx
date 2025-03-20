@@ -1,12 +1,14 @@
-import Row from "./Row";
+import { useContext } from "react";
 
-const Body = ({ data, isCloseHandle }) => {
+import Row from "./Row";
+import { ProductContext } from "../../contexts/ProductContext";
+
+const Body = () => {
+  const { data } = useContext(ProductContext);
   return (
     <tbody>
-      {data?.map((dataRow, index) => {
-        return (
-          <Row key={index} dataRow={dataRow} isCloseHandle={isCloseHandle} />
-        );
+      {data?.data?.map((value, index) => {
+        return <Row key={index} data={value} />;
       })}
     </tbody>
   );

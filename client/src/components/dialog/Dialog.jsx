@@ -1,5 +1,7 @@
 import { IoCloseOutline } from "react-icons/io5";
 import Button from "../button/Button";
+import { useContext } from "react";
+import { ProductContext } from "../../contexts/ProductContext";
 
 const Dialog = ({
   onSubmit,
@@ -7,8 +9,8 @@ const Dialog = ({
   labelSubmit = "",
   dialogTitle = "",
   children,
-  isCloseHandle,
 }) => {
+  const { setIsClose } = useContext(ProductContext);
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
       <div className="bg-white p-5 rounded-md relative">
@@ -17,30 +19,21 @@ const Dialog = ({
           <IoCloseOutline
             className="absolute top-3 right-3 cursor-pointer"
             fontSize={32}
-            onClick={isCloseHandle}
+            onClick={() => {
+              setIsClose((prev) => !prev);
+            }}
           />
           <div className="h-[1px] w-full bg-dark my-8"></div>
-          {/* <InputDialog
-            register={register}
-            errors={errors}
-            label={"ID"}
-            idInput={"id"}
-          />
-          <InputDialog
-            register={register}
-            errors={errors}
-            label={"ID"}
-            idInput={"id"}
-          /> */}
           {children}
           <div className="flex justify-end">
             <Button
               label={"Hủy"}
               variant="white"
               className={"w-[60px] h-10 mr-5 rounded-none"}
-              //   onClick={handleClose}
               type="button"
-              onClick={isCloseHandle}
+              onClick={() => {
+                setIsClose((prev) => !prev);
+              }}
             />
             <Button
               label={labelSubmit}

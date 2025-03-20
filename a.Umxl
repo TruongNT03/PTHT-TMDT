@@ -1,0 +1,58 @@
+@startuml
+'===============================
+' Presentation Layer
+'===============================
+package "Presentation Layer" {
+  [Web App] as WA
+  [Mobile App] as MA
+  [Admin Dashboard] as AD
+}
+
+'===============================
+' Business Logic Layer
+'===============================
+package "Business Logic Layer" {
+  [User Management] as UM
+  [Event Management] as EM
+  [AI Recommendation] as AIR
+  [Authentication & Authorization] as Auth
+}
+
+'===============================
+' Data Access Layer
+'===============================
+package "Data Access Layer" {
+  [Registration DB] as RegDB
+  [Event & Speaker DB] as EventDB
+  [User Behavior DB] as UBDB
+}
+
+'===============================
+' Infrastructure Layer
+'===============================
+package "Infrastructure Layer" {
+  [Web/App Server] as WAS
+  [Database Server] as DBS
+  [AI Service Server] as AIS
+  [Security & Network] as SN
+}
+
+' Liên kết giữa các lớp
+WA --> UM : Gửi yêu cầu (đăng ký, truy xuất dữ liệu)
+MA --> UM
+AD --> UM
+AD --> EM
+
+UM --> RegDB : CRUD
+EM --> EventDB : CRUD
+AIR --> UBDB : Lấy dữ liệu hành vi, feedback
+
+UM, EM, AIR, Auth --> WAS : Triển khai dưới dạng REST API
+
+WAS --> DBS : Truy xuất dữ liệu
+AIR --> AIS : Xử lý đề xuất AI
+
+' Tích hợp các dịch vụ bảo mật & mạng
+WA, MA, AD --> SN
+
+@enduml

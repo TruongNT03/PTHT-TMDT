@@ -1,12 +1,16 @@
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { Pagination } from "antd";
 import { IoIosArrowDown } from "react-icons/io";
 import { IoSearch } from "react-icons/io5";
 
 import Head from "./Head";
 import Body from "./Body";
+import { ProductContext } from "../../contexts/ProductContext";
+import { getAllProduct } from "../../services/productService/getAllProduct";
 
-const Table = ({ data = [], head = [], isCloseHandle }) => {
+const Table = ({ head = [] }) => {
+  const { data, setIsClose, setDialogData, setData } =
+    useContext(ProductContext);
   const [orderShow, setOrderShow] = useState(false);
   const [searchActive, setSearchActive] = useState(false);
   const [searchValue, setSearchValue] = useState({
@@ -74,22 +78,25 @@ const Table = ({ data = [], head = [], isCloseHandle }) => {
                 orderShow ? "max-h-[200px]" : "max-h-0"
               } absolute top-[40px] left-0 bg-white overflow-hidden rounded-lg transition-all ease-in-out duration-300`}
             >
-              {head.map((element, index) => (
+              {head.map((value, index) => (
                 <li
                   key={index}
                   className="w-full px-3 hover:bg-primary hover:text-secondary"
                   onClick={() => {
-                    handleClick(element);
+                    handleClick(value.label);
                   }}
                 >
-                  {element}
+                  {value.label}
                 </li>
               ))}
             </ul>
           </div>
           <div
             className="bg-primary bg-opacity-70 text-white border-[1px] border-black p-1 rounded-lg cursor-pointer"
-            onClick={isCloseHandle}
+            onClick={() => {
+              setDialogData(undefined);
+              setIsClose((prev) => !prev);
+            }}
           >
             Insert
           </div>
@@ -97,16 +104,20 @@ const Table = ({ data = [], head = [], isCloseHandle }) => {
       </div>
       <table className="w-full table-auto bg-transparent rounded-sm">
         <Head head={head} />
-        <Body data={data} isCloseHandle={isCloseHandle} />
+        <Body />
       </table>
       <div className="mt-5 relative">
         <Pagination
-          defaultCurrent={1}
-          total={100}
+          current={data?.currentPage}
+          total={data?.totalItem}
           pageSize={10}
           showSizeChanger={false}
           showQuickJumper={true}
           className="absolute right-0"
+          onChange={async (page) => {
+            const responese = await getAllProduct(page);
+            setData(responese);
+          }}
         />
       </div>
     </div>

@@ -13,6 +13,7 @@ import AdminRoute from "./routes/AdminRoute";
 import AdminLayout from "./layout/AdminLayout";
 import Product from "./page/admin/Product";
 import Dashboard from "./page/admin/Dashboard";
+import ProductProvide from "./contexts/ProductContext";
 
 function App() {
   return (
@@ -22,7 +23,14 @@ function App() {
           <Route element={<AdminRoute />}>
             <Route path="/admin" element={<AdminLayout />}>
               <Route path="" element={<Dashboard />} />
-              <Route path="product" element={<Product />} />
+              <Route
+                path="product"
+                element={
+                  <ProductProvide>
+                    <Product />
+                  </ProductProvide>
+                }
+              />
             </Route>
           </Route>
           <Route path="/" element={<MainLayout />}>

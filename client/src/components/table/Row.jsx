@@ -1,14 +1,18 @@
-const Row = ({ dataRow = {}, isCloseHandle }) => {
+import { useContext } from "react";
+import { ProductContext } from "../../contexts/ProductContext";
+
+const Row = ({ data = {} }) => {
+  const { setIsClose, setDialogData } = useContext(ProductContext);
   return (
-    <tr className="border-b-[1px] border-black border-opacity-20 max-h-11">
-      {Object.keys(dataRow).map((key, index) => {
+    <tr className="border-b-[1px] border-black border-opacity-20 h-12">
+      {Object.keys(data).map((key, index) => {
         if (key === "image") {
           return (
-            <td key={index}>
+            <td key={index} className="">
               <img
-                src={dataRow[key]}
+                src={data[key]}
                 alt=""
-                className="max-h-11 object-cover rounded"
+                className="h-11 object-cover rounded"
               />
             </td>
           );
@@ -18,7 +22,7 @@ const Row = ({ dataRow = {}, isCloseHandle }) => {
               key={index}
               className="max-w-[100px] pr-3 overflow-hidden text-ellipsis whitespace-nowrap"
             >
-              {dataRow[key]?.name || dataRow[key]}
+              {data[key]?.name || data[key]}
             </td>
           );
         }
@@ -26,7 +30,10 @@ const Row = ({ dataRow = {}, isCloseHandle }) => {
       <td>
         <button
           className="text-light hover:text-primary"
-          onClick={isCloseHandle}
+          onClick={() => {
+            setDialogData(data);
+            setIsClose((prev) => !prev);
+          }}
         >
           Sửa
         </button>
