@@ -34,10 +34,20 @@ const insertProduct = async (req, res) => {
 };
 
 const updateProduct = async (req, res) => {
-  const { name, description, price, stock, image, subCategoryId, sectionId } =
-    req.body;
+  const {
+    id,
+    name,
+    description,
+    price,
+    stock,
+    image,
+    subCategoryId,
+    sectionId,
+  } = req.body;
+  if (req.file) {
+    req.body.image = `images/${req.file.filename}`;
+  }
   console.log(req.body);
-  const { id } = req.body;
   const { error } = ProductSchema.update.validate(req.body);
   if (error) {
     return res.status(400).json({ message: "Validate Error", errors: error });
@@ -46,7 +56,7 @@ const updateProduct = async (req, res) => {
   if (!product) {
     return res.status(400).json({ message: "Không tồn tại product" });
   }
-  await product.update(req.body);
+  await product.update({ ...req.body });
   return res.status(201).json({
     message: "Cập nhập product thành công",
   });

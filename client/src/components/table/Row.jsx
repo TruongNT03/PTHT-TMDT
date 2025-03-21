@@ -10,9 +10,9 @@ const Row = ({ data = {} }) => {
           return (
             <td key={index} className="">
               <img
-                src={data[key]}
+                src={`http://localhost:8080/${data[key]}`}
                 alt=""
-                className="h-11 object-cover rounded"
+                className="h-11 w-11 object-cover rounded"
               />
             </td>
           );

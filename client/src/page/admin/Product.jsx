@@ -42,6 +42,8 @@ const Product = () => {
     "Section",
   ];
   const onSubmit = async (body) => {
+    const listFile = body?.image;
+    body = { ...body, image: listFile[0] };
     const responese = await updateProduct(body);
     if (!responese.errors) {
       alert(responese.message);
@@ -66,56 +68,68 @@ const Product = () => {
         >
           <InputDialog
             label={"ID"}
-            disabled={true}
-            hasDropdown={true}
-            register={register}
-            name={"id"}
-            errors={errors}
+            readOnly={true}
+            register={register("id")}
+            error={errors?.id?.message}
           />
           <InputDialog
             label={"Name"}
-            register={register}
-            name={"name"}
-            errors={errors}
+            register={register("name", {
+              pattern: {
+                value: /^[\p{L}0-9 ,.!?@#\$%^&*()_+-=\[\]{};':"<>\/]+$/u,
+                message: "Không hợp lệ",
+              },
+              required: true,
+            })}
+            error={errors?.name?.message}
           />
           <InputDialog
             label={"Description"}
-            register={register}
+            register={register("description", {
+              pattern: {
+                value: /^[\p{L}0-9 ,.!?@#\$%^&*()_+-=\[\]{};':"<>\/]+$/u,
+                message: "Không hợp lệ",
+              },
+            })}
             name={"description"}
-            errors={errors}
+            error={errors?.description?.message}
           />
           <InputDialog
             label={"Price"}
-            register={register}
+            register={register("price", {
+              pattern: { value: /^-?\d+(\.\d+)?$/, message: "Không hợp lệ" },
+            })}
             name={"price"}
-            errors={errors}
+            error={errors?.price?.message}
           />
           <InputDialog
             label={"Stock"}
-            register={register}
+            register={register("stock", {
+              pattern: { value: /^[1-9]\d*$/, message: "Không hợp lệ" },
+            })}
             name={"stock"}
-            errors={errors}
+            error={errors?.stock?.message}
           />
           <FileDialog
             label={"Image"}
             name={"image"}
-            register={register}
-            errors={errors}
+            register={register("image")}
+            error={errors?.image?.message}
           />
           <DropDownDialog
             label={"Subcategory"}
             name={"subCategory"}
-            register={register}
+            register={register("subCategory")}
             listDropDown={listSubCategory}
-            errors={errors}
+            error={errors?.subCategory?.message}
             setValue={setValue}
           />
           <DropDownDialog
             label={"Section"}
             name={"section"}
-            register={register}
+            register={register("section")}
             listDropDown={listSection}
-            errors={errors}
+            error={errors?.section?.message}
             setValue={setValue}
           />
         </Dialog>
