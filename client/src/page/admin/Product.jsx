@@ -9,9 +9,12 @@ import DropDownDialog from "../../components/dialog/DropDownDialog";
 import getAllDropDown from "../../services/productService/getAllDropDown";
 import FileDialog from "../../components/dialog/FileDialog";
 import updateProduct from "../../services/productService/updateProduct";
+import insertProduct from "../../services/productService/insertProduct";
+import Modal from "../../components/Modal";
+import Loading from "../../components/loading/Loading";
 
 const Product = () => {
-  const { dialogData, isClose, setIsClose, getData } =
+  const { dialogData, getData, visible, loading, setVisible } =
     useContext(ProductContext);
   const [listSubCategory, setSubCategory] = useState([]);
   const [listSection, setListSection] = useState([]);
@@ -27,7 +30,6 @@ const Product = () => {
   const {
     register,
     handleSubmit,
-    setValue,
     formState: { errors },
     reset,
   } = useForm({ values: dialogData });
@@ -41,13 +43,25 @@ const Product = () => {
     "Subcategory",
     "Section",
   ];
-  const onSubmit = async (body) => {
-    const listFile = body?.image;
-    body = { ...body, image: listFile[0] };
-    const responese = await updateProduct(body);
-    if (!responese.errors) {
-      alert(responese.message);
-      setIsClose(true);
+  const onSubmit = async (data) => {
+    let content = { "Content-Type": "application/json" };
+    if (typeof data?.image === "object") {
+      const listFile = data.image;
+      data = { ...data, image: listFile[0] };
+      content = { "Content-Type": "multipart/form-data" };
+    } else {
+      delete data.image;
+    }
+    let response;
+    if (data?.id === "") {
+      delete data.id;
+      response = await insertProduct(data, content);
+    } else {
+      response = await updateProduct(data, content);
+    }
+    if (!response.errors) {
+      alert(response.message);
+      setVisible(true);
       getData();
     }
   };
@@ -56,10 +70,13 @@ const Product = () => {
   }, [dialogData, reset]);
   return (
     <div className="flex-1 h-screen">
-      <TableContainer head={head} title="Recent purchases" />
-      {isClose ? (
-        <></>
+      {loading ? (
+        <Loading />
       ) : (
+        <TableContainer head={head} title="Recent purchases" />
+      )}
+
+      <Modal visible={visible}>
         <Dialog
           dialogTitle="Thông tin sản phẩm"
           labelSubmit="Cập nhập sản phẩm"
@@ -76,7 +93,7 @@ const Product = () => {
             label={"Name"}
             register={register("name", {
               pattern: {
-                value: /^[\p{L}0-9 ,.!?@#\$%^&*()_+-=\[\]{};':"<>\/]+$/u,
+                value: /^[\p{L}0-9 ,.!?@#$%^&*()_+\-=[\]{};':"<>\/]+$/u,
                 message: "Không hợp lệ",
               },
               required: true,
@@ -87,7 +104,7 @@ const Product = () => {
             label={"Description"}
             register={register("description", {
               pattern: {
-                value: /^[\p{L}0-9 ,.!?@#\$%^&*()_+-=\[\]{};':"<>\/]+$/u,
+                value: /^[\p{L}0-9 ,.!?@#$%^&*()_+\-=[\]{};':"<>\/]+$/u,
                 message: "Không hợp lệ",
               },
             })}
@@ -97,6 +114,7 @@ const Product = () => {
           <InputDialog
             label={"Price"}
             register={register("price", {
+              valueAsNumber: true,
               pattern: { value: /^-?\d+(\.\d+)?$/, message: "Không hợp lệ" },
             })}
             name={"price"}
@@ -105,6 +123,7 @@ const Product = () => {
           <InputDialog
             label={"Stock"}
             register={register("stock", {
+              valueAsNumber: true,
               pattern: { value: /^[1-9]\d*$/, message: "Không hợp lệ" },
             })}
             name={"stock"}
@@ -118,22 +137,22 @@ const Product = () => {
           />
           <DropDownDialog
             label={"Subcategory"}
-            name={"subCategory"}
-            register={register("subCategory")}
+            register={register("subCategoryId", {
+              valueAsNumber: true,
+            })}
             listDropDown={listSubCategory}
             error={errors?.subCategory?.message}
-            setValue={setValue}
           />
           <DropDownDialog
             label={"Section"}
-            name={"section"}
-            register={register("section")}
+            register={register("sectionId", {
+              valueAsDate: true,
+            })}
             listDropDown={listSection}
             error={errors?.section?.message}
-            setValue={setValue}
           />
         </Dialog>
-      )}
+      </Modal>
     </div>
   );
 };

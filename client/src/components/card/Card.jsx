@@ -1,13 +1,13 @@
-const Card = () => {
+import { Link } from "react-router-dom";
+
+const Card = ({ className, image, data }) => {
   return (
-    <div className="">
+    <div className={`${className}`}>
       <div className="w-[206px] h-[206px] rounded-xl overflow-hidden mb-[10px] relative group cursor-pointer">
-        <img
-          src="https://bizweb.dktcdn.net/thumb/large/100/455/315/products/3-jpeg-dcba3f1d-413f-4e83-87bb-c21479ea321b.jpg?v=1653358923853"
-          alt=""
-          className=""
-        />
-        <button className="absolute bottom-0 text-white flex text-xs items-center justify-center w-full h-[35px] bg-gray hover:bg-secondary opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+        <Link to={`/product/${data.id}`}>
+          <img src={image} alt="" className="object-cover w-full h-full" />
+        </Link>
+        <Link className="absolute bottom-0 text-white flex text-xs items-center justify-center w-full h-[35px] bg-gray hover:bg-secondary opacity-0 group-hover:opacity-100 transition-opacity duration-300">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="19"
@@ -34,11 +34,11 @@ const Card = () => {
             ></path>
           </svg>
           Thêm vào giỏ hàng
-        </button>
+        </Link>
       </div>
-      <div className="font-semibold text-[14px] mb-[8px]">Áo len nữ</div>
+      <div className="font-semibold text-[14px] mb-[8px]">{data.name}</div>
       <div className="flex gap-2 text-base font-semibold text-secondary">
-        110.000Đ
+        {new Intl.NumberFormat().format(data.price * 1000)}
         <del className="text text-[14px] font-light text-black">130.000Đ</del>
       </div>
     </div>

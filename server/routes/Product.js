@@ -20,5 +20,6 @@ router.delete(
   authorizeAdmin,
   asyncHandler(ProductController.deleteProduct)
 );
+router.get("/:id", asyncHandler(ProductController.getProductById));
 
 export default router;

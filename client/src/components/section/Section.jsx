@@ -2,7 +2,7 @@ import Card from "../card/Card";
 import Button from "../button/Button";
 import { MdArrowBack, MdArrowForward } from "react-icons/md";
 
-const Section = () => {
+const Section = ({ children }) => {
   return (
     <div className="w-full max-w-[1140px] mx-auto py-10">
       <div className="w-[100px] h-[2px] bg-secondary"></div>
@@ -31,19 +31,10 @@ const Section = () => {
         </div>
       </div>
       <div className="w-full flex justify-between flex-wrap gap-y-6">
-        <Card />
-        <Card />
-        <Card />
-        <Card />
-        <Card />
-        <Card />
-        <Card />
-        <Card />
-        <Card />
-        <Card />
+        {children}
       </div>
       <div className="w-[241px] h-[62px] mx-auto mt-10 font-bold">
-        <Button label={"Xem tất cả"} />
+        <Button label={"Xem tất cả"} className={"px-5"} />
       </div>
     </div>
   );

@@ -2,7 +2,7 @@ import { useContext } from "react";
 import { ProductContext } from "../../contexts/ProductContext";
 
 const Row = ({ data = {} }) => {
-  const { setIsClose, setDialogData } = useContext(ProductContext);
+  const { setDialogData, setVisible } = useContext(ProductContext);
   return (
     <tr className="border-b-[1px] border-black border-opacity-20 h-12">
       {Object.keys(data).map((key, index) => {
@@ -32,11 +32,14 @@ const Row = ({ data = {} }) => {
           className="text-light hover:text-primary"
           onClick={() => {
             setDialogData(data);
-            setIsClose((prev) => !prev);
+            setVisible(true);
           }}
         >
           Sửa
         </button>
+      </td>
+      <td>
+        <button className="text-red-500">Xóa</button>
       </td>
     </tr>
   );

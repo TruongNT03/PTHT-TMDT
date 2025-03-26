@@ -2,13 +2,12 @@ import { useContext } from "react";
 import { Pagination } from "antd";
 
 import { ProductContext } from "../../contexts/ProductContext";
-import { getAllProduct } from "../../services/productService/getAllProduct";
 import Search from "../search/Search";
 import Dropdown from "../dropdown/Dropdown";
 import Table from "./Table";
 
 const TableContainer = ({ head = [], title = "" }) => {
-  const { data, setIsClose, setDialogData, setData } =
+  const { data, setDialogData, setSearchParams, setVisible } =
     useContext(ProductContext);
   return (
     <div className="w-[96%] relative bg-secondary bg-opacity-50 mx-auto px-5 pt-5 pb-12 rounded-xl mt-5">
@@ -27,10 +26,10 @@ const TableContainer = ({ head = [], title = "" }) => {
                 price: "",
                 stock: "",
                 image: "",
-                subCategory: "",
-                section: "",
+                subCategoryId: 1,
+                sectionId: 1,
               });
-              setIsClose((prev) => !prev);
+              setVisible(true);
             }}
           >
             Insert
@@ -47,8 +46,7 @@ const TableContainer = ({ head = [], title = "" }) => {
           showQuickJumper={true}
           className="absolute right-0"
           onChange={async (page) => {
-            const responese = await getAllProduct(page);
-            setData(responese);
+            setSearchParams({ page: page });
           }}
         />
       </div>

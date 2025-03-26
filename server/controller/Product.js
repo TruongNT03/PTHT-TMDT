@@ -47,7 +47,6 @@ const updateProduct = async (req, res) => {
   if (req.file) {
     req.body.image = `images/${req.file.filename}`;
   }
-  console.log(req.body);
   const { error } = ProductSchema.update.validate(req.body);
   if (error) {
     return res.status(400).json({ message: "Validate Error", errors: error });
@@ -106,4 +105,19 @@ const deleteProduct = async (req, res) => {
   return res.status(200).json({ message: "Xóa product thành công" });
 };
 
-export { insertProduct, updateProduct, getProduct, deleteProduct };
+const getProductById = async (req, res) => {
+  const { id } = req.params;
+  const product = await db.products.findByPk(id);
+  if (!product) {
+    return res.status(200).json({ message: "Không tồn tại sản phẩm" });
+  }
+  return res.status(200).json({ message: "Thành công", data: product });
+};
+
+export {
+  insertProduct,
+  updateProduct,
+  getProduct,
+  deleteProduct,
+  getProductById,
+};

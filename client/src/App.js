@@ -14,6 +14,9 @@ import AdminLayout from "./layout/AdminLayout";
 import Product from "./page/admin/Product";
 import Dashboard from "./page/admin/Dashboard";
 import ProductProvide from "./contexts/ProductContext";
+import ProductDetail from "./page/ProductDetail";
+import NotFound from "./page/NotFound";
+import ListProduct from "./page/ListProduct";
 
 function App() {
   return (
@@ -43,6 +46,9 @@ function App() {
               <Route path="changepassword" element={<ChangePassword />} />
               <Route path="address" element={<Address />} />
             </Route>
+            <Route path="/product/:id" element={<ProductDetail />} />
+            <Route path="/product" element={<ListProduct />} />
+            <Route path="*" element={<NotFound />} />
           </Route>
         </Routes>
       </BrowserRouter>

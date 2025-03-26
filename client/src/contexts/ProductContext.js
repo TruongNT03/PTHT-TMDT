@@ -1,11 +1,13 @@
 import { createContext, useEffect, useState } from "react";
 import { getAllProduct } from "../services/productService/getAllProduct";
+import { useSearchParams } from "react-router-dom";
 
 export const ProductContext = createContext();
 
 const ProductProvide = ({ children }) => {
+  const [visible, setVisible] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [data, setData] = useState({});
-  const [isClose, setIsClose] = useState(true);
   const [dialogData, setDialogData] = useState({
     id: "",
     name: "",
@@ -13,26 +15,32 @@ const ProductProvide = ({ children }) => {
     price: "",
     stock: "",
     image: "",
-    subCategory: "",
-    section: "",
+    subCategoryId: 1,
+    sectionId: 1,
   });
-  const getData = async () => {
-    const response = await getAllProduct();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const getData = async (searchParams) => {
+    setLoading(true);
+    const response = await getAllProduct(searchParams);
     setData(response);
+    setLoading(false);
   };
   useEffect(() => {
-    getData();
-  }, []);
+    getData(searchParams);
+  }, [searchParams]);
   return (
     <ProductContext.Provider
       value={{
         data,
         setData,
-        isClose,
-        setIsClose,
         dialogData,
         setDialogData,
         getData,
+        searchParams,
+        setSearchParams,
+        visible,
+        setVisible,
+        loading,
       }}
     >
       {children}

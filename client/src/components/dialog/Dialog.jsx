@@ -10,7 +10,7 @@ const Dialog = ({
   dialogTitle = "",
   children,
 }) => {
-  const { setIsClose } = useContext(ProductContext);
+  const { setVisible } = useContext(ProductContext);
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
       <div className="bg-white p-5 rounded-md relative">
@@ -19,9 +19,10 @@ const Dialog = ({
           <IoCloseOutline
             className="absolute top-3 right-3 cursor-pointer"
             fontSize={32}
-            onClick={() => {
-              setIsClose((prev) => !prev);
-            }}
+            onClick={() => setVisible(false)}
+            // onClick={() => {
+            //   setIsClose((prev) => !prev);
+            // }}
           />
           <div className="h-[1px] w-full bg-dark my-8"></div>
           {children}
@@ -31,9 +32,10 @@ const Dialog = ({
               variant="white"
               className={"w-[60px] h-10 mr-5 rounded-none"}
               type="button"
-              onClick={() => {
-                setIsClose((prev) => !prev);
-              }}
+              onClick={() => setVisible(false)}
+              // onClick={() => {
+              //   setIsClose((prev) => !prev);
+              // }}
             />
             <Button
               label={labelSubmit}
