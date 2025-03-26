@@ -1,18 +1,42 @@
-import React from "react";
+import { useState } from "react";
+import { IoCloudUploadOutline } from "react-icons/io5";
 
-const FileDialog = ({ label, register, error }) => {
+const FileDialog = ({ register, error, className }) => {
+  const [filename, setFilename] = useState();
+  console.log(filename);
   return (
-    <div className="w-full mb-4">
-      <div className="w-full border p-2 relative">
-        <label
-          htmlFor={label}
-          className="text-sm text-gray bg-white px-2 absolute top-[-12px] left-3"
-        >
-          {label}
-        </label>
-        <input id={label} type="file" className="" {...register}></input>
-      </div>
-      <div className="text-xs text-red-500">{error}</div>
+    <div className={`flex flex-col items-center justify-center ${className}`}>
+      <label
+        for="drop-zone"
+        className="h-full w-full cursor-pointer hover:bg-light-blue"
+      >
+        <div className="w-full h-full flex flex-col items-center justify-center text-gray">
+          <IoCloudUploadOutline fontSize={40} />
+          {filename ? (
+            <p>{filename}</p>
+          ) : (
+            <div>
+              <p>
+                <span className="font-medium">Click to upload</span> or drag and
+                drop
+              </p>
+              <p class="text-xs text-gray-500 dark:text-gray-400">
+                SVG, PNG, JPG or GIF (MAX. 800x400px)
+              </p>{" "}
+            </div>
+          )}
+        </div>
+        <input
+          id="drop-zone"
+          type="file"
+          className="hidden"
+          {...register}
+          onChange={(e) => {
+            setFilename(e.target.value);
+          }}
+        />
+        <div className="text-xs text-red-500">{error}</div>
+      </label>
     </div>
   );
 };

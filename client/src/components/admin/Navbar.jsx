@@ -4,7 +4,7 @@ import { IoIosArrowDown } from "react-icons/io";
 
 const Navbar = () => {
   return (
-    <div className="h-[80px] bg-white flex justify-end items-center gap-8 text-2xl pr-10 border-b-[1px] border-gray border-opacity-50">
+    <div className="h-[80px] px-[32px] bg-white flex justify-end items-center gap-8 text-2xl pr-10 border-b-[1px] border-gray border-opacity-50">
       <IoSearch />
       <FaBell />
       <div className="border-[1px] w-fit h-fit p-1 rounded-lg text-base font-semibold flex items-center gap-1">

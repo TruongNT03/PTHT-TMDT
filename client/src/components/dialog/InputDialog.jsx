@@ -1,21 +1,24 @@
-const InputDialog = ({ label, register, error, readOnly }) => {
+const InputDialog = ({
+  label,
+  register,
+  error,
+  readOnly,
+  placeholder,
+  className,
+}) => {
   return (
-    <div className="w-full mb-4">
-      <div className="relative w-full p-2 border">
-        <label
-          htmlFor={label}
-          className="text-sm text-gray bg-white px-2 absolute top-[-10px] left-3 transition-all peer-placeholder-shown:top-[10px] peer-placeholder-shown:bg-transparent"
-        >
-          {label}
-        </label>
-        <input
-          id={label}
-          className="w-full px-2 outline-none border-gray peer"
-          placeholder=""
-          {...register}
-          readOnly={readOnly}
-        />
-      </div>
+    <div className={`w-full mb-4 ${className}`}>
+      <label htmlFor={label} className="text-gray bg-white">
+        {label}
+      </label>
+      <input
+        id={label}
+        className="w-full h-full p-2 border-[2px] outline-none border-gray-light rounded-md"
+        placeholder={placeholder}
+        {...register}
+        readOnly={readOnly}
+      />
+
       <div className="text-xs text-red-500 mt-2">{error}</div>
     </div>
   );

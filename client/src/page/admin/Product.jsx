@@ -76,7 +76,7 @@ const Product = () => {
         <TableContainer head={head} title="Recent purchases" />
       )}
 
-      <Modal visible={visible}>
+      {/* <Modal visible={visible}>
         <Dialog
           dialogTitle="Thông tin sản phẩm"
           labelSubmit="Cập nhập sản phẩm"
@@ -152,7 +152,7 @@ const Product = () => {
             error={errors?.section?.message}
           />
         </Dialog>
-      </Modal>
+      </Modal> */}
     </div>
   );
 };

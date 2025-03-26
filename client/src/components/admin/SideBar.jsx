@@ -22,21 +22,21 @@ const SideBar = ({ className }) => {
         "border-l-transparent",
         "border-l-transparent",
       ]);
-    } else if (location.endsWith("product")) {
+    } else if (location.includes("product")) {
       setActive([
         "border-l-transparent",
         "border-l-secondary",
         "border-l-transparent",
         "border-l-transparent",
       ]);
-    } else if (location.endsWith("category")) {
+    } else if (location.includes("category")) {
       setActive([
         "border-l-transparent",
         "border-l-transparent",
         "border-l-secondary",
         "border-l-transparent",
       ]);
-    } else if (location.endsWith("section")) {
+    } else if (location.includes("section")) {
       setActive([
         "border-l-transparent",
         "border-l-transparent",

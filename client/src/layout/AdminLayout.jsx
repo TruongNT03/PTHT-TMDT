@@ -7,8 +7,8 @@ import Direction from "../components/admin/Direction";
 const AdminLayout = () => {
   return (
     <div className="flex h-screen">
-      <SideBar className={"w-[300px] bg-primary"} />
-      <div className="flex flex-col flex-1 bg-light">
+      <SideBar className={"w-[300px] bg-primary h-screen"} />
+      <div className="flex-1 bg-light-blue overflow-y-scroll">
         <Navbar />
         <Direction />
         <Outlet />
