@@ -1,17 +1,18 @@
 import { useContext } from "react";
 import { Link } from "react-router-dom";
 import { UserContext } from "../../contexts/userContext";
+import Cookies from "js-cookie";
 
 const Nav = () => {
   const { user, setUser } = useContext(UserContext);
   const handleLogout = () => {
-    localStorage.removeItem("token");
+    Cookies.remove("token");
     setUser("");
   };
   return (
     <div className="flex h-full items-center text-white pr-[15px]">
       {user?.avatar ? (
-        <img src={user.avatar} alt="avatar" className="w-[24px] rounded-full" />
+        <img src={user.avatar} alt="avatar" className="w-[24px] rounded-md" />
       ) : (
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -33,7 +34,11 @@ const Nav = () => {
 
       {user ? (
         <Link to={"/profile"} className="hover:text-[#FE9614] ml-[4px]">
-          {user?.firstName + " " + user?.lastName}
+          {user?.firstname
+            ? user?.firstname
+            : "" + " " + user?.lastname
+            ? user?.lastname
+            : ""}
         </Link>
       ) : (
         <Link to={"/login"} className="hover:text-[#FE9614] ml-[4px]">

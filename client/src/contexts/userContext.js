@@ -1,4 +1,5 @@
 import { createContext, useEffect, useState } from "react";
+import Cookies from "js-cookie";
 
 import getUser from "../services/authService/getUser";
 
@@ -11,7 +12,7 @@ const UserProvider = ({ children }) => {
     setUser((prev) => ({ ...prev, ...data.data }));
   };
   useEffect(() => {
-    const token = localStorage.getItem("token");
+    const token = Cookies.get("token");
     if (token) {
       handleGet();
     }

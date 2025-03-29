@@ -14,7 +14,7 @@ const insertAddress = async (req, res) => {
   });
   const newAddress = await db.address.create({
     ...req.body,
-    userId: user.id,
+    user_id: user.id,
   });
   return res.status(200).json({
     message: "Thêm mới địa chỉ thành công",
@@ -30,27 +30,21 @@ const getAddress = async (req, res) => {
   });
   const addresses = await db.address.findAll({
     where: {
-      userId: user.id,
+      user_id: user.id,
     },
+    attributes: ["id", "name", "phone", "address", "is_default"],
   });
-  const resAddresses = addresses.map(({ dataValues }) => ({
-    id: dataValues.id,
-    name: dataValues.name,
-    phone: dataValues.phone,
-    address: dataValues.address,
-    isDefault: dataValues.isDefault,
-  }));
   res.status(200).json({
     message: "Thành công",
-    data: resAddresses,
+    data: addresses,
   });
 };
 
 const updateAddress = async (req, res) => {
-  const { id, name, address, phone, isDefault } = req.body;
+  const { id, name, address, phone, is_default } = req.body;
   try {
     await db.address.update(
-      { name, address, phone, isDefault },
+      { name, address, phone, is_default },
       {
         where: {
           id: id,

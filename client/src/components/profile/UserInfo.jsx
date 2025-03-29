@@ -8,10 +8,10 @@ const UserInfo = ({ className }) => {
       <div className={`flex flex-col gap-4 text-sm ${className}`}>
         <div className="uppercase text-xl">Thông tin tài khoản</div>
         <div className="flex gap-1 font-bold">
-          Họ: <div className="font-normal">{user?.firstName}</div>
+          Họ: <div className="font-normal">{user?.firstname}</div>
         </div>
         <div className="flex gap-1 font-bold">
-          Tên: <div className="font-normal">{user?.lastName}</div>
+          Tên: <div className="font-normal">{user?.lastname}</div>
         </div>
         <div className="flex gap-1 font-bold">
           Email: <div className="font-normal">{user?.email}</div>

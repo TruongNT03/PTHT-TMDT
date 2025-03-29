@@ -7,20 +7,20 @@ import db from "../models/index.js";
 const saltRounds = 10;
 
 const register = async (req, res) => {
-  // const { error } = UserSchema.validate(req.body);
-  // if (error) {
-  //   return res.status(401).json({
-  //     errors: error,
-  //   });
-  // }
-  // const user = await db.users.findOne({
-  //   where: {
-  //     email: req.body.email,
-  //   },
-  // });
-  // if (user) {
-  //   return res.status(401).json({ message: "Email đã tồn tại." });
-  // }
+  const { error } = UserSchema.validate(req.body);
+  if (error) {
+    return res.status(401).json({
+      errors: error,
+    });
+  }
+  const user = await db.users.findOne({
+    where: {
+      email: req.body.email,
+    },
+  });
+  if (user) {
+    return res.status(401).json({ message: "Email đã tồn tại." });
+  }
   const password = await bcrypt.hash(req.body.password, saltRounds);
   const newUser = await db.users.create({
     ...req.body,
@@ -32,7 +32,6 @@ const register = async (req, res) => {
       fullname: newUser.fullname,
       email: newUser.email,
       username: newUser.username,
-      role: newUser.role,
     },
   });
 };
@@ -51,7 +50,7 @@ const login = async (req, res) => {
       });
     }
     const token = jwt.sign(
-      { id: user.id, email: user.email, role: user.role },
+      { id: user.id, email: user.email, role: user.role, type: user.type },
       process.env.JWT_PRIVATE_KEY,
       {
         expiresIn: "30d",
@@ -61,8 +60,8 @@ const login = async (req, res) => {
       message: "Đăng nhập thành công.",
       token: token,
       data: {
-        firstName: user.firstName,
-        lastName: user.lastName,
+        firstname: user.firstname,
+        lastname: user.lastname,
         role: user.role,
         avatar: user.vavatar,
         address: user.address,
@@ -79,8 +78,8 @@ const getUserData = async (req, res) => {
     data: {
       id: user.id,
       email: user.email,
-      firstName: user.firstName,
-      lastName: user.lastName,
+      firstname: user.firstname,
+      lastname: user.lastname,
       role: user.role,
       avatar: user.avatar,
     },
@@ -106,5 +105,7 @@ const changePassword = async (req, res) => {
     message: "Đổi mật khẩu thành công",
   });
 };
+
+const google = async (req, res) => {};
 
 export { register, login, getUserData, changePassword };

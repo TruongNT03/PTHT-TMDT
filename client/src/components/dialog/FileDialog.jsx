@@ -1,13 +1,13 @@
-import { useState } from "react";
+import { useId, useState } from "react";
 import { IoCloudUploadOutline } from "react-icons/io5";
 
-const FileDialog = ({ register, error, className }) => {
+const FileDialog = ({ register, error, className, multiple }) => {
   const [filename, setFilename] = useState();
-  console.log(filename);
+  const inputId = useId();
   return (
     <div className={`flex flex-col items-center justify-center ${className}`}>
       <label
-        for="drop-zone"
+        for={inputId}
         className="h-full w-full cursor-pointer hover:bg-light-blue"
       >
         <div className="w-full h-full flex flex-col items-center justify-center text-gray">
@@ -27,9 +27,10 @@ const FileDialog = ({ register, error, className }) => {
           )}
         </div>
         <input
-          id="drop-zone"
+          id={inputId}
           type="file"
-          className="hidden"
+          multiple={multiple}
+          className="opacity-0"
           {...register}
           onChange={(e) => {
             setFilename(e.target.value);

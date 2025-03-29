@@ -72,12 +72,14 @@ const SideBar = ({ className }) => {
           <div>Product</div>
         </Link>
         <Link
+          to={"category"}
           className={`flex items-center ml-3 gap-3 px-4 py-1 ${active[2]} border-l-4`}
         >
           <TbCategoryMinus />
           <div>Category</div>
         </Link>
         <Link
+          to={"section"}
           className={`flex items-center ml-3 gap-3 px-4 py-1 ${active[3]} border-l-4`}
         >
           <AiOutlineUnorderedList />

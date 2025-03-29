@@ -17,7 +17,9 @@ import ProductProvide from "./contexts/ProductContext";
 import ProductDetail from "./page/ProductDetail";
 import NotFound from "./page/NotFound";
 import ListProduct from "./page/ListProduct";
-import EditProduct from "./page/EditProduct";
+import EditProduct from "./page/admin/EditProduct";
+import Category from "./page/admin/Category";
+import Section from "./page/admin/Section";
 
 function App() {
   return (
@@ -27,7 +29,10 @@ function App() {
           <Route element={<AdminRoute />}>
             <Route path="/admin" element={<AdminLayout />}>
               <Route path="" element={<Dashboard />} />
-              <Route path="product/edit" element={<EditProduct />} />
+              <Route path="product/edit/:id" element={<EditProduct />} />
+              <Route path="product/new" element={<EditProduct />} />
+              <Route path="category" element={<Category />} />
+              <Route path="section" element={<Section />} />
               <Route
                 path="product"
                 element={

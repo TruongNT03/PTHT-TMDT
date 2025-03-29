@@ -2,8 +2,8 @@ import Joi from "joi";
 
 const UserSchema = Joi.object({
   password: Joi.string().min(6).max(50).required(),
-  firstName: Joi.string().optional().allow(""),
-  lastName: Joi.string().optional().allow(""),
+  firstname: Joi.string().optional().allow(""),
+  lastname: Joi.string().optional().allow(""),
   email: Joi.string().email().required(),
   avatar: Joi.string().uri().optional().allow(""),
 });

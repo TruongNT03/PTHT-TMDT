@@ -24,14 +24,14 @@ module.exports = {
       image: {
         type: Sequelize.STRING,
       },
-      subCategoryId: {
+      category_id: {
         type: Sequelize.INTEGER,
         references: {
-          model: "subCategories",
+          model: "categories",
           key: "id",
         },
       },
-      sectionId: {
+      section_id: {
         type: Sequelize.INTEGER,
         references: {
           model: "sections",

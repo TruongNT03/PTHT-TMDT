@@ -4,7 +4,7 @@ const AddressSchema = Joi.object({
   name: Joi.string().required(),
   address: Joi.string().required(),
   phone: Joi.string().required(),
-  isDefault: Joi.boolean().default(false),
+  is_default: Joi.boolean().default(false),
 });
 
 export default AddressSchema;

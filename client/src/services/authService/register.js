@@ -1,10 +1,10 @@
 import instance from "../../utils/axios";
 
-const register = async ({ firstName, lastName, email, password }) => {
+const register = async ({ firstname, lastname, email, password }) => {
   try {
     const response = await instance.post("/auth/register", {
-      firstName,
-      lastName,
+      firstname,
+      lastname,
       email,
       password,
     });

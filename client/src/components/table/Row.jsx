@@ -1,8 +1,6 @@
-import { useContext } from "react";
-import { ProductContext } from "../../contexts/ProductContext";
+import { Link } from "react-router-dom";
 
 const Row = ({ data = {} }) => {
-  const { setDialogData, setVisible } = useContext(ProductContext);
   return (
     <tr className="border-b-[1px] border-black border-opacity-20 h-12">
       {Object.keys(data).map((key, index) => {
@@ -28,15 +26,12 @@ const Row = ({ data = {} }) => {
         }
       })}
       <td>
-        <button
+        <Link
+          to={`/admin/product/edit/${data.id}`}
           className="text-light hover:text-primary"
-          onClick={() => {
-            setDialogData(data);
-            setVisible(true);
-          }}
         >
           Sửa
-        </button>
+        </Link>
       </td>
       <td>
         <button className="text-red-500">Xóa</button>

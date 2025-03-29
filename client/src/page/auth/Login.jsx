@@ -117,10 +117,13 @@ const Login = () => {
           <FaFacebookSquare fontSize={32} />
           Facebook
         </div>
-        <div className="w-full p-2 flex items-center justify-center gap-2 bg-[#DB4437] rounded-xl text-white">
+        <a
+          href="http://localhost:8080/api/v1/auth/google"
+          className="w-full p-2 flex items-center justify-center gap-2 bg-[#DB4437] rounded-xl text-white"
+        >
           <ImGoogle2 fontSize={32} />
           Google
-        </div>
+        </a>
       </form>
     </div>
   );
