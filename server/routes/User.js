@@ -26,5 +26,20 @@ route.get(
     res.redirect("http://localhost:3000");
   }
 );
+route.get(
+  "/facebook",
+  passport.authenticate("facebook", { scope: ["profile"] })
+);
+route.get(
+  "/facebook/callback",
+  passport.authenticate("facebook", {
+    failureRedirect: "/login",
+    session: false,
+  }),
+  (req, res) => {
+    res.cookie("token", req.user.token);
+    res.redirect("http://localhost:3000");
+  }
+);
 
 export default route;

@@ -13,7 +13,7 @@ const AdminRoute = () => {
         return;
       }
       const response = await getUser();
-      if (response?.data?.role !== "ADMIN") {
+      if (response?.data?.role !== "admin") {
         navigate("/");
       }
     };

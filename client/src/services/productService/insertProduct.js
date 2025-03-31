@@ -1,7 +1,7 @@
 import instance from "../../utils/axios";
 
-const insertProduct = async (product) => {
-  const response = await instance.post("/product", product, {});
+const insertProduct = async (formData) => {
+  const response = await instance.post("/product", formData);
   return response;
 };
 

@@ -8,7 +8,7 @@ const authorizeAdmin = (req, res, next) => {
     if (err) {
       return res.status(401).json(err);
     }
-    if (user.role === "ADMIN") {
+    if (user.role === "admin") {
       req.user = user;
       next();
     } else {

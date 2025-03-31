@@ -3,9 +3,14 @@ import * as ProductSchema from "../dtos/Product";
 import totalPageCaculate from "../utils/totalPageCaculate";
 
 const insertProduct = async (req, res) => {
-  const { name, description, category_id, section_id, variant_product } =
-    req.body;
-  const variants = variant_product.variant;
+  const {
+    name,
+    description,
+    category_id,
+    section_id,
+    product_images = [],
+    variants = [],
+  } = req.body;
   const { error } = ProductSchema.insert.validate(req.body);
   if (error) {
     return res.status(400).json({ message: "Validate Error", errors: error });
@@ -18,77 +23,87 @@ const insertProduct = async (req, res) => {
   if (!section) {
     return res.status(400).json({ message: "Không tồn tại section" });
   }
+  let stock = 0;
+  variants.map((value) => {
+    stock += parseInt(value.stock);
+  });
+  console.log(stock);
   const transaction = await db.sequelize.transaction();
   const [product, created] = await db.products.findOrCreate({
-    where: { name, category_id, section_id },
+    where: { name: name },
     defaults: {
       name,
       description,
       category_id,
       section_id,
-      stock: Number.parseInt(variant_product.stock),
+      stock: stock,
     },
-    transaction,
   });
-
   if (!created) {
-    product.stock += Number.parseInt(variant_product.stock);
-    await product.save({ transaction });
+    return res
+      .status(200)
+      .json({ message: "Sản phầm đã tồn tại, vui lòng chọn tên khác!" });
   }
   //xử lý biến thể
-  let variant_value_id = [];
-  for (const element of variants) {
-    const variant = await db.variants.findOrCreate({
-      where: {
-        name: Object.keys(element)[0],
+  for (const variant of variants) {
+    let sku = "";
+    for (const variantItem of variant.variantList) {
+      let vari = await db.variants.findOne({
+        where: {
+          name: variantItem.variant,
+        },
+      });
+      if (!vari) {
+        vari = await db.variants.create(
+          {
+            name: variantItem.variant,
+          },
+          { transaction }
+        );
+      }
+      let vari_value = await db.variant_values.findOne({
+        where: {
+          name: variantItem.value,
+        },
+      });
+      if (!vari_value) {
+        vari_value = await db.variant_values.create(
+          {
+            name: variantItem.value,
+            variant_id: vari.id,
+          },
+          { transaction }
+        );
+      }
+      sku += vari_value.id.toString() + "-";
+    }
+    sku = sku.substring(0, sku.length - 1);
+    const product_variant_value = await db.product_variant_values.create(
+      {
+        product_id: product.id,
+        price: variant.price,
+        old_price: variant.discount_price,
+        stock: variant.stock,
+        sku: sku,
       },
-      defaults: {
-        name: Object.keys(element)[0],
-      },
-      transaction,
-    });
-    const variant_value = await db.variant_values.findOrCreate({
-      where: {
-        name: Object.values(element)[0],
-      },
-      defaults: {
-        name: Object.values(element)[0],
-        variant_id: variant.id,
-      },
-      transaction,
-    });
-    variant_value_id.push(variant_value[0].id);
+      { transaction }
+    );
   }
-  let sku_string = "";
-  for (const id of variant_value_id) {
-    sku_string += id.toString() + "-";
-  }
-  sku_string = sku_string.substring(0, sku_string.length - 1);
-  const product_variant_value = await db.product_variant_values.create(
-    {
-      product_id: product.id,
-      price: variant_product.price,
-      old_price: variant_product.old_price,
-      stock: variant_product.stock,
-      sku: sku_string,
-    },
-    { transaction }
-  );
   await transaction.commit();
+  const product_variant_values = await db.product_variant_values.findAll({
+    where: {
+      product_id: product.id,
+    },
+  });
   return res.status(201).json({
     message: "Thêm mới thành công",
     data: {
+      id: product.id,
       name: product.name,
       description: product.description,
       category_id: product.category_id,
       section_id: product.section_id,
-      variant: {
-        product_id: product_variant_value.product_id,
-        price: product_variant_value.price,
-        old_price: product_variant_value.old_price,
-        stock: product_variant_value.stock,
-        sku: product_variant_value.sku,
-      },
+      product_variant_values: product_variant_values,
     },
   });
 };

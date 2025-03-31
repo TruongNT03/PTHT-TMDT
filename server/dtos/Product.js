@@ -5,7 +5,8 @@ const insert = Joi.object({
   description: Joi.string().optional(),
   category_id: Joi.number().required(),
   section_id: Joi.number().required(),
-  variant_product: Joi.object().optional(),
+  product_images: Joi.array().optional(),
+  variants: Joi.array().required(),
 });
 
 const update = Joi.object({
