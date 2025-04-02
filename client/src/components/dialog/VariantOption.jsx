@@ -19,12 +19,17 @@ const VariantOption = ({ setVariants, indexOfVariantProduct }) => {
 
       {variant.map((value, indexOfListVariant) => (
         <div className="flex items-center gap-10">
-          <Form.Item className="flex-[1]" label="Variant:" required>
+          <Form.Item
+            className="flex-[1]"
+            label="Variant:"
+            required
+            rules={[{ required: true, message: "Please input variant!" }]}
+          >
             <Input
               onChange={(e) =>
                 setVariants((prev) => [
                   ...prev.filter((value, index) => {
-                    if (index == indexOfVariantProduct) {
+                    if (index === indexOfVariantProduct) {
                       value.variantList = variant;
                       value.variantList[indexOfListVariant].variant =
                         e.target.value;
@@ -37,12 +42,17 @@ const VariantOption = ({ setVariants, indexOfVariantProduct }) => {
               }
             ></Input>
           </Form.Item>
-          <Form.Item className="flex-[1]" label="Value:" required>
+          <Form.Item
+            className="flex-[1]"
+            label="Value:"
+            required
+            rules={[{ required: true, message: "Please input value!" }]}
+          >
             <Input
               onChange={(e) =>
                 setVariants((prev) => [
                   ...prev.filter((value, index) => {
-                    if (index == indexOfVariantProduct) {
+                    if (index === indexOfVariantProduct) {
                       value.variantList = variant;
                       value.variantList[indexOfListVariant].value =
                         e.target.value;
@@ -55,7 +65,7 @@ const VariantOption = ({ setVariants, indexOfVariantProduct }) => {
               }
             />
           </Form.Item>
-          {indexOfListVariant == 0 ? (
+          {indexOfListVariant === 0 ? (
             <LuListX className="opacity-0" />
           ) : (
             <LuListX
@@ -64,7 +74,7 @@ const VariantOption = ({ setVariants, indexOfVariantProduct }) => {
                 setVariant((prev) =>
                   prev.filter(
                     (value, indexOfVariant) =>
-                      indexOfVariant != indexOfListVariant
+                      indexOfVariant !== indexOfListVariant
                   )
                 );
               }}
@@ -75,12 +85,17 @@ const VariantOption = ({ setVariants, indexOfVariantProduct }) => {
 
       <div className="font-medium mb-3">Information:</div>
       <div className="flex gap-10">
-        <Form.Item className="flex-[1]" label="Discount price:" required>
+        <Form.Item
+          className="flex-[1]"
+          label="Discount price:"
+          required
+          rules={[{ required: true, message: "Please input discount price!" }]}
+        >
           <Input
             onChange={(e) =>
               setVariants((prev) => [
                 ...prev.filter((value, index) => {
-                  if (index == indexOfVariantProduct) {
+                  if (index === indexOfVariantProduct) {
                     value.discount_price = e.target.value;
                     return value;
                   } else {
@@ -91,12 +106,17 @@ const VariantOption = ({ setVariants, indexOfVariantProduct }) => {
             }
           />
         </Form.Item>
-        <Form.Item className="flex-[1]" label="Price:" required>
+        <Form.Item
+          className="flex-[1]"
+          label="Price:"
+          required
+          rules={[{ required: true, message: "Please input price!" }]}
+        >
           <Input
             onChange={(e) =>
               setVariants((prev) => [
                 ...prev.filter((value, index) => {
-                  if (index == indexOfVariantProduct) {
+                  if (index === indexOfVariantProduct) {
                     value.price = e.target.value;
                     return value;
                   } else {
@@ -107,12 +127,17 @@ const VariantOption = ({ setVariants, indexOfVariantProduct }) => {
             }
           />
         </Form.Item>
-        <Form.Item label="Stock:" className="flex-[1]" required>
+        <Form.Item
+          label="Stock:"
+          className="flex-[1]"
+          required
+          rules={[{ required: true, message: "Please input stock!" }]}
+        >
           <Input
             onChange={(e) =>
               setVariants((prev) => [
                 ...prev.filter((value, index) => {
-                  if (index == indexOfVariantProduct) {
+                  if (index === indexOfVariantProduct) {
                     value.stock = e.target.value;
                     return value;
                   } else {
@@ -123,8 +148,13 @@ const VariantOption = ({ setVariants, indexOfVariantProduct }) => {
             }
           />
         </Form.Item>
-        <Form.Item className="flex-[1]" label="Image:">
-          <Upload>
+        <Form.Item
+          className="flex-[1]"
+          label="Image:"
+          name={`variant_images_${indexOfVariantProduct}`}
+          rules={[{ required: true, message: "Please input variant image!" }]}
+        >
+          <Upload beforeUpload={() => false}>
             <Button icon={<CgSoftwareUpload fontSize={24} />}>
               Click to Upload
             </Button>

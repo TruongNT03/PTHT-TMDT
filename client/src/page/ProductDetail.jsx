@@ -30,6 +30,7 @@ function SampleNextArrow(props) {
 const ProductDetail = ({ className }) => {
   const { id } = useParams();
   const [data, setData] = useState({});
+  console.log(data);
   const [nav1, setNav1] = useState(null);
   const [nav2, setNav2] = useState(null);
   let sliderRef1 = useRef(null);
@@ -55,44 +56,44 @@ const ProductDetail = ({ className }) => {
       <Navigate className={"w-full mb-4"} />
       <div className="w-full flex gap-5">
         <div className="flex-1 max-w-[600px]">
-          {/* <Slider
+          <Slider
             arrows={false}
             asNavFor={nav2}
             ref={(slider) => (sliderRef1 = slider)}
-          > */}
-          {/* {image.map((value, index) => {
-              return ( */}
-          <div className="">
-            <img
-              src={process.env.REACT_APP_SERVER_URL + data.image}
-              alt=""
-              className=""
-            />
-          </div>
-          {/* );
-            })} */}
-          {/* </Slider>
+          >
+            {data?.product_images?.map((value, index) => {
+              return (
+                <div className="">
+                  <img
+                    src={process.env.REACT_APP_SERVER_URL + value.path}
+                    alt=""
+                    className=""
+                  />
+                </div>
+              );
+            })}
+          </Slider>
           <Slider
-            // slidesToShow={5}
+            slidesToShow={5}
             nextArrow={<SampleNextArrow />}
             prevArrow={<SamplePrevArrow />}
             className="w-[500px] mx-auto"
             focusOnSelect={true}
             asNavFor={nav1}
             ref={(slider) => (sliderRef2 = slider)}
-          > */}
-          {/* {image.map((value, index) => {
-              return ( */}
-          <div className="px-2">
-            <img
-              src={process.env.REACT_APP_SERVER_URL + data.image}
-              alt=""
-              className="object-cover"
-            />
-          </div>
-          {/* );
-            })} */}
-          {/* </Slider> */}
+          >
+            {data?.product_images?.map((value, index) => {
+              return (
+                <div className="px-2">
+                  <img
+                    src={process.env.REACT_APP_SERVER_URL + value.path}
+                    alt=""
+                    className="object-cover"
+                  />
+                </div>
+              );
+            })}
+          </Slider>
         </div>
         <div className="flex-1">
           <div className="text-[22px] font-semibold mb-[10px]">{data.name}</div>

@@ -18,7 +18,7 @@ const register = async (req, res) => {
       email: req.body.email,
     },
   });
-  if (user) {
+  if (user && user.type === "LOCAL") {
     return res.status(401).json({ message: "Email đã tồn tại." });
   }
   const password = await bcrypt.hash(req.body.password, saltRounds);
@@ -40,6 +40,7 @@ const login = async (req, res) => {
   const user = await db.users.findOne({
     where: {
       email: req.body.email,
+      type: "LOCAL",
     },
   });
   if (user) {

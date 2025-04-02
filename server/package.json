@@ -8,6 +8,7 @@
   },
   "scripts": {
     "start": "nodemon --exec babel-node index.js",
+    "debug": "nodemon --inspect --exec babel-node index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "TruongNT",

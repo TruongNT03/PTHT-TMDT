@@ -9,7 +9,11 @@ const UserProvider = ({ children }) => {
   const [user, setUser] = useState({});
   const handleGet = async () => {
     const data = await getUser();
-    setUser((prev) => ({ ...prev, ...data.data }));
+    if (data?.data) {
+      setUser((prev) => ({ ...prev, ...data.data }));
+    } else {
+      Cookies.remove("token");
+    }
   };
   useEffect(() => {
     const token = Cookies.get("token");

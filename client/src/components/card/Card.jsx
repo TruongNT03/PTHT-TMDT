@@ -5,7 +5,11 @@ const Card = ({ className, image, data }) => {
     <div className={`${className}`}>
       <div className="w-[206px] h-[206px] rounded-xl overflow-hidden mb-[10px] relative group cursor-pointer">
         <Link to={`/product/${data.id}`}>
-          <img src={image} alt="" className="object-cover w-full h-full" />
+          <img
+            src={process.env.REACT_APP_SERVER_URL + image}
+            alt=""
+            className="object-cover w-full h-full"
+          />
         </Link>
         <Link className="absolute bottom-0 text-white flex text-xs items-center justify-center w-full h-[35px] bg-gray hover:bg-secondary opacity-0 group-hover:opacity-100 transition-opacity duration-300">
           <svg
@@ -38,8 +42,8 @@ const Card = ({ className, image, data }) => {
       </div>
       <div className="font-semibold text-[14px] mb-[8px]">{data.name}</div>
       <div className="flex gap-2 text-base font-semibold text-secondary">
-        {new Intl.NumberFormat().format(data.price * 1000)}
-        <del className="text text-[14px] font-light text-black">130.000Đ</del>
+        {new Intl.NumberFormat().format(data.price * 1000)} Đ
+        {/* <del className="text text-[14px] font-light text-black">130.000Đ</del> */}
       </div>
     </div>
   );

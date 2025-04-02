@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import Cookies from "js-cookie";
 
 import getUser from "../services/authService/getUser";
 import { Outlet, useNavigate } from "react-router-dom";
@@ -7,7 +8,7 @@ const AdminRoute = () => {
   const navigate = useNavigate();
   useEffect(() => {
     const checkAdmin = async () => {
-      const token = localStorage.getItem("token");
+      const token = Cookies.get("token");
       if (!token) {
         navigate("/login");
         return;

@@ -12,6 +12,14 @@ const storage = multer.diskStorage({
   },
 });
 
-const upload = multer({ storage: storage });
+const fileFilter = (req, file, cb) => {
+  if (file.mimetype.startsWith("image/")) {
+    cb(null, true);
+  } else {
+    cb(new Error("Chỉ được upload file ảnh!"), false);
+  }
+};
+
+const upload = multer({ storage, fileFilter });
 
 export default upload;

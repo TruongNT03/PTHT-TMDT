@@ -1,5 +1,5 @@
 import { createContext, useEffect, useState } from "react";
-import { getAllProduct } from "../services/productService/getAllProduct";
+import getAllProduct from "../services/productService/getAllProduct";
 import { useSearchParams } from "react-router-dom";
 
 export const ProductContext = createContext();

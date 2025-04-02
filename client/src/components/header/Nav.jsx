@@ -12,7 +12,7 @@ const Nav = () => {
   return (
     <div className="flex h-full items-center text-white pr-[15px]">
       {user?.avatar ? (
-        <img src={user.avatar} alt="avatar" className="w-[24px] rounded-md" />
+        <img src={user?.avatar} alt="avatar" className="w-[24px] rounded-md" />
       ) : (
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -34,11 +34,7 @@ const Nav = () => {
 
       {user ? (
         <Link to={"/profile"} className="hover:text-[#FE9614] ml-[4px]">
-          {user?.firstname
-            ? user?.firstname
-            : "" + " " + user?.lastname
-            ? user?.lastname
-            : ""}
+          {(user?.firstname || "") + " " + (user?.lastname || "")}
         </Link>
       ) : (
         <Link to={"/login"} className="hover:text-[#FE9614] ml-[4px]">

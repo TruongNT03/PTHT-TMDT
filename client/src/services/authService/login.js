@@ -1,9 +1,10 @@
 import instance from "../../utils/axios";
+import Cookies from "js-cookie";
 
 const login = async ({ email, password }) => {
   try {
     const response = await instance.post("/auth/login", { email, password });
-    localStorage.setItem("token", response.token);
+    Cookies.set("token", response.token);
     return response;
   } catch (error) {
     return error;

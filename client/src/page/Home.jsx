@@ -4,7 +4,7 @@ import Banner from "../components/banner/Banner";
 import Card from "../components/card/Card";
 import Section from "../components/section/Section";
 import Service from "../components/service/Service";
-import { getAllProduct } from "../services/productService/getAllProduct";
+import getAllProduct from "../services/productService/getAllProduct";
 import Loading from "../components/loading/Loading";
 
 const Home = () => {
@@ -28,7 +28,7 @@ const Home = () => {
             {data.map((value, index) => (
               <Card
                 key={index}
-                image={process.env.REACT_APP_SERVER_URL + value.image}
+                image={value?.product_images[0]?.path}
                 data={value}
               />
             ))}

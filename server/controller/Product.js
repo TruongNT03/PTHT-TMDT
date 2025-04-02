@@ -1,17 +1,19 @@
-import db from "../models/index";
+import db, { Sequelize } from "../models/index";
 import * as ProductSchema from "../dtos/Product";
 import totalPageCaculate from "../utils/totalPageCaculate";
 
 const insertProduct = async (req, res) => {
-  const {
+  const data = JSON.parse(req.body.data);
+  debugger;
+  const { product_images, variant_images } = req?.files;
+  const { name, description, category_id, section_id, variants } = data;
+  const { error } = ProductSchema.insert.validate({
     name,
     description,
     category_id,
     section_id,
-    product_images = [],
-    variants = [],
-  } = req.body;
-  const { error } = ProductSchema.insert.validate(req.body);
+    variants,
+  });
   if (error) {
     return res.status(400).json({ message: "Validate Error", errors: error });
   }
@@ -27,7 +29,6 @@ const insertProduct = async (req, res) => {
   variants.map((value) => {
     stock += parseInt(value.stock);
   });
-  console.log(stock);
   const transaction = await db.sequelize.transaction();
   const [product, created] = await db.products.findOrCreate({
     where: { name: name },
@@ -37,17 +38,27 @@ const insertProduct = async (req, res) => {
       category_id,
       section_id,
       stock: stock,
+      price: variants[0].price,
     },
   });
+  for (const file of product_images) {
+    await db.product_images.create(
+      {
+        product_id: product.id,
+        path: "/images/" + file.filename,
+      },
+      { transaction }
+    );
+  }
   if (!created) {
-    return res
-      .status(200)
-      .json({ message: "Sản phầm đã tồn tại, vui lòng chọn tên khác!" });
+    return res.status(200).json({
+      errors: { message: "Sản phầm đã tồn tại, vui lòng chọn tên khác!" },
+    });
   }
   //xử lý biến thể
-  for (const variant of variants) {
+  for (let i = 0; i < variants.length; i++) {
     let sku = "";
-    for (const variantItem of variant.variantList) {
+    for (const variantItem of variants[i].variantList) {
       let vari = await db.variants.findOne({
         where: {
           name: variantItem.variant,
@@ -78,13 +89,16 @@ const insertProduct = async (req, res) => {
       sku += vari_value.id.toString() + "-";
     }
     sku = sku.substring(0, sku.length - 1);
+    const path = "/images/" + variant_images[i].filename;
+    console.log(path);
     const product_variant_value = await db.product_variant_values.create(
       {
         product_id: product.id,
-        price: variant.price,
-        old_price: variant.discount_price,
-        stock: variant.stock,
+        price: variants[i].price,
+        old_price: variants[i].discount_price,
+        stock: variants[i].stock,
         sku: sku,
+        image: path,
       },
       { transaction }
     );
@@ -129,15 +143,23 @@ const getProduct = async (req, res) => {
   const limit = 10;
   const offset = (page - 1) * limit;
   const { rows, count } = await db.products.findAndCountAll({
-    attributes: ["id", "name", "description", "price", "stock", "image"],
+    attributes: ["id", "name", "description", "stock", "price"],
     include: [
       {
-        model: db.subCategories,
+        model: db.categories,
         attributes: ["id", "name"],
       },
       {
         model: db.sections,
         attributes: ["id", "name"],
+      },
+      {
+        model: db.product_images,
+        where: {
+          product_id: Sequelize.col("products.id"),
+        },
+        attributes: ["id", "path"],
+        required: false,
       },
     ],
     limit,
@@ -171,14 +193,14 @@ const deleteProduct = async (req, res) => {
 const getProductById = async (req, res) => {
   const { id } = req.params;
   const product = await db.products.findByPk(id, {
-    attributes: ["id", "name", "description", "stock"],
+    attributes: ["id", "name", "description", "stock", "price"],
     include: [
       {
         model: db.product_variant_values,
         where: {
           product_id: id,
         },
-        attributes: ["id", "price", "old_price", "stock"],
+        attributes: ["id", "price", "old_price", "stock", "sku", "image"],
         required: false,
       },
       {
@@ -193,6 +215,26 @@ const getProductById = async (req, res) => {
   });
   if (!product) {
     return res.status(200).json({ message: "Không tồn tại sản phẩm" });
+  }
+  const variant_value_data = [];
+  for (const element of product.product_variant_values) {
+    const sku_arr = element.sku.split("-").map((value) => parseInt(value));
+    for (let i = 0; i < sku_arr.length; i++) {
+      const dataFind = await db.variant_values.findByPk(sku_arr[i], {
+        attributes: ["id", "name"],
+        include: [
+          {
+            model: db.variants,
+            attributes: ["name"],
+          },
+        ],
+      });
+      variant_value_data.push({
+        id: dataFind.id,
+        name: dataFind.name,
+        variant: dataFind.variant.name,
+      });
+    }
   }
   return res.status(200).json({ message: "Thành công", data: product });
 };

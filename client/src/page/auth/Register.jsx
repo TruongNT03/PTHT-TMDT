@@ -45,26 +45,26 @@ const Register = ({ classname }) => {
         <Input
           label={"Họ"}
           className={"w-full"}
-          register={register("firstName", {
+          register={register("firstname", {
             required: "Vui lòng nhập họ",
             pattern: {
               value: /^[A-Za-zÀ-Ỹà-ỹĂăÂâĐđÊêÔôƠơƯư\s]+$/,
               message: "Tên chỉ gồm các chữ cái",
             },
           })}
-          errorMessage={errors.firstName?.message}
+          errorMessage={errors.firstname?.message}
         />
         <Input
           label={"Tên"}
           className={"w-full"}
-          register={register("lastName", {
+          register={register("lastname", {
             pattern: {
               value: /^[A-Za-zÀ-Ỹà-ỹĂăÂâĐđÊêÔôƠơƯư\s]+$/,
               message: "Tên chỉ gồm các chữ cái",
             },
             required: "Vui lòng nhập tên",
           })}
-          errorMessage={errors.lastName?.message}
+          errorMessage={errors.lastname?.message}
         />
         <Input
           label={"Email"}

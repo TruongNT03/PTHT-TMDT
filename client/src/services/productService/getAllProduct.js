@@ -6,4 +6,4 @@ const getAllProduct = async (searchParams) => {
   });
 };
 
-export { getAllProduct };
+export default getAllProduct;

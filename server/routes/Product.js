@@ -7,7 +7,15 @@ import upload from "../middlewares/productUpload";
 
 const router = Route();
 
-router.post("/", authorizeAdmin, asyncHandler(ProductController.insertProduct));
+router.post(
+  "/",
+  authorizeAdmin,
+  upload.fields([
+    { name: "product_images", maxCount: 5 },
+    { name: "variant_images", maxCount: 10 },
+  ]),
+  asyncHandler(ProductController.insertProduct)
+);
 router.put(
   "/",
   authorizeAdmin,
