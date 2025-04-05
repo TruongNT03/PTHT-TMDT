@@ -22,7 +22,7 @@ route.get(
     session: false,
   }),
   (req, res) => {
-    res.cookie("token", req.user.token);
+    res.cookie("token", req.user.token, { maxAge: 24 * 60 * 60 * 1000 * 7 });
     res.redirect("http://localhost:3000");
   }
 );

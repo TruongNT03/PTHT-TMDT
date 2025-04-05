@@ -107,6 +107,4 @@ const changePassword = async (req, res) => {
   });
 };
 
-const google = async (req, res) => {};
-
 export { register, login, getUserData, changePassword };

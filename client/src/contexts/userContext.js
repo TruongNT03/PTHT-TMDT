@@ -8,9 +8,9 @@ export const UserContext = createContext();
 const UserProvider = ({ children }) => {
   const [user, setUser] = useState({});
   const handleGet = async () => {
-    const data = await getUser();
-    if (data?.data) {
-      setUser((prev) => ({ ...prev, ...data.data }));
+    const response = await getUser();
+    if (response?.data) {
+      setUser(response.data);
     } else {
       Cookies.remove("token");
     }

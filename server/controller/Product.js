@@ -219,6 +219,7 @@ const getProductById = async (req, res) => {
   const variant_value_data = [];
   for (const element of product.product_variant_values) {
     const sku_arr = element.sku.split("-").map((value) => parseInt(value));
+    const listVariant = [];
     for (let i = 0; i < sku_arr.length; i++) {
       const dataFind = await db.variant_values.findByPk(sku_arr[i], {
         attributes: ["id", "name"],
@@ -229,14 +230,34 @@ const getProductById = async (req, res) => {
           },
         ],
       });
-      variant_value_data.push({
+      listVariant.push({
         id: dataFind.id,
-        name: dataFind.name,
-        variant: dataFind.variant.name,
+        value: dataFind.name,
+        name: dataFind.variant.name,
       });
     }
+    variant_value_data.push(listVariant);
   }
-  return res.status(200).json({ message: "Thành công", data: product });
+  let response = {
+    id: product.id,
+    name: product.name,
+    description: product.description,
+    stock: product.stock,
+    price: product.price,
+    product_variants: [],
+    product_images: product.product_images,
+  };
+  for (let i = 0; i < product.product_variant_values.length; i++) {
+    response.product_variants.push({
+      id: product.product_variant_values[i].id,
+      price: product.product_variant_values[i].price,
+      old_price: product.product_variant_values[i].old_price,
+      stock: product.product_variant_values[i].stock,
+      image: product.product_variant_values[i].image,
+      variant: variant_value_data[i],
+    });
+  }
+  return res.status(200).json({ message: "Thành công", data: response });
 };
 
 export {

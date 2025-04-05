@@ -1,5 +1,6 @@
-import { Button, Form, Input, Upload } from "antd";
+import { Button, Form, Input, Upload, Select, Divider, Space } from "antd";
 import { useState } from "react";
+import { PlusOutlined } from "@ant-design/icons";
 import { CgSoftwareUpload } from "react-icons/cg";
 import { LuListPlus, LuListX } from "react-icons/lu";
 
@@ -25,7 +26,32 @@ const VariantOption = ({ setVariants, indexOfVariantProduct }) => {
             required
             rules={[{ required: true, message: "Please input variant!" }]}
           >
-            <Input
+            <Select
+              defaultValue={"Size"}
+              options={[
+                {
+                  label: "Size",
+                  value: "Size",
+                },
+                {
+                  label: "Color",
+                  value: "Color",
+                },
+              ]}
+              dropdownRender={(menu) => (
+                <>
+                  {menu}
+                  <Divider className="my-2" />
+                  <div className="flex">
+                    <Input className="" />
+                    <Button type="text" icon={<PlusOutlined />}>
+                      Add item
+                    </Button>
+                  </div>
+                </>
+              )}
+            />
+            {/* <Input
               onChange={(e) =>
                 setVariants((prev) => [
                   ...prev.filter((value, index) => {
@@ -40,7 +66,7 @@ const VariantOption = ({ setVariants, indexOfVariantProduct }) => {
                   }),
                 ])
               }
-            ></Input>
+            /> */}
           </Form.Item>
           <Form.Item
             className="flex-[1]"
@@ -48,7 +74,40 @@ const VariantOption = ({ setVariants, indexOfVariantProduct }) => {
             required
             rules={[{ required: true, message: "Please input value!" }]}
           >
-            <Input
+            <Select
+              defaultValue={"M"}
+              options={[
+                {
+                  label: "S",
+                  value: "S",
+                },
+                {
+                  label: "M",
+                  value: "M",
+                },
+                {
+                  label: "L",
+                  value: "L",
+                },
+                {
+                  label: "XL",
+                  value: "XL",
+                },
+              ]}
+              dropdownRender={(menu) => (
+                <>
+                  {menu}
+                  <Divider className="my-2" />
+                  <div className="flex">
+                    <Input className="" />
+                    <Button type="text" icon={<PlusOutlined />}>
+                      Add item
+                    </Button>
+                  </div>
+                </>
+              )}
+            />
+            {/* <Input
               onChange={(e) =>
                 setVariants((prev) => [
                   ...prev.filter((value, index) => {
@@ -63,7 +122,7 @@ const VariantOption = ({ setVariants, indexOfVariantProduct }) => {
                   }),
                 ])
               }
-            />
+            /> */}
           </Form.Item>
           {indexOfListVariant === 0 ? (
             <LuListX className="opacity-0" />
