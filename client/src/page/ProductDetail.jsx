@@ -26,11 +26,15 @@ function SampleNextArrow(props) {
     />
   );
 }
+
 const ProductDetail = ({ className }) => {
   const { id } = useParams();
   const [data, setData] = useState({});
   const [variantSeclect, setVariantSelect] = useState({});
-  console.log(variantSeclect);
+  const [choose, setChoose] = useState({});
+  // console.log(data);
+  // console.log(variantSeclect);
+  // console.log(choose);
   const variant_of_product = {
     variant: new Set(),
   };
@@ -43,11 +47,36 @@ const ProductDetail = ({ className }) => {
       variant_of_product[value2.name].add(value2.value);
     });
   });
+
   const [nav1, setNav1] = useState(null);
   const [nav2, setNav2] = useState(null);
   let sliderRef1 = useRef(null);
   let sliderRef2 = useRef(null);
   const [counter, setCounter] = useState(1);
+
+  const findVariant = (variantSeclect = {}) => {
+    const { product_variants = [] } = data;
+    // Danh sach cac bien the da chon
+    const value = Object.values(variantSeclect);
+    // Duyet tung bien the san pham API tra ve
+    for (const variant of product_variants) {
+      // Dieu kien de ko bi loi
+      if (variant.variant.length > 0) {
+        // Duyet tung gia tri trong moi bien the san pham
+        let check = true;
+        for (const element of variant.variant) {
+          // Neu danh sach da chon khong chua gia tri cua bien the san pham
+          if (!value.includes(element.value)) {
+            check = false;
+          }
+        }
+        if (check) {
+          return setChoose(variant);
+        }
+      }
+    }
+    return setChoose({});
+  };
   const onMinus = () => {
     setCounter((prev) => prev - 1);
   };
@@ -63,6 +92,10 @@ const ProductDetail = ({ className }) => {
     setNav1(sliderRef1);
     setNav2(sliderRef2);
   }, [id]);
+  useEffect(() => {
+    findVariant(variantSeclect);
+    // eslint-disable-next-line
+  }, [variantSeclect]);
   return (
     <div className="w-full max-w-[1110px] mx-auto py-10">
       <Navigate className={"w-full mb-4"} />
@@ -75,7 +108,7 @@ const ProductDetail = ({ className }) => {
           >
             {data?.product_images?.map((value, index) => {
               return (
-                <div className="">
+                <div key={index} className="">
                   <img
                     src={process.env.REACT_APP_SERVER_URL + value.path}
                     alt=""
@@ -109,11 +142,40 @@ const ProductDetail = ({ className }) => {
         </div>
         <div className="flex-1">
           <div className="text-[22px] font-semibold mb-[10px]">{data.name}</div>
-          <div className="flex items-center text-[15px] font-light mb-[20px]">
-            Mã Sp: <div className="m-1">Đang cập nhập</div>
+          <div className="flex items-center text-text mb-[20px]">
+            <div className="flex-[1]">Có sẵn</div>
+            <div className="flex flex-[4]">
+              <div className="text-red mr-1">
+                {choose?.stock || data?.stock}
+              </div>{" "}
+              Sản phẩm
+            </div>
           </div>
-          <div className="flex text-red text-[28px] font-semibold mb-[40px]">
-            <div>{new Intl.NumberFormat().format(data.price * 1000)}</div>Đ
+          <div className="flex gap-5 text-red text-[28px] font-semibold bg-light-blue p-3 my-3">
+            {choose?.old_price && (
+              <div className="flex">
+                <div className="text-lg leading-10">₫</div>
+                <div className="">
+                  {new Intl.NumberFormat().format(choose.old_price * 1000)}
+                </div>
+              </div>
+            )}
+            {choose?.price ? (
+              <div className="flex text-slate-400 items-center">
+                <div className="text-lg leading-10">₫</div>
+                <div className="line-through font-normal">
+                  {new Intl.NumberFormat().format(choose.price * 1000)}
+                </div>
+                <div className="bg-secondary text-sm font-light text-white px-1 ml-5">
+                  Sale
+                </div>
+              </div>
+            ) : (
+              <div className="flex">
+                <div className="text-lg leading-10 ">₫</div>
+                <div>{new Intl.NumberFormat().format(data.price * 1000)}</div>
+              </div>
+            )}
           </div>
           {Array.from(variant_of_product.variant).map((name, index1) => (
             <div key={index1} className="flex mb-5">
@@ -124,16 +186,18 @@ const ProductDetail = ({ className }) => {
                     key={index2}
                     onClick={() => {
                       if (variantSeclect[name] === value) {
-                        setVariantSelect((prev) => ({
-                          ...prev,
-                          [name]: undefined,
-                        }));
+                        setVariantSelect((prev) => {
+                          const obj = { ...prev };
+                          delete obj[name];
+                          return { ...obj };
+                        });
                       } else {
                         setVariantSelect((prev) => ({
                           ...prev,
                           [name]: value,
                         }));
                       }
+                      findVariant(variantSeclect);
                     }}
                     className={`border rounded-sm px-2 text-text ${
                       variantSeclect[name] === value
@@ -147,10 +211,39 @@ const ProductDetail = ({ className }) => {
               </div>
             </div>
           ))}
+          <div className="flex mb-[40px]">
+            <div className="flex-[1]">
+              <img
+                class="img-responsive"
+                alt=""
+                src="https://bizweb.dktcdn.net/100/455/315/themes/894917/assets/iamge_product2.png?1724746453440"
+              />
+            </div>
+
+            <div className="flex-[4]">
+              <div className="font-semibold">Miễn phí vận chuyển</div>
+              <div>Cho đơn hàng từ 499.000đ</div>
+            </div>
+          </div>
+          <div className="flex mb-[40px]">
+            <div className="flex-1">
+              <img
+                class="img-responsive"
+                alt=""
+                src="https://bizweb.dktcdn.net/100/455/315/themes/894917/assets/iamge_product1.png?1724746453440"
+              />
+            </div>
+            <div className="flex-[4]">
+              <div className="font-semibold">Miễn phí đổi, sửa hàng</div>
+              <div>
+                Đổi hàng trong 30 ngày kể từ ngày mua Hỗ trợ sửa đồ miễn phí
+              </div>
+            </div>
+          </div>
           <div className="flex">
-            <div className="mb-3 font-semibold">Số lượng:</div>
+            <div className="flex-[1] mb-3 font-semibold">Số lượng</div>
             <Counter
-              className={"mb-5"}
+              className={"mb-5 flex-[4]"}
               state={counter}
               onMinus={onMinus}
               onPlus={onPlus}
