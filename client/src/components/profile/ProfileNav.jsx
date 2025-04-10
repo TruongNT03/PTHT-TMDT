@@ -1,9 +1,9 @@
 import { useContext } from "react";
 import { Link } from "react-router-dom";
-import { UserContext } from "../../contexts/userContext";
+import { HeaderContext } from "../../contexts/HeaderContext";
 
 const ProfileNav = ({ className }) => {
-  const { user } = useContext(UserContext);
+  const { user } = useContext(HeaderContext);
   return (
     <div className={`flex flex-col gap-4 text-sm ${className}`}>
       <div className="uppercase text-xl">Trang tài khoản</div>

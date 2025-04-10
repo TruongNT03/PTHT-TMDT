@@ -5,10 +5,10 @@ import { useContext } from "react";
 import Input from "../input/Input";
 import Button from "../button/Button";
 import changePassword from "../../services/authService/changePassword";
-import { UserContext } from "../../contexts/userContext";
+import { HeaderContext } from "../../contexts/HeaderContext";
 
 const ChangePassword = ({ className }) => {
-  const { setUser } = useContext(UserContext);
+  const { setUser } = useContext(HeaderContext);
   const navigate = useNavigate();
   const {
     register,

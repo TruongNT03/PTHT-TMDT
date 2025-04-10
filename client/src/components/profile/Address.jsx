@@ -16,7 +16,7 @@ const Address = () => {
       name: "",
       address: "",
       phone: "",
-      isDefault: false,
+      is_default: false,
     });
     setClose((prev) => !prev);
   };
@@ -37,7 +37,7 @@ const Address = () => {
             name={item.name}
             address={item.address}
             phone={item.phone}
-            isDefault={item.isDefault}
+            is_default={item.is_default}
             handleClose={handleClose}
           />
         );

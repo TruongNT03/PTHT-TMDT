@@ -3,7 +3,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Home from "./page/Home";
 import Login from "./page/auth/Login";
 import Register from "./page/auth/Register";
-import UserProvider from "./contexts/userContext";
+import HeaderProvider from "./contexts/HeaderContext";
 import Profile from "./page/Profile";
 import UserInfo from "./components/profile/UserInfo";
 import Order from "./components/profile/Order";
@@ -17,20 +17,23 @@ import ProductProvide from "./contexts/ProductContext";
 import ProductDetail from "./page/ProductDetail";
 import NotFound from "./page/NotFound";
 import ListProduct from "./page/ListProduct";
+import CreateProduct from "./page/admin/CreateProduct";
 import EditProduct from "./page/admin/EditProduct";
 import Category from "./page/admin/Category";
 import Section from "./page/admin/Section";
+import Cart from "./page/Cart";
+import Checkout from "./page/Checkout";
 
 function App() {
   return (
-    <UserProvider>
+    <HeaderProvider>
       <BrowserRouter>
         <Routes>
           <Route element={<AdminRoute />}>
             <Route path="/admin" element={<AdminLayout />}>
               <Route path="" element={<Dashboard />} />
               <Route path="product/edit/:id" element={<EditProduct />} />
-              <Route path="product/new" element={<EditProduct />} />
+              <Route path="product/new" element={<CreateProduct />} />
               <Route path="category" element={<Category />} />
               <Route path="section" element={<Section />} />
               <Route
@@ -55,11 +58,13 @@ function App() {
             </Route>
             <Route path="/product/:id" element={<ProductDetail />} />
             <Route path="/product" element={<ListProduct />} />
+            <Route path="/cart" element={<Cart />} />
+            <Route path="/checkout" element={<Checkout />} />
             <Route path="*" element={<NotFound />} />
           </Route>
         </Routes>
       </BrowserRouter>
-    </UserProvider>
+    </HeaderProvider>
   );
 }
 

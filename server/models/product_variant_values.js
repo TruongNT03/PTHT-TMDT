@@ -11,6 +11,9 @@ module.exports = (sequelize, DataTypes) => {
       product_variant_values.belongsTo(models.products, {
         foreignKey: "product_id",
       });
+      product_variant_values.hasOne(models.cart_items, {
+        foreignKey: "product_variant_id",
+      });
     }
   }
   product_variant_values.init(

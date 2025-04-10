@@ -7,13 +7,12 @@ import { CiCircleMinus } from "react-icons/ci";
 import insertProduct from "../../services/productService/insertProduct";
 import getAllDropDown from "../../services/productService/getAllDropDown";
 import { useNavigate, useParams } from "react-router-dom";
-import getProductById from "../../services/productService/getProductById";
 
-const EditProduct = () => {
+const CreateProduct = () => {
   const { id } = useParams();
+  console.log(id);
   const [categories, setCategories] = useState([]);
   const [sections, setSections] = useState([]);
-  const [product, setProduct] = useState({});
   const [category, setCategory] = useState(1);
   const [section, setSection] = useState(1);
   const [variants, setVariants] = useState([
@@ -92,10 +91,8 @@ const EditProduct = () => {
     const getData = async () => {
       const sectionList = await getAllDropDown("section");
       const categoryList = await getAllDropDown("category");
-      const product = await getProductById(id);
       setCategories(categoryList.data);
       setSections(sectionList.data);
-      setProduct(product.data);
     };
     getData();
   }, []);
@@ -120,7 +117,7 @@ const EditProduct = () => {
                   { required: true, message: "Please input product name!" },
                 ]}
               >
-                <Input defaultValue={product.name} />
+                <Input />
               </Form.Item>
               <Form.Item
                 label="Product Description:"
@@ -132,10 +129,7 @@ const EditProduct = () => {
                   },
                 ]}
               >
-                <Input.TextArea
-                  autoSize={{ maxRows: 10, minRows: 10 }}
-                  defaultValue={product.description}
-                />
+                <Input.TextArea autoSize={{ maxRows: 10, minRows: 10 }} />
               </Form.Item>
               <div className="h-[2px] bg-gray-light my-14"></div>
               <div className="text-2xl font-semibold mb-5">Images</div>
@@ -269,4 +263,4 @@ const EditProduct = () => {
   );
 };
 
-export default EditProduct;
+export default CreateProduct;

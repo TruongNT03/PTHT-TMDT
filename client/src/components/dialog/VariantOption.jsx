@@ -1,11 +1,23 @@
 import { Button, Form, Input, Upload, Select, Divider, Space } from "antd";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { PlusOutlined } from "@ant-design/icons";
 import { CgSoftwareUpload } from "react-icons/cg";
 import { LuListPlus, LuListX } from "react-icons/lu";
 
+const options = [
+  {
+    label: "Size",
+    value: "Size",
+  },
+  {
+    label: "Color",
+    value: "Color",
+  },
+];
+
 const VariantOption = ({ setVariants, indexOfVariantProduct }) => {
   const [variant, setVariant] = useState([{ variant: "", value: "" }]);
+  const variantOptionRef = useRef();
   return (
     <>
       <div className="font-medium mb-3 flex items-center gap-5">
@@ -26,18 +38,10 @@ const VariantOption = ({ setVariants, indexOfVariantProduct }) => {
             required
             rules={[{ required: true, message: "Please input variant!" }]}
           >
-            <Select
+            {/* <Select
+              ref={variantOptionRef}
               defaultValue={"Size"}
-              options={[
-                {
-                  label: "Size",
-                  value: "Size",
-                },
-                {
-                  label: "Color",
-                  value: "Color",
-                },
-              ]}
+              options={options}
               dropdownRender={(menu) => (
                 <>
                   {menu}
@@ -50,8 +54,8 @@ const VariantOption = ({ setVariants, indexOfVariantProduct }) => {
                   </div>
                 </>
               )}
-            />
-            {/* <Input
+            /> */}
+            <Input
               onChange={(e) =>
                 setVariants((prev) => [
                   ...prev.filter((value, index) => {
@@ -66,7 +70,7 @@ const VariantOption = ({ setVariants, indexOfVariantProduct }) => {
                   }),
                 ])
               }
-            /> */}
+            />
           </Form.Item>
           <Form.Item
             className="flex-[1]"
@@ -74,7 +78,7 @@ const VariantOption = ({ setVariants, indexOfVariantProduct }) => {
             required
             rules={[{ required: true, message: "Please input value!" }]}
           >
-            <Select
+            {/* <Select
               defaultValue={"M"}
               options={[
                 {
@@ -106,8 +110,8 @@ const VariantOption = ({ setVariants, indexOfVariantProduct }) => {
                   </div>
                 </>
               )}
-            />
-            {/* <Input
+            /> */}
+            <Input
               onChange={(e) =>
                 setVariants((prev) => [
                   ...prev.filter((value, index) => {
@@ -122,7 +126,7 @@ const VariantOption = ({ setVariants, indexOfVariantProduct }) => {
                   }),
                 ])
               }
-            /> */}
+            />
           </Form.Item>
           {indexOfListVariant === 0 ? (
             <LuListX className="opacity-0" />

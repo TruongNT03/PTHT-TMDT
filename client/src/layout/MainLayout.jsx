@@ -24,7 +24,7 @@ const MainLayout = () => {
       <nav className="w-full h-[60px] mx-auto bg-light flex items-center justify-center">
         <SubNav />
       </nav>
-      <div className="w-full">
+      <div className="w-full bg-light-blue">
         <Outlet />
       </div>
       <Footer className="w-full" />

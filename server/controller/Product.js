@@ -193,7 +193,15 @@ const deleteProduct = async (req, res) => {
 const getProductById = async (req, res) => {
   const { id } = req.params;
   const product = await db.products.findByPk(id, {
-    attributes: ["id", "name", "description", "stock", "price"],
+    attributes: [
+      "id",
+      "name",
+      "description",
+      "stock",
+      "price",
+      "category_id",
+      "section_id",
+    ],
     include: [
       {
         model: db.product_variant_values,
@@ -244,6 +252,8 @@ const getProductById = async (req, res) => {
     description: product.description,
     stock: product.stock,
     price: product.price,
+    category_id: product.category_id,
+    section_id: product.section_id,
     product_variants: [],
     product_images: product.product_images,
   };

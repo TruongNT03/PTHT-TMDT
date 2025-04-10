@@ -1,13 +1,12 @@
 import React, { useContext, useState } from "react";
-import { UserContext } from "../../contexts/userContext";
+import { HeaderContext } from "../../contexts/HeaderContext";
 import { Input, Form, Modal, Upload, Button } from "antd";
 import { GoUpload } from "react-icons/go";
 import { RxAvatar } from "react-icons/rx";
 import { BsPencilSquare } from "react-icons/bs";
 
 const UserInfo = ({ className }) => {
-  const { user } = useContext(UserContext);
-  const [form] = Form.useForm();
+  const { user } = useContext(HeaderContext);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const showModal = () => {
     setIsModalOpen(true);

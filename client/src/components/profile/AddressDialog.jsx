@@ -12,7 +12,7 @@ const AddressDialog = ({
   name = "",
   address = "",
   phone = "",
-  isDefault = false,
+  is_default = false,
 }) => {
   const {
     register,
@@ -23,7 +23,7 @@ const AddressDialog = ({
       name,
       address,
       phone,
-      isDefault,
+      is_default,
     },
   });
 
@@ -41,7 +41,7 @@ const AddressDialog = ({
         name: "",
         address: "",
         phone: "",
-        isDefault: false,
+        is_default: false,
       });
     } else {
       await newAddress(data);
@@ -50,7 +50,7 @@ const AddressDialog = ({
         name: "",
         address: "",
         phone: "",
-        isDefault: false,
+        is_default: false,
       });
     }
     setClose(true);
@@ -136,7 +136,7 @@ const AddressDialog = ({
             </label>
           </div>
           <div className="flex items-center gap-3">
-            <input type="checkbox" {...register("isDefault")} />
+            <input type="checkbox" {...register("is_default")} />
             <div>Đặt làm địa chỉ mặc định</div>
           </div>
           <div className="flex justify-end">

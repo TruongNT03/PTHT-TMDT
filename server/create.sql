@@ -9,7 +9,7 @@ npx sequelize-cli model:generate --name orders --attributes user_id:integer,tota
 npx sequelize-cli model:generate --name order_details --attributes order_id:integer,product_id:integer,quantity:integer,price:float
 npx sequelize-cli model:generate --name reviews --attributes user_id:integer,product_id:integer,rating:integer,comment:string
 npx sequelize-cli model:generate --name carts --attributes user_id:integer
-npx sequelize-cli model:generate --name cart_items --attributes product_id:integer,cart_id:integer,quantity:integer
+npx sequelize-cli model:generate --name cart_items --attributes product_variant_id:integer,cart_id:integer,quantity:integer
 npx sequelize-cli model:generate --name variants --attributes name:string
 npx sequelize-cli model:generate --name variant_values --attributes name:string,variant_id:integer
 

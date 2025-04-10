@@ -7,11 +7,11 @@ import { useContext, useState } from "react";
 import Button from "../../components/button/Button";
 import Input from "../../components/input/Input";
 import login from "../../services/authService/login";
-import { UserContext } from "../../contexts/userContext";
+import { HeaderContext } from "../../contexts/HeaderContext";
 
 const Login = () => {
   const navigate = useNavigate();
-  const { handleGet } = useContext(UserContext);
+  const { handleGet } = useContext(HeaderContext);
   const {
     register,
     handleSubmit,

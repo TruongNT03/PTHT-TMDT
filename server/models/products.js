@@ -11,9 +11,6 @@ module.exports = (sequelize, DataTypes) => {
       products.hasMany(models.product_variant_values, {
         foreignKey: "product_id",
       });
-      products.hasOne(models.cart_items, {
-        foreignKey: "product_id",
-      });
       products.hasMany(models.order_details, {
         foreignKey: "product_id",
       });

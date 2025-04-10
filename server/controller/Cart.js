@@ -1,0 +1,116 @@
+import db from "../models/index.js";
+
+const insertItem = async (req, res) => {
+  const user = req.user;
+  const { product_variant_id, quantity } = req.body;
+  let cart = await db.carts.findOne({
+    where: {
+      user_id: user.id,
+    },
+  });
+  if (!cart) {
+    cart = await db.carts.create({
+      user_id: user.id,
+    });
+  }
+  let cartItem = await db.cart_items.findOne({
+    where: {
+      product_variant_id: product_variant_id,
+      cart_id: cart.id,
+    },
+    attributes: ["id", "product_variant_id", "cart_id", "quantity"],
+  });
+  if (!cartItem) {
+    cartItem = await db.cart_items.create({
+      product_variant_id: product_variant_id,
+      cart_id: cart.id,
+      quantity: quantity,
+    });
+  } else {
+    cartItem.quantity += quantity;
+    await cartItem.save();
+  }
+  return res.status(200).json({ message: "Thành công", data: cartItem });
+};
+
+const getCart = async (req, res) => {
+  const user = req.user;
+  let cart = await db.carts.findOne({
+    where: {
+      user_id: user.id,
+    },
+    attributes: ["id", "user_id"],
+  });
+  const cart_item = await db.cart_items.findAll({
+    where: {
+      cart_id: cart.id,
+    },
+    attributes: ["id", "product_variant_id", "quantity"],
+    include: [
+      {
+        model: db.product_variant_values,
+        attributes: [
+          "id",
+          "product_id",
+          "price",
+          "old_price",
+          "stock",
+          "image",
+          "sku",
+        ],
+        include: {
+          model: db.products,
+          attributes: ["name"],
+        },
+      },
+    ],
+  });
+  const resData = [];
+  for (const value of cart_item) {
+    const variant_value_id = value.product_variant_value.sku
+      .split("-")
+      .map((value) => Number.parseInt(value));
+    let variant = [];
+    for (const value of variant_value_id) {
+      const variant_value = await db.variant_values.findByPk(value, {
+        include: [
+          {
+            model: db.variants,
+            attributes: ["name"],
+          },
+        ],
+      });
+
+      variant.push({
+        name: variant_value.variant.name,
+        value: variant_value.name,
+      });
+    }
+
+    resData.push({
+      id: value.id,
+      name: value.product_variant_value.product.name,
+      product_id: value.product_variant_value.product_id,
+      price: value.product_variant_value.price,
+      old_price: value.product_variant_value.old_price,
+      image: value.product_variant_value.image,
+      quantity: value.quantity,
+      variant: variant,
+    });
+  }
+  return res
+    .status(200)
+    .json({ message: "Thành công", data: resData, total_item: resData.length });
+};
+
+const deleteCartItem = async (req, res) => {
+  const { id } = req.params;
+  await db.cart_items.destroy({
+    where: {
+      id,
+    },
+  });
+  return res.status(200).json({ message: "Xóa thành công" });
+};
+
+export { insertItem, getCart, deleteCartItem };

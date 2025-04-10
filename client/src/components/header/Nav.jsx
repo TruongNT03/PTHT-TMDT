@@ -1,14 +1,65 @@
+import Cookies from "js-cookie";
 import { useContext } from "react";
 import { Link } from "react-router-dom";
-import { UserContext } from "../../contexts/userContext";
-import Cookies from "js-cookie";
+import { BsCart2 } from "react-icons/bs";
+import { Popover, Badge, Button } from "antd";
+
+import { HeaderContext } from "../../contexts/HeaderContext";
+import { deleteCartItem } from "../../services/cart";
 
 const Nav = () => {
-  const { user, setUser } = useContext(UserContext);
+  const { user, setUser, cart, getCart } = useContext(HeaderContext);
+  const handleDetele = async (id) => {
+    const response = await deleteCartItem(id);
+    alert(response.message);
+    getCart();
+  };
+  const content = (
+    <div>
+      {cart?.map((value, index) => {
+        return (
+          <Link
+            to={`/product/${value.product_id}`}
+            key={index}
+            className="flex  gap-2 p-2 mb-2 rounded-md cursor-pointer hover:bg-primary hover:bg-opacity-20 hover:text-text"
+          >
+            <img
+              src={process.env.REACT_APP_SERVER_URL + value.image}
+              alt=""
+              className="w-12 h-12 object-cover rounded-md"
+            />
+            <div>
+              <div>{value.name}</div>
+              <div>
+                Giá:{" "}
+                {new Intl.NumberFormat().format(
+                  (value?.price ? value.price : value.old_price) * 1000
+                )}
+                đ
+              </div>
+            </div>
+            <div
+              className="flex-auto text-right cursor-pointer text-blue-500 hover:text-red"
+              onClick={() => handleDetele(value.id)}
+            >
+              Xóa
+            </div>
+          </Link>
+        );
+      })}
+      <div className="flex gap-5 items-center">
+        <div>{cart?.length} sản phẩm trong giỏ hàng</div>
+        <Link to="/cart">
+          <Button type="primary">Tới giỏ hàng</Button>
+        </Link>
+      </div>
+    </div>
+  );
   const handleLogout = () => {
     Cookies.remove("token");
-    setUser("");
+    setUser();
   };
+
   return (
     <div className="flex h-full items-center text-white pr-[15px]">
       {user?.avatar ? (
@@ -58,30 +109,16 @@ const Nav = () => {
           Đăng ký
         </Link>
       )}
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="24"
-        height="24"
-        viewBox="0 0 20 20"
-        fill="none"
-      >
-        <path
-          d="M19.7031 7.22905C19.439 6.89772 19.0428 6.70764 18.616 6.70764H14.7643L12.6756 1.9251C12.5461 1.62858 12.2007 1.49307 11.9042 1.62264C11.6076 1.75213 11.4722 2.09756 11.6017 2.39412L13.4855 6.70768H6.51449L8.39828 2.39412C8.52778 2.09756 8.39238 1.75217 8.09582 1.62264C7.7993 1.49307 7.45387 1.6285 7.32438 1.9251L5.23574 6.70768H1.38403C0.957229 6.70768 0.561018 6.89772 0.296916 7.22909C0.0376587 7.5544 -0.0580053 7.9726 0.0344556 8.37659L2.09137 17.361C2.235 17.9883 2.78996 18.4264 3.44094 18.4264H16.5591C17.21 18.4264 17.765 17.9883 17.9086 17.361L19.9655 8.37655C20.058 7.97256 19.9623 7.55436 19.7031 7.22905ZM16.5591 17.2545H3.44094C3.34145 17.2545 3.2543 17.1893 3.23371 17.0994L1.1768 8.11506C1.16067 8.04456 1.18774 7.99151 1.21336 7.95944C1.23711 7.9296 1.2909 7.87956 1.38403 7.87956H4.72399L4.57051 8.231C4.44102 8.52757 4.57641 8.87296 4.87297 9.00249C4.9493 9.03585 5.02883 9.05163 5.10715 9.05163C5.33301 9.05163 5.54824 8.92026 5.64442 8.70007L6.00274 7.87964H13.9973L14.3557 8.70007C14.4518 8.9203 14.6671 9.05163 14.8929 9.05163C14.9712 9.05163 15.0508 9.03585 15.1271 9.00249C15.4237 8.87299 15.5591 8.52757 15.4296 8.231L15.2761 7.87956H18.6161C18.7092 7.87956 18.763 7.9296 18.7867 7.95944C18.8123 7.99155 18.8394 8.0446 18.8233 8.11503L16.7664 17.0994C16.7457 17.1893 16.6586 17.2545 16.5591 17.2545Z"
-          fill="white"
-        ></path>
-        <path
-          d="M6.48438 10.4186C6.16078 10.4186 5.89844 10.6809 5.89844 11.0045V15.3014C5.89844 15.625 6.16078 15.8873 6.48438 15.8873C6.80797 15.8873 7.07031 15.625 7.07031 15.3014V11.0045C7.07031 10.6809 6.80801 10.4186 6.48438 10.4186Z"
-          fill="white"
-        ></path>
-        <path
-          d="M10 10.4186C9.67641 10.4186 9.41406 10.6809 9.41406 11.0045V15.3014C9.41406 15.625 9.67641 15.8873 10 15.8873C10.3236 15.8873 10.5859 15.625 10.5859 15.3014V11.0045C10.5859 10.6809 10.3236 10.4186 10 10.4186Z"
-          fill="white"
-        ></path>
-        <path
-          d="M13.5156 10.4186C13.192 10.4186 12.9297 10.6809 12.9297 11.0045V15.3014C12.9297 15.625 13.192 15.8873 13.5156 15.8873C13.8392 15.8873 14.1016 15.625 14.1016 15.3014V11.0045C14.1015 10.6809 13.8392 10.4186 13.5156 10.4186Z"
-          fill="white"
-        ></path>
-      </svg>
+      <Popover content={content} title="Giỏ hàng">
+        <Badge
+          count={cart?.length}
+          size="small"
+          color="orange"
+          showZero={false}
+        >
+          <BsCart2 className="text-xl cursor-pointer text-white hover:text-secondary" />
+        </Badge>
+      </Popover>
     </div>
   );
 };

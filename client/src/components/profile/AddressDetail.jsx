@@ -8,7 +8,7 @@ const AddressDetail = ({
   name,
   address,
   phone,
-  isDefault,
+  is_default,
   handleClose,
 }) => {
   const { setData } = useContext(AddressContext);
@@ -18,14 +18,14 @@ const AddressDetail = ({
       name: name,
       address: address,
       phone: phone,
-      isDefault: isDefault,
+      is_default: is_default,
     });
     handleClose();
   };
   const handleDelete = async () => {
     const response = await deleteAddress(id);
     alert(response.message);
-    setData({ id: 0, name: "", address: "", phone: "", isDefault: false });
+    setData({ id: 0, name: "", address: "", phone: "", is_default: false });
   };
   return (
     <div>
@@ -35,7 +35,7 @@ const AddressDetail = ({
           <div className="flex items-center font-bold mt-5">
             Họ tên:
             <div className="font-normal ml-2">{name}</div>
-            {isDefault ? (
+            {is_default ? (
               <div className="font-normal text-[10px] text-primary ml-4">
                 Địa chỉ mặc định
               </div>

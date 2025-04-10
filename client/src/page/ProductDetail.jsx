@@ -1,12 +1,15 @@
 import Slider from "react-slick";
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useContext } from "react";
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
+import Cookies from "js-cookie";
 
 import Navigate from "../components/navigate/Navigate";
 import Button from "../components/button/Button";
 import Counter from "../components/counter/Counter";
 import getProductById from "../services/productService/getProductById";
+import { addToCart } from "../services/cart";
+import { HeaderContext } from "../contexts/HeaderContext";
 
 function SamplePrevArrow(props) {
   const { className, onClick } = props;
@@ -28,13 +31,19 @@ function SampleNextArrow(props) {
 }
 
 const ProductDetail = ({ className }) => {
+  const { getCart } = useContext(HeaderContext);
   const { id } = useParams();
   const [data, setData] = useState({});
   const [variantSeclect, setVariantSelect] = useState({});
-  const [choose, setChoose] = useState({});
+  const [choose, setChoose] = useState();
+  const [message, setMessage] = useState("");
+  const [stock, setStock] = useState();
+  const [counter, setCounter] = useState(1);
+  const navigate = useNavigate();
   // console.log(data);
   // console.log(variantSeclect);
   // console.log(choose);
+
   const variant_of_product = {
     variant: new Set(),
   };
@@ -52,7 +61,32 @@ const ProductDetail = ({ className }) => {
   const [nav2, setNav2] = useState(null);
   let sliderRef1 = useRef(null);
   let sliderRef2 = useRef(null);
-  const [counter, setCounter] = useState(1);
+
+  const onCart = () => {
+    const token = Cookies.get("token");
+    if (!token) {
+      navigate("/login");
+    }
+    if (choose === undefined) {
+      return setMessage("Vui lòng chọn phân loại sản phẩm!");
+    }
+    if (counter > stock || counter <= 0) {
+      return setMessage("Số lượng sản phẩm không hợp lệ!");
+    }
+    const postData = async (data) => {
+      const response = await addToCart(data);
+      if (response.error) {
+        alert(response.message);
+      } else {
+        alert(response.message);
+      }
+      await getCart();
+    };
+    postData({
+      product_variant_id: choose.id,
+      quantity: counter,
+    });
+  };
 
   const findVariant = (variantSeclect = {}) => {
     const { product_variants = [] } = data;
@@ -71,11 +105,13 @@ const ProductDetail = ({ className }) => {
           }
         }
         if (check) {
+          setStock(variant.stock);
           return setChoose(variant);
         }
       }
     }
-    return setChoose({});
+    setStock(data.stock);
+    return setChoose();
   };
   const onMinus = () => {
     setCounter((prev) => prev - 1);
@@ -86,6 +122,7 @@ const ProductDetail = ({ className }) => {
   useEffect(() => {
     const getData = async () => {
       const response = await getProductById(id);
+      setStock(response.data.stock);
       setData(response.data);
     };
     getData();
@@ -94,8 +131,14 @@ const ProductDetail = ({ className }) => {
   }, [id]);
   useEffect(() => {
     findVariant(variantSeclect);
+    if (choose) {
+      setMessage("");
+    }
+    if (counter <= stock && counter > 0) {
+      setMessage("");
+    }
     // eslint-disable-next-line
-  }, [variantSeclect]);
+  }, [variantSeclect, choose, counter]);
   return (
     <div className="w-full max-w-[1110px] mx-auto py-10">
       <Navigate className={"w-full mb-4"} />
@@ -145,10 +188,7 @@ const ProductDetail = ({ className }) => {
           <div className="flex items-center text-text mb-[20px]">
             <div className="flex-[1]">Có sẵn</div>
             <div className="flex flex-[4]">
-              <div className="text-red mr-1">
-                {choose?.stock || data?.stock}
-              </div>{" "}
-              Sản phẩm
+              <div className="text-red mr-1">{stock}</div> Sản phẩm
             </div>
           </div>
           <div className="flex gap-5 text-red text-[28px] font-semibold bg-light-blue p-3 my-3">
@@ -250,12 +290,13 @@ const ProductDetail = ({ className }) => {
               setState={setCounter}
             />
           </div>
-
+          <div className="text-red text-xs mb-5">{message}</div>
           <Button label={"Mua ngay"} className={"w-full mb-5"} />
           <Button
             label={"Thêm vào giỏ hàng"}
             className={"w-full"}
             variant="white"
+            onClick={onCart}
           />
         </div>
       </div>
