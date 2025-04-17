@@ -1,13 +1,13 @@
 import instance from "../../utils/axios";
 
-const changeAddress = async ({ id, name, address, phone, isDefault }) => {
+const changeAddress = async ({ id, name, address, phone, is_default }) => {
   try {
     const response = await instance.put("/address", {
       id,
       name,
       address,
       phone,
-      isDefault,
+      is_default,
     });
     return response;
   } catch (error) {

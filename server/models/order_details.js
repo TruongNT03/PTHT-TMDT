@@ -11,7 +11,7 @@ module.exports = (sequelize, DataTypes) => {
       order_details.belongsTo(models.orders, {
         foreignKey: "order_id",
       });
-      order_details.belongsTo(models.products, {
+      order_details.belongsTo(models.product_variant_values, {
         foreignKey: "product_id",
       });
     }
@@ -19,7 +19,7 @@ module.exports = (sequelize, DataTypes) => {
   order_details.init(
     {
       order_id: DataTypes.INTEGER,
-      product_id: DataTypes.INTEGER,
+      product_variant_id: DataTypes.INTEGER,
       quantity: DataTypes.INTEGER,
       price: DataTypes.FLOAT,
     },

@@ -10,8 +10,8 @@ import { useNavigate, useParams } from "react-router-dom";
 
 const CreateProduct = () => {
   const { id } = useParams();
-  console.log(id);
   const [categories, setCategories] = useState([]);
+  // const [hasVariant, setHasVariant] = useState(false);
   const [sections, setSections] = useState([]);
   const [category, setCategory] = useState(1);
   const [section, setSection] = useState(1);
@@ -23,6 +23,10 @@ const CreateProduct = () => {
       stock: "",
     },
   ]);
+  // const toogleOnChange = (checked) => {
+  //   console.log(checked);
+  //   setHasVariant(checked);
+  // };
   const navigate = useNavigate();
   const formData = new FormData();
   const onFinish = async (values) => {
@@ -30,6 +34,8 @@ const CreateProduct = () => {
       values?.product_images?.fileList.forEach((value) => {
         formData.append(`product_images`, value.originFileObj);
       });
+      // let data = {};
+      // if (hasVariant) {
       variants.forEach((_value, index) => {
         formData.append(
           "variant_images",
@@ -43,29 +49,30 @@ const CreateProduct = () => {
         section_id: section,
         variants: variants,
       };
+      // } else {
+      //   data = {
+      //     name: values.name,
+      //     description: values.description,
+      //     category_id: category,
+      //     section_id: section,
+      //     price: values.price,
+      //     discount_price: values.discount_price,
+      //     stock: values.stock,
+      //   };
+      // }
       formData.append("data", JSON.stringify(data));
       const response = await insertProduct(formData);
-      if (!response?.errors || !response?.error) {
+      if (response?.errors || response?.error) {
         toast.error(response?.message || "Có lỗi xảy ra", {
           position: "top-right",
-          autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
+          autoClose: 1000,
           theme: "light",
           transition: Bounce,
         });
       } else {
         toast.success("Thêm mới thành công!", {
           position: "top-right",
-          autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
+          autoClose: 1000,
           theme: "light",
           transition: Bounce,
           onClose: () => {
@@ -77,11 +84,6 @@ const CreateProduct = () => {
       toast.error("Có lỗi xảy ra", {
         position: "top-right",
         autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
         theme: "light",
         transition: Bounce,
       });
@@ -151,8 +153,65 @@ const CreateProduct = () => {
               </Form.Item>
               <div className="h-[2px] bg-gray-light my-14"></div>
               <div className="text-2xl font-semibold mb-5">
-                Variant Products
+                Different Options
               </div>
+              {/* <div className="flex mb-5 gap-5">
+                <Switch onChange={toogleOnChange} />
+                <div>This product has variant</div>
+              </div> */}
+              {/* {!hasVariant && (
+                <div className="w-full flex gap-5">
+                  <Form.Item
+                    className="flex-[1]"
+                    label="Price:"
+                    name="price"
+                    rules={[
+                      {
+                        pattern: /^\d+$/,
+                        message: "Price includes numbers only!",
+                      },
+                      {
+                        required: true,
+                        message: "Please input Product Price!",
+                      },
+                    ]}
+                  >
+                    <Input />
+                  </Form.Item>
+                  <Form.Item
+                    className="flex-[1]"
+                    label="Discount Price:"
+                    name="discount_price"
+                    rules={[
+                      {
+                        pattern: /^\d+$/,
+                        message: "Price includes numbers only!",
+                      },
+                      {
+                        required: false,
+                        message: "Please input Discount Price",
+                      },
+                    ]}
+                  >
+                    <Input />
+                  </Form.Item>
+                  <Form.Item
+                    className="flex-[1]"
+                    label="Stock:"
+                    name="stock"
+                    rules={[
+                      {
+                        pattern: /^\d+$/,
+                        message: "Stock includes numbers only!",
+                      },
+                      { required: true, message: "Please input Stock!" },
+                    ]}
+                  >
+                    <Input />
+                  </Form.Item>
+                </div>
+              )} */}
+              {/* {hasVariant && */}
               {variants.map((value, index1) =>
                 index1 === 0 ? (
                   <VariantOption
@@ -183,6 +242,8 @@ const CreateProduct = () => {
                   </>
                 )
               )}
+              {/* )} */}
+              {/* {hasVariant && ( */}
               <div
                 className="text-blue-500 cursor-pointer"
                 onClick={() => {
@@ -201,6 +262,7 @@ const CreateProduct = () => {
               >
                 Add More
               </div>
+              {/* )} */}
             </div>
             <div className="flex-[1] flex flex-col gap-10">
               <div className="bg-white rounded-2xl p-8">

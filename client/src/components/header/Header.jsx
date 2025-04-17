@@ -1,6 +1,7 @@
 import Search from "./Search";
 import Nav from "./Nav";
 import { Link } from "react-router-dom";
+import CartToCheckoutProvider from "../../contexts/CartToCheckoutContext";
 
 const Header = () => {
   return (

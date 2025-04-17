@@ -41,7 +41,7 @@ const getCart = async (req, res) => {
     },
     attributes: ["id", "user_id"],
   });
-  const cart_item = await db.cart_items.findAll({
+  const cart_items = await db.cart_items.findAll({
     where: {
       cart_id: cart.id,
     },
@@ -65,8 +65,75 @@ const getCart = async (req, res) => {
       },
     ],
   });
+  // let res_cart = [];
+  // for (const cart_item of cart_items) {
+  //   res_cart.push({
+  //     cart_item: {
+  //       id: cart_item.id,
+  //       product_variant_id: cart_item.product_variant_id,
+  //       quantity: cart_item.quantity,
+  //       product_variant_value: {
+  //         id: cart_item.product_variant_value.id,
+  //         product_id: cart_item.product_variant_value.product_id,
+  //         price: cart_item.product_variant_value.price,
+  //         old_price: cart_item.product_variant_value.old_price,
+  //         stock: cart_item.product_variant_value.stock,
+  //         sku: cart_item.product_variant_value.sku,
+  //         image: cart_item.product_variant_value.image,
+  //       },
+  //     },
+  //   });
+  // }
+  // for (const cart_item of res_cart) {
+  //   const product_id = cart_item.cart_item.product_variant_value.product_id;
+  //   const product_variant_values = await db.product_variant_values.findAll({
+  //     where: {
+  //       product_id,
+  //     },
+  //     attributes: [
+  //       "id",
+  //       "product_id",
+  //       "price",
+  //       "old_price",
+  //       "stock",
+  //       "image",
+  //       "sku",
+  //     ],
+  //     include: [
+  //       {
+  //         model: db.products,
+  //         attributes: ["name"],
+  //       },
+  //     ],
+  //   });
+  //   cart_item.product_variant = product_variant_values;
+  //   for (const item of res_cart) {
+  //     item.cart_item.product_variant_value.variant_value = [];
+  //     const variant_value_ids = item.cart_item.product_variant_value.sku
+
+  //       .split("-")
+  //       .map((value) => Number.parseInt(value));
+  //     for (const variant_value_id of variant_value_ids) {
+  //       const variant_values = await db.variant_values.findByPk(
+  //         variant_value_id,
+  //         {
+  //           include: [
+  //             {
+  //               model: db.variants,
+  //               attributes: ["name"],
+  //             },
+  //           ],
+  //         }
+  //       );
+  //       item.cart_item.product_variant_value.variant_value.push({
+  //         name: variant_values.variant.name,
+  //         value: variant_values.name,
+  //       });
+  //     }
+  //   }
+  // }
   const resData = [];
-  for (const value of cart_item) {
+  for (const value of cart_items) {
     const variant_value_id = value.product_variant_value.sku
       .split("-")
       .map((value) => Number.parseInt(value));
@@ -98,9 +165,15 @@ const getCart = async (req, res) => {
       variant: variant,
     });
   }
-  return res
-    .status(200)
-    .json({ message: "Thành công", data: resData, total_item: resData.length });
+  return res.status(200).json({
+    message: "Thành công",
+    data: resData,
+    total_item: resData.length,
+  });
+  // return res.status(200).json({
+  //   message: "Thành công",
+  //   data: res_cart,
+  // });
 };
 
 const deleteCartItem = async (req, res) => {

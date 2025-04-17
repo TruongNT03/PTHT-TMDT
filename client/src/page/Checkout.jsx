@@ -1,37 +1,58 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { HiOutlineLocationMarker } from "react-icons/hi";
 import { MdOutlinePayment } from "react-icons/md";
 import { AiFillProduct } from "react-icons/ai";
+import { Radio } from "antd";
+import { useNavigate } from "react-router-dom";
 
 import getAddress from "../services/addressService/getAddress";
 import { getAllCart } from "../services/cart";
+import { insertOrder } from "../services/order";
 import Button from "../components/button/Button";
+import { CartToCheckoutContext } from "../contexts/CartToCheckoutContext";
 
 const Checkout = () => {
+  const navigate = useNavigate();
+  const { selected, setSelected } = useContext(CartToCheckoutContext);
+  const [pay, setPay] = useState("cod");
   const [address, setAddress] = useState([]);
   const [cart, setCart] = useState([]);
+  const onSubmit = async () => {
+    if (pay === "cod") {
+      const card_item_ids = [];
+      selected.forEach((value) => {
+        card_item_ids.push(value.id);
+      });
+      console.log(card_item_ids);
+      const response = await insertOrder(card_item_ids);
+      alert(response.message);
+      setTimeout(() => {
+        navigate("/");
+      }, [1000]);
+    }
+  };
   useEffect(() => {
     const getData = async () => {
       const response = await getAddress();
-      if (response.error) {
-        alert(response.error);
+      if (response?.error) {
+        alert(response?.error);
       } else {
         setAddress(response.data);
       }
     };
     getData();
   }, []);
-  useEffect(() => {
-    const getData = async () => {
-      const response = await getAllCart();
-      if (response.error) {
-        alert(response.error);
-      } else {
-        setCart(response.data);
-      }
-    };
-    getData();
-  }, []);
+  // useEffect(() => {
+  //   const getData = async () => {
+  //     const response = await getAllCart();
+  //     if (response.error) {
+  //       alert(response.error);
+  //     } else {
+  //       setCart(response.data);
+  //     }
+  //   };
+  //   getData();
+  // }, []);
   return (
     <div className="w-full max-w-[1110px] mx-auto pb-[100px]">
       <div className="w-fit text-2xl font-medium pt-5 mb-5 py-3 text-primary border-b-primary border-b-[2px]">
@@ -67,7 +88,7 @@ const Checkout = () => {
           <div className="flex-[1]">Số lượng</div>
           <div className="flex-[1]">Thành tiền</div>
         </div>
-        {cart?.map((value, index) => (
+        {selected?.map((value, index) => (
           <div className="flex justify-between items-center py-3 my-3 border-t-[1px] border-gray-light">
             <div className="flex-[3] flex gap-3 items-center">
               <img
@@ -79,10 +100,7 @@ const Checkout = () => {
                 <div>{value?.name}</div>
                 <div className="flex gap-1">
                   {value?.variant?.map((value, index) => (
-                    <div>
-                      {value?.value}
-                      {","}
-                    </div>
+                    <div>{value?.value}</div>
                   ))}
                 </div>
               </div>
@@ -100,7 +118,7 @@ const Checkout = () => {
           <MdOutlinePayment />
           <div>Phương thức thanh toán</div>
         </div>
-        <div className="my-5">
+        {/* <div className="my-5">
           <input type="radio" id="COD" className="ml-1" />
           <label htmlFor="COD" className="ml-3">
             Thanh toán khi nhận hàng
@@ -109,14 +127,35 @@ const Checkout = () => {
         <div className="text-text ml-5">
           Thanh toán khi nhận hàng Phí thu hộ: ₫0 VNĐ. Ưu đãi về phí vận chuyển
           (nếu có) áp dụng cả với phí thu hộ.
-        </div>
+        </div> */}
+        <Radio.Group defaultValue="cod" buttonStyle="outline" className="mt-5">
+          <Radio.Button value="cod" onFocus={(e) => setPay(e.target.value)}>
+            Thanh toán khi nhận hàng
+          </Radio.Button>
+          <Radio.Button value="bank" disabled={true}>
+            Chuyển khoản qua ngân hàng
+          </Radio.Button>
+          <Radio.Button value="credit" disabled={true}>
+            Thẻ tín dụng/Ghi nợ
+          </Radio.Button>
+          <Radio.Button value="vnpay" onFocus={(e) => setPay(e.target.value)}>
+            VNPAY
+          </Radio.Button>
+        </Radio.Group>
+        {pay === "cod" && (
+          <div className="text-text mt-5">
+            Thanh toán khi nhận hàng: Phí thu hộ: ₫0 VNĐ. Ưu đãi về phí vận
+            chuyển (nếu có) áp dụng cả với phí thu hộ.
+          </div>
+        )}
+
         <div className="w-full bg-gray-light h-[1px] my-5"></div>
         <div className="flex flex-col items-end">
           <div className="flex gap-5 items-center my-5">
             <div>Tổng thanh toán:</div>
             <div className="text-2xl font-semibold text-red">120, 000đ</div>
           </div>
-          <Button label="Đặt hàng" className="px-5" />
+          <Button label="Đặt hàng" className="px-5" onClick={onSubmit} />
         </div>
       </div>
     </div>

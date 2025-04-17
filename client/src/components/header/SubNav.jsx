@@ -12,21 +12,20 @@ const SubNav = () => {
           Trang chủ
         </Link>
         <Link className="py-1 flex items-center gap-1 hover:text-secondary group">
-          Thời trang Nam{" "}
+          Thời trang Nam
           <IoMdArrowDropdown
             fontSize={20}
             className="group-hover:rotate-180 transition duration-700 ease-in-out"
           />
         </Link>
         <Link className="py-1 flex items-center gap-1 hover:text-secondary group">
-          Sản phẩm
+          Thời trang Nữ
           <IoMdArrowDropdown
             fontSize={20}
             className="group-hover:rotate-180 transition duration-700 ease-in-out"
           />
         </Link>
-        <Link className="py-1 hover:text-secondary">Bé trai</Link>
-        <Link className="py-1 hover:text-secondary">Bé gái</Link>
+        <Link className="py-1 hover:text-secondary">Trẻ em</Link>
         <Link className="py-1 hover:text-secondary">Tin tức</Link>
         <Link className="py-1 hover:text-secondary">Liên hệ</Link>
       </ul>

@@ -151,11 +151,11 @@ const ProductDetail = ({ className }) => {
           >
             {data?.product_images?.map((value, index) => {
               return (
-                <div key={index} className="">
+                <div key={index} className="w-[600px] h-[600px]">
                   <img
                     src={process.env.REACT_APP_SERVER_URL + value.path}
                     alt=""
-                    className=""
+                    className="w-full h-full object-cover"
                   />
                 </div>
               );
@@ -172,11 +172,11 @@ const ProductDetail = ({ className }) => {
           >
             {data?.product_images?.map((value, index) => {
               return (
-                <div className="px-2">
+                <div className="w-[100px] h-[100px]">
                   <img
                     src={process.env.REACT_APP_SERVER_URL + value.path}
                     alt=""
-                    className="object-cover"
+                    className="w-full h-full object-cover px-2"
                   />
                 </div>
               );

@@ -11,6 +11,7 @@ import CategoryRoute from "./routes/Category.js";
 import ProductRoute from "./routes/Product.js";
 import CartRouter from "./routes/Cart.js";
 import VariantRoute from "./routes/ProductVariantValue.js";
+import OrderRoute from "./routes/Order.js";
 
 import { googleStrategy, facebookStrategy } from "./passport.js";
 
@@ -32,6 +33,7 @@ app.use("/api/v1/category", CategoryRoute);
 app.use("/api/v1/product", ProductRoute);
 app.use("/api/v1/variant", VariantRoute);
 app.use("/api/v1/cart", CartRouter);
+app.use("/api/v1/order", OrderRoute);
 
 app.get("/", (req, res) => {
   res.status(200).json("Hello");

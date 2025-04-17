@@ -1,50 +1,12 @@
-import { useState } from "react";
-
 const Search = () => {
-  const [show, setShow] = useState(false);
   return (
-    <div className="flex items-center text-sm bg-white rounded-full h-[44px] relative">
-      <div className="pl-[32px] pr-[30px]">Tất cả</div>
-      <div
-        className="bg-[url(https://bizweb.dktcdn.net/100/455/315/themes/894917/assets/down-search.svg?1723540086975)] w-[17px] h-[36px] block cursor-pointer"
-        onClick={() => {
-          setShow((prev) => !prev);
-        }}
-      ></div>
-      {show ? (
-        <ul className="absolute top-[44px] w-fit px-4 py-2 bg-white rounded-lg max-h-[400px] overflow-y-auto scroll">
-          <li>Sản phẩm khuyễn mãi</li>
-          <li>2</li>
-          <li>3</li>
-          <li>4</li>
-          <li>5</li>
-          <li>Sản phẩm khuyễn mãi</li>
-          <li>2</li>
-          <li>3</li>
-          <li>4</li>
-          <li>5</li>
-          <li>Sản phẩm khuyễn mãi</li>
-          <li>2</li>
-          <li>3</li>
-          <li>4</li>
-          <li>5</li>
-          <li>Sản phẩm khuyễn mãi</li>
-          <li>2</li>
-          <li>3</li>
-          <li>4</li>
-          <li>5</li>
-        </ul>
-      ) : (
-        <></>
-      )}
-
+    <div className="flex items-center text-sm h-[44px] relative">
       <input
         type="text"
         placeholder="Tìm sản phẩm bạn mong muốn"
-        className="w-[310px] bg-transparent px-2"
+        className="w-[400px] px-8 outline-none bg-white py-3 rounded-l-full"
       />
-      <div className="bg-[#FE9614] px-5 rounded-r-full  h-[44px] text-[20px] text-white flex items-center">
-        {/* <FaSearch /> */}
+      <div className="bg-[#FE9614] hover:bg-opacity-50 px-5 rounded-r-full  h-[44px] text-[20px] text-white flex items-center cursor-pointer">
         <svg
           stroke="currentColor"
           fill="currentColor"

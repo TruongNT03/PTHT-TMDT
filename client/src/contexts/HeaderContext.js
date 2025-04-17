@@ -36,7 +36,9 @@ const HeaderProvider = ({ children }) => {
     getCart();
   }, []);
   return (
-    <HeaderContext.Provider value={{ user, setUser, handleGet, cart, getCart }}>
+    <HeaderContext.Provider
+      value={{ user, setUser, handleGet, cart, getCart, setCart }}
+    >
       {children}
     </HeaderContext.Provider>
   );

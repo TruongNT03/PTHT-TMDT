@@ -11,6 +11,7 @@ import { HeaderContext } from "../../contexts/HeaderContext";
 
 const Login = () => {
   const navigate = useNavigate();
+  const { getCart } = useContext(HeaderContext);
   const { handleGet } = useContext(HeaderContext);
   const {
     register,
@@ -23,6 +24,7 @@ const Login = () => {
     const res = await login(data);
     if (res?.token) {
       handleGet();
+      getCart();
       navigate("/");
     } else {
       alert("Tài khoản mật khẩu không chính xác!");

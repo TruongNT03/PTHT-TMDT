@@ -5,7 +5,7 @@ import AddressProvider from "../contexts/AddressContext";
 const Profile = () => {
   return (
     <AddressProvider>
-      <div className="flex w-full max-w-[1110px] mx-auto py-8">
+      <div className="flex w-full min-h-[500px] max-w-[1110px] mx-auto py-8">
         <ProfileNav className={"w-80"} />
         <div className="w-full">
           <Outlet />

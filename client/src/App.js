@@ -10,6 +10,8 @@ import Order from "./components/profile/Order";
 import ChangePassword from "./components/profile/ChangePassword";
 import Address from "./components/profile/Address";
 import AdminRoute from "./routes/AdminRoute";
+import ProtectedRoute from "./routes/ProtectedRoute";
+import PublicRoute from "./routes/PublicRoute";
 import AdminLayout from "./layout/AdminLayout";
 import Product from "./page/admin/Product";
 import Dashboard from "./page/admin/Dashboard";
@@ -23,6 +25,7 @@ import Category from "./page/admin/Category";
 import Section from "./page/admin/Section";
 import Cart from "./page/Cart";
 import Checkout from "./page/Checkout";
+import CartToCheckoutProvider from "./contexts/CartToCheckoutContext";
 
 function App() {
   return (
@@ -47,21 +50,39 @@ function App() {
             </Route>
           </Route>
           <Route path="/" element={<MainLayout />}>
-            <Route index element={<Home />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
-            <Route path="/profile" element={<Profile />}>
-              <Route index path="" element={<UserInfo />} />
-              <Route path="order" element={<Order />} />
-              <Route path="changepassword" element={<ChangePassword />} />
-              <Route path="address" element={<Address />} />
+            <Route element={<PublicRoute />}>
+              <Route index element={<Home />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/register" element={<Register />} />
+              <Route path="/profile" element={<Profile />}>
+                <Route index path="" element={<UserInfo />} />
+                <Route path="order" element={<Order />} />
+                <Route path="changepassword" element={<ChangePassword />} />
+                <Route path="address" element={<Address />} />
+              </Route>
+              <Route path="/product/:id" element={<ProductDetail />} />
+              <Route path="/product" element={<ListProduct />} />
             </Route>
-            <Route path="/product/:id" element={<ProductDetail />} />
-            <Route path="/product" element={<ListProduct />} />
-            <Route path="/cart" element={<Cart />} />
-            <Route path="/checkout" element={<Checkout />} />
-            <Route path="*" element={<NotFound />} />
+            <Route element={<ProtectedRoute />}>
+              <Route
+                path="/cart"
+                element={
+                  <CartToCheckoutProvider>
+                    <Cart />
+                  </CartToCheckoutProvider>
+                }
+              />
+              <Route
+                path="/checkout"
+                element={
+                  <CartToCheckoutProvider>
+                    <Checkout />
+                  </CartToCheckoutProvider>
+                }
+              />
+            </Route>
           </Route>
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
     </HeaderProvider>

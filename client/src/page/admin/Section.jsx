@@ -2,22 +2,29 @@ import { Button, Form, Input, Modal, Upload } from "antd";
 import { useEffect, useState } from "react";
 import { MdUpload } from "react-icons/md";
 
-import { getAllSection } from "../../services/section";
+import { getAllSection, insertSection } from "../../services/section";
 import Card from "../../components/category/Card";
 
 const Section = () => {
   const [data, setData] = useState();
   const [isOpen, setIsOpen] = useState(false);
-  const onFinish = (data) => {
-    console.log(data);
+  const getData = async () => {
+    const response = await getAllSection();
+    if (!response.error) {
+      setData(response.data);
+    }
+  };
+  const onFinish = async (data) => {
+    const response = await insertSection({ name: data.name });
+    if (response.error) {
+      alert(response.message);
+    } else {
+      alert(response.message);
+      setIsOpen(false);
+      getData();
+    }
   };
   useEffect(() => {
-    const getData = async () => {
-      const response = await getAllSection();
-      if (!response.error) {
-        setData(response.data);
-      }
-    };
     getData();
   }, []);
   return (

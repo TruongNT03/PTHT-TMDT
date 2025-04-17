@@ -1,12 +1,12 @@
 import instance from "../../utils/axios";
 
-const newAddress = async ({ name, address, phone, isDefault }) => {
+const newAddress = async ({ name, address, phone, is_default }) => {
   try {
     const response = await instance.post("/address", {
       name,
       address,
       phone,
-      isDefault,
+      is_default,
     });
     return response;
   } catch (error) {

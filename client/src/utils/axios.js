@@ -15,16 +15,16 @@ instance.interceptors.request.use(
     return config;
   },
   (error) => {
-    return error.response.data;
+    return error?.response?.data;
   }
 );
 
 instance.interceptors.response.use(
   (response) => {
-    return response.data;
+    return response?.data;
   },
   (error) => {
-    return error.response.data;
+    return error?.response?.data;
   }
 );
 

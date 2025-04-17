@@ -8,7 +8,7 @@ import { HeaderContext } from "../../contexts/HeaderContext";
 import { deleteCartItem } from "../../services/cart";
 
 const Nav = () => {
-  const { user, setUser, cart, getCart } = useContext(HeaderContext);
+  const { user, setUser, cart, getCart, setCart } = useContext(HeaderContext);
   const handleDetele = async (id) => {
     const response = await deleteCartItem(id);
     alert(response.message);
@@ -96,7 +96,10 @@ const Nav = () => {
       {user ? (
         <Link
           to={"/"}
-          onClick={handleLogout}
+          onClick={() => {
+            handleLogout();
+            setCart([]);
+          }}
           className="flex items-center hover:text-[#FE9614] after:content-[''] after:mx-[20px] after:h-6 after:w-[1px] after:bg-white after:block"
         >
           Đăng xuất
