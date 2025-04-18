@@ -10,6 +10,7 @@ import Counter from "../components/counter/Counter";
 import getProductById from "../services/productService/getProductById";
 import { addToCart } from "../services/cart";
 import { HeaderContext } from "../contexts/HeaderContext";
+import { MessageContext } from "../contexts/MesageContext";
 
 function SamplePrevArrow(props) {
   const { className, onClick } = props;
@@ -32,6 +33,7 @@ function SampleNextArrow(props) {
 
 const ProductDetail = ({ className }) => {
   const { getCart } = useContext(HeaderContext);
+  const { openNotification, contextHolder } = useContext(MessageContext);
   const { id } = useParams();
   const [data, setData] = useState({});
   const [variantSeclect, setVariantSelect] = useState({});
@@ -78,7 +80,7 @@ const ProductDetail = ({ className }) => {
       if (response.error) {
         alert(response.message);
       } else {
-        alert(response.message);
+        openNotification({ message: "Thêm vào giỏ hàng thành công!" });
       }
       await getCart();
     };
@@ -141,6 +143,7 @@ const ProductDetail = ({ className }) => {
   }, [variantSeclect, choose, counter]);
   return (
     <div className="w-full max-w-[1110px] mx-auto py-10">
+      {contextHolder}
       <Navigate className={"w-full mb-4"} />
       <div className="w-full flex gap-5">
         <div className="flex-1 max-w-[600px]">

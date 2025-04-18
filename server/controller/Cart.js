@@ -41,6 +41,11 @@ const getCart = async (req, res) => {
     },
     attributes: ["id", "user_id"],
   });
+  if (!cart) {
+    cart = await db.carts.create({
+      user_id: user.id,
+    });
+  }
   const cart_items = await db.cart_items.findAll({
     where: {
       cart_id: cart.id,

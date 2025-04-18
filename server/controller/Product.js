@@ -1,6 +1,7 @@
 import db, { Sequelize } from "../models/index";
 import * as ProductSchema from "../dtos/Product";
 import totalPageCaculate from "../utils/totalPageCaculate";
+import { Op } from "sequelize";
 
 const insertProduct = async (req, res) => {
   const data = JSON.parse(req.body.data);
@@ -139,11 +140,20 @@ const updateProduct = async (req, res) => {
 };
 
 const getProduct = async (req, res) => {
-  const { page = 1 } = req.query;
+  const { page = 1, keyword, sortBy = "name", sortOrder = "ASC" } = req.query;
   const limit = 10;
   const offset = (page - 1) * limit;
-  const { rows, count } = await db.products.findAndCountAll({
+  const whereCondition = keyword
+    ? {
+        name: {
+          [Op.like]: `%${keyword}%`,
+        },
+      }
+    : {};
+  const { count, rows } = await db.products.findAndCountAll({
+    where: whereCondition,
     attributes: ["id", "name", "description", "stock", "price"],
+    distinct: true,
     include: [
       {
         model: db.categories,
@@ -162,6 +172,7 @@ const getProduct = async (req, res) => {
         required: false,
       },
     ],
+    order: [[sortBy, sortOrder.toUpperCase()]],
     limit,
     offset,
   });

@@ -6,10 +6,12 @@ import { useForm } from "react-hook-form";
 import Input from "../../components/input/Input";
 import Button from "../../components/button/Button";
 import signIn from "../../services/authService/register";
+import { useContext } from "react";
+import { MessageContext } from "../../contexts/MesageContext";
 
 const Register = ({ classname }) => {
   const navigate = useNavigate();
-
+  const { openNotification, contextHolder } = useContext(MessageContext);
   const {
     register,
     handleSubmit,
@@ -20,7 +22,7 @@ const Register = ({ classname }) => {
   const onSubmit = async (data) => {
     const response = await signIn(data);
     if (response?.data) {
-      alert("Đăng ký thành công");
+      openNotification({ message: "Đăng ký thành công" });
       navigate("/login");
     } else {
       alert(response.message);
@@ -31,6 +33,7 @@ const Register = ({ classname }) => {
 
   return (
     <div className={`${classname}w-full py-16`}>
+      {contextHolder}
       <form
         onSubmit={handleSubmit(onSubmit)}
         className="flex flex-col w-[368px] items-center gap-[15px] p-6 rounded-xl mx-auto shadow-2xl"

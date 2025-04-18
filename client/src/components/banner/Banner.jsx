@@ -22,16 +22,21 @@ const Banner = () => {
   };
   return (
     <div className="w-full object-scale-down">
-      <Slider {...settings}>
+      <Slider {...settings} autoplay={true} autoplaySpeed={1000}>
         <img
           src="https://bizweb.dktcdn.net/100/455/315/themes/894917/assets/slider_2.jpg?1724746453440"
           alt=""
-          className=""
+          className="max-h-[700px] object-cover"
         />
         <img
-          src="https://bizweb.dktcdn.net/100/455/315/themes/894917/assets/slider_2.jpg?1724746453440"
+          src="https://cdn.printnetwork.com/production/assets/5966561450122033bd4456f8/imageLocker/blog-description/blog/sales_banners.jpg"
           alt=""
-          className=""
+          className="max-h-[700px] object-cover"
+        />
+        <img
+          src="https://t3.ftcdn.net/jpg/04/65/46/52/360_F_465465254_1pN9MGrA831idD6zIBL7q8rnZZpUCQTy.jpg"
+          alt=""
+          className="max-h-[700px] object-cover"
         />
       </Slider>
     </div>

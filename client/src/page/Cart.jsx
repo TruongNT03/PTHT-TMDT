@@ -23,7 +23,7 @@ const Cart = () => {
   });
   useEffect(() => {
     setSelected([]);
-  }, []);
+  }, [setSelected]);
   return (
     <div className="w-full max-w-[1110px] bg-light-blue pt-8 mx-auto pb-[50px]">
       <div className="text-2xl text-primary font-medium flex gap-4">

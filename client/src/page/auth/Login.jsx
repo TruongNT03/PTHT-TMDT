@@ -8,9 +8,11 @@ import Button from "../../components/button/Button";
 import Input from "../../components/input/Input";
 import login from "../../services/authService/login";
 import { HeaderContext } from "../../contexts/HeaderContext";
+import { MessageContext } from "../../contexts/MesageContext";
 
 const Login = () => {
   const navigate = useNavigate();
+  const { openNotification, contextHolder } = useContext(MessageContext);
   const { getCart } = useContext(HeaderContext);
   const { handleGet } = useContext(HeaderContext);
   const {
@@ -27,7 +29,7 @@ const Login = () => {
       getCart();
       navigate("/");
     } else {
-      alert("Tài khoản mật khẩu không chính xác!");
+      openNotification({ message: "Tài khoản mật khẩu không chính xác!" });
     }
   };
 
@@ -42,6 +44,7 @@ const Login = () => {
 
   return (
     <div className="w-full py-16">
+      {contextHolder}
       <form
         onSubmit={handleSubmit(onSubmit)}
         className="flex flex-col w-[368px] items-center gap-[15px] p-6 rounded-xl mx-auto shadow-2xl"

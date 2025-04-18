@@ -5,47 +5,55 @@ import { BsCart2 } from "react-icons/bs";
 import { Popover, Badge, Button } from "antd";
 
 import { HeaderContext } from "../../contexts/HeaderContext";
+import { MessageContext } from "../../contexts/MesageContext";
 import { deleteCartItem } from "../../services/cart";
 
 const Nav = () => {
   const { user, setUser, cart, getCart, setCart } = useContext(HeaderContext);
+  const { openNotification, contextHolder } = useContext(MessageContext);
   const handleDetele = async (id) => {
     const response = await deleteCartItem(id);
-    alert(response.message);
+    if (response?.error) {
+      openNotification({ message: response?.error });
+    } else {
+      openNotification({ message: "Xóa sản phẩm thành công!" });
+    }
     getCart();
   };
   const content = (
     <div>
+      {contextHolder}
       {cart?.map((value, index) => {
-        return (
-          <Link
-            to={`/product/${value.product_id}`}
-            key={index}
-            className="flex  gap-2 p-2 mb-2 rounded-md cursor-pointer hover:bg-primary hover:bg-opacity-20 hover:text-text"
-          >
-            <img
-              src={process.env.REACT_APP_SERVER_URL + value.image}
-              alt=""
-              className="w-12 h-12 object-cover rounded-md"
-            />
-            <div>
-              <div>{value.name}</div>
-              <div>
-                Giá:{" "}
-                {new Intl.NumberFormat().format(
-                  (value?.price ? value.price : value.old_price) * 1000
-                )}
-                đ
-              </div>
-            </div>
-            <div
-              className="flex-auto text-right cursor-pointer text-blue-500 hover:text-red"
-              onClick={() => handleDetele(value.id)}
+        if (index <= 4)
+          return (
+            <Link
+              to={`/product/${value.product_id}`}
+              key={index}
+              className="flex gap-2 p-2 mb-2 rounded-md cursor-pointer hover:bg-primary hover:bg-opacity-20 hover:text-text"
             >
-              Xóa
-            </div>
-          </Link>
-        );
+              <img
+                src={process.env.REACT_APP_SERVER_URL + value.image}
+                alt=""
+                className="w-12 h-12 object-cover rounded-md"
+              />
+              <div>
+                <div>{value.name}</div>
+                <div>
+                  Giá:{" "}
+                  {new Intl.NumberFormat().format(
+                    (value?.price ? value.price : value.old_price) * 1000
+                  )}
+                  đ
+                </div>
+              </div>
+              <div
+                className="flex-auto text-right cursor-pointer text-blue-500 hover:text-red"
+                onClick={() => handleDetele(value.id)}
+              >
+                Xóa
+              </div>
+            </Link>
+          );
       })}
       <div className="flex gap-5 items-center">
         <div>{cart?.length} sản phẩm trong giỏ hàng</div>
