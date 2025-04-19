@@ -14,17 +14,21 @@ import { CartToCheckoutContext } from "../contexts/CartToCheckoutContext";
 const Checkout = () => {
   const navigate = useNavigate();
   const { selected, setSelected } = useContext(CartToCheckoutContext);
-  const [pay, setPay] = useState("cod");
+  const [pay, setPay] = useState("COD");
   const [address, setAddress] = useState([]);
   const [cart, setCart] = useState([]);
   const onSubmit = async () => {
-    if (pay === "cod") {
-      const card_item_ids = [];
-      selected.forEach((value) => {
-        card_item_ids.push(value.id);
-      });
-      console.log(card_item_ids);
-      const response = await insertOrder(card_item_ids);
+    const card_item_ids = [];
+    selected.forEach((value) => {
+      card_item_ids.push(value.id);
+    });
+    const response = await insertOrder({
+      card_item_ids: card_item_ids,
+      method: pay,
+    });
+    if (response.checkoutUrl) {
+      window.location.href = response.checkoutUrl;
+    } else {
       alert(response.message);
       setTimeout(() => {
         navigate("/");
@@ -128,19 +132,20 @@ const Checkout = () => {
           Thanh toán khi nhận hàng Phí thu hộ: ₫0 VNĐ. Ưu đãi về phí vận chuyển
           (nếu có) áp dụng cả với phí thu hộ.
         </div> */}
-        <Radio.Group defaultValue="cod" buttonStyle="outline" className="mt-5">
-          <Radio.Button value="cod" onFocus={(e) => setPay(e.target.value)}>
-            Thanh toán khi nhận hàng
-          </Radio.Button>
+        <Radio.Group
+          defaultValue="COD"
+          buttonStyle="outline"
+          className="mt-5"
+          onChange={(e) => setPay(e.target.value)}
+        >
+          <Radio.Button value="COD">Thanh toán khi nhận hàng</Radio.Button>
           <Radio.Button value="bank" disabled={true}>
             Chuyển khoản qua ngân hàng
           </Radio.Button>
           <Radio.Button value="credit" disabled={true}>
             Thẻ tín dụng/Ghi nợ
           </Radio.Button>
-          <Radio.Button value="vnpay" onFocus={(e) => setPay(e.target.value)}>
-            VNPAY
-          </Radio.Button>
+          <Radio.Button value="QR">VietQR</Radio.Button>
         </Radio.Group>
         {pay === "cod" && (
           <div className="text-text mt-5">

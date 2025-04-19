@@ -1,8 +1,21 @@
 import db from "../models";
+import PayOS from "@payos/node";
+import dotenv from "dotenv";
+
+dotenv.config();
+
+const payos = new PayOS(
+  process.env.PAYOS_CLIENT_ID,
+  process.env.PAYOS_API_KEY,
+  process.env.PAYOS_CHECKSUM_KEY
+);
+
+dotenv.config();
 
 const insertOrder = async (req, res) => {
   const user = req.user;
-  const { card_item_ids } = req.body;
+  const { card_item_ids, method } = req.body;
+  console.log(method);
   const transaction = await db.sequelize.transaction();
   // Tao order
   let total_price = 0;
@@ -45,10 +58,26 @@ const insertOrder = async (req, res) => {
 
   await transaction.commit();
 
-  return res.status(201).json({
-    message: "Thành công",
-    data: order,
-  });
+  if (method === "COD") {
+    return res.status(201).json({
+      message: "Thành công",
+      data: order,
+    });
+  }
+  if (method === "QR") {
+    const orderPay = {
+      amount: 2000,
+      description: `Thanh toán đơn hàng #${order.id}`,
+      orderCode: order.id,
+      cancelUrl: "http://localhost:3000",
+      returnUrl: "http://localhost:3000",
+    };
+    const paymentLink = await payos.createPaymentLink(orderPay);
+    return res.status(201).json({
+      message: "Tạo liên kết thanh toán thành công",
+      checkoutUrl: paymentLink.checkoutUrl,
+    });
+  }
 };
 
 const getAllOrder = async (req, res) => {

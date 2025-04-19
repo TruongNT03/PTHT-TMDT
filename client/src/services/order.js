@@ -5,8 +5,8 @@ const getAllOrder = async () => {
   return response;
 };
 
-const insertOrder = async (card_item_ids) => {
-  const response = await instance.post("/order", { card_item_ids });
+const insertOrder = async ({ card_item_ids, method }) => {
+  const response = await instance.post("/order", { card_item_ids, method });
   return response;
 };
 
