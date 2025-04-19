@@ -40,7 +40,9 @@ const Card = ({ className, image, data }) => {
           Thêm vào giỏ hàng
         </Link>
       </div>
-      <div className="font-semibold text-[14px] mb-[8px]">{data.name}</div>
+      <div className="font-semibold text-[14px] mb-[8px] truncate w-[200px] overflow-hidden">
+        {data.name}
+      </div>
       <div className="flex gap-2 text-base font-semibold text-secondary">
         {new Intl.NumberFormat().format(data.price * 1000)} Đ
         {/* <del className="text text-[14px] font-light text-black">130.000Đ</del> */}

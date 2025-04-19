@@ -181,6 +181,11 @@ const columns = [
     title: "Description",
     dataIndex: "description",
     key: "description",
+    render: (description) => (
+      <div className="max-w-[400px] overflow-hidden truncate ">
+        {description}
+      </div>
+    ),
   },
   {
     title: "Stock",

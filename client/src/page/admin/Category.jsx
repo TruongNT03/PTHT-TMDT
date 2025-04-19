@@ -2,22 +2,29 @@ import { Button, Form, Input, Modal, Upload } from "antd";
 import { useEffect, useState } from "react";
 import { MdUpload } from "react-icons/md";
 
-import { getAllCategory } from "../../services/category";
+import { getAllCategory, insertCategory } from "../../services/category";
 import Card from "../../components/category/Card";
 
 const Category = () => {
   const [data, setData] = useState();
   const [isOpen, setIsOpen] = useState(false);
-  const onFinish = (data) => {
-    console.log(data);
+  const getData = async () => {
+    const response = await getAllCategory();
+    if (!response.error) {
+      setData(response.data);
+    }
+  };
+  const onFinish = async (data) => {
+    const response = await insertCategory({ name: data.name });
+    if (response.error) {
+      alert(response.message);
+    } else {
+      alert(response.message);
+      setIsOpen(false);
+      getData();
+    }
   };
   useEffect(() => {
-    const getData = async () => {
-      const response = await getAllCategory();
-      if (!response.error) {
-        setData(response.data);
-      }
-    };
     getData();
   }, []);
   return (

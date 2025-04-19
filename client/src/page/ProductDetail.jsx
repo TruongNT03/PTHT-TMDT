@@ -63,6 +63,7 @@ const ProductDetail = ({ className }) => {
   const [nav2, setNav2] = useState(null);
   let sliderRef1 = useRef(null);
   let sliderRef2 = useRef(null);
+  const imageRef = useRef(null);
 
   const onCart = () => {
     const token = Cookies.get("token");
@@ -107,12 +108,12 @@ const ProductDetail = ({ className }) => {
           }
         }
         if (check) {
-          setStock(variant.stock);
+          setStock(variant?.stock);
           return setChoose(variant);
         }
       }
     }
-    setStock(data.stock);
+    setStock(data?.stock);
     return setChoose();
   };
   const onMinus = () => {
@@ -124,8 +125,8 @@ const ProductDetail = ({ className }) => {
   useEffect(() => {
     const getData = async () => {
       const response = await getProductById(id);
-      setStock(response.data.stock);
-      setData(response.data);
+      setStock(response?.data?.stock);
+      setData(response?.data);
     };
     getData();
     setNav1(sliderRef1);
@@ -156,6 +157,7 @@ const ProductDetail = ({ className }) => {
               return (
                 <div key={index} className="w-[600px] h-[600px]">
                   <img
+                    ref={imageRef}
                     src={process.env.REACT_APP_SERVER_URL + value.path}
                     alt=""
                     className="w-full h-full object-cover"
@@ -199,15 +201,15 @@ const ProductDetail = ({ className }) => {
               <div className="flex">
                 <div className="text-lg leading-10">₫</div>
                 <div className="">
-                  {new Intl.NumberFormat().format(choose.old_price * 1000)}
+                  {new Intl.NumberFormat().format(choose.price * 1000)}
                 </div>
               </div>
             )}
-            {choose?.price ? (
+            {choose?.old_price ? (
               <div className="flex text-slate-400 items-center">
                 <div className="text-lg leading-10">₫</div>
                 <div className="line-through font-normal">
-                  {new Intl.NumberFormat().format(choose.price * 1000)}
+                  {new Intl.NumberFormat().format(choose.old_price * 1000)}
                 </div>
                 <div className="bg-secondary text-sm font-light text-white px-1 ml-5">
                   Sale
@@ -228,6 +230,7 @@ const ProductDetail = ({ className }) => {
                   <button
                     key={index2}
                     onClick={() => {
+                      console.log(value);
                       if (variantSeclect[name] === value) {
                         setVariantSelect((prev) => {
                           const obj = { ...prev };

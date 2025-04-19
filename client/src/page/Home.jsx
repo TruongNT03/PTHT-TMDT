@@ -12,7 +12,7 @@ const Home = () => {
   useEffect(() => {
     const getData = async () => {
       const response = await getAllProduct();
-      setData(response.data);
+      setData(response?.data);
     };
     getData();
   }, []);

@@ -5,7 +5,6 @@ import { Op } from "sequelize";
 
 const insertProduct = async (req, res) => {
   const data = JSON.parse(req.body.data);
-  debugger;
   const { product_images, variant_images } = req?.files;
   const { name, description, category_id, section_id, variants } = data;
   const { error } = ProductSchema.insert.validate({
@@ -60,6 +59,7 @@ const insertProduct = async (req, res) => {
   for (let i = 0; i < variants.length; i++) {
     let sku = "";
     for (const variantItem of variants[i].variantList) {
+      console.log(variantItem);
       let vari = await db.variants.findOne({
         where: {
           name: variantItem.variant,
@@ -78,10 +78,14 @@ const insertProduct = async (req, res) => {
           name: variantItem.value,
         },
       });
+      const path = variant_images[i]
+        ? "/images/" + variant_images[i].filename
+        : null;
       if (!vari_value) {
         vari_value = await db.variant_values.create(
           {
             name: variantItem.value,
+            image: path,
             variant_id: vari.id,
           },
           { transaction }
@@ -90,16 +94,13 @@ const insertProduct = async (req, res) => {
       sku += vari_value.id.toString() + "-";
     }
     sku = sku.substring(0, sku.length - 1);
-    const path = "/images/" + variant_images[i].filename;
-    console.log(path);
     const product_variant_value = await db.product_variant_values.create(
       {
         product_id: product.id,
         price: variants[i].price,
-        old_price: variants[i].discount_price,
+        old_price: variants[i].old_price,
         stock: variants[i].stock,
         sku: sku,
-        image: path,
       },
       { transaction }
     );
@@ -219,7 +220,7 @@ const getProductById = async (req, res) => {
         where: {
           product_id: id,
         },
-        attributes: ["id", "price", "old_price", "stock", "sku", "image"],
+        attributes: ["id", "price", "old_price", "stock", "sku"],
         required: false,
       },
       {

@@ -19,7 +19,7 @@ const CreateProduct = () => {
     {
       variantList: [{ variant: "", value: "" }],
       price: "",
-      discount_price: "",
+      old_price: "",
       stock: "",
     },
   ]);
@@ -144,7 +144,7 @@ const CreateProduct = () => {
                 <Upload
                   beforeUpload={() => false}
                   multiple
-                  className="w-full h-[200px] flex items-center justify-center border-dashed border-[2px] rounded-md border-gray-light"
+                  className="w-full h-[200px] flex gap-5 items-center justify-center border-dashed border-[2px] rounded-md border-gray-light"
                 >
                   <Button icon={<CgSoftwareUpload fontSize={24} />}>
                     Click to Upload
@@ -253,7 +253,7 @@ const CreateProduct = () => {
                       {
                         variantList: [{ variant: "", value: "" }],
                         price: "",
-                        discount_price: "",
+                        old_price: "",
                         stock: "",
                       },
                     ];

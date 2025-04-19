@@ -54,18 +54,14 @@ const getCart = async (req, res) => {
     include: [
       {
         model: db.product_variant_values,
-        attributes: [
-          "id",
-          "product_id",
-          "price",
-          "old_price",
-          "stock",
-          "image",
-          "sku",
-        ],
+        attributes: ["id", "product_id", "price", "old_price", "stock", "sku"],
         include: {
           model: db.products,
-          attributes: ["name"],
+          attributes: ["id", "name"],
+          include: {
+            model: db.product_images,
+            attributes: ["path"],
+          },
         },
       },
     ],
@@ -158,14 +154,19 @@ const getCart = async (req, res) => {
         value: variant_value.name,
       });
     }
-
+    const product_id = value.product_variant_value.product.id;
+    const product_images = await db.product_images.findAll({
+      where: {
+        product_id: product_id,
+      },
+    });
     resData.push({
       id: value.id,
       name: value.product_variant_value.product.name,
       product_id: value.product_variant_value.product_id,
       price: value.product_variant_value.price,
       old_price: value.product_variant_value.old_price,
-      image: value.product_variant_value.image,
+      image: product_images[0].path,
       quantity: value.quantity,
       variant: variant,
     });

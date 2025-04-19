@@ -3,7 +3,6 @@ import db from "../models";
 const insertOrder = async (req, res) => {
   const user = req.user;
   const { card_item_ids } = req.body;
-  console.log(req.body);
   const transaction = await db.sequelize.transaction();
   // Tao order
   let total_price = 0;
@@ -23,7 +22,11 @@ const insertOrder = async (req, res) => {
     const product_variant = await db.product_variant_values.findByPk(
       product_variant_id
     );
-    console.log(product_variant);
+    product_variant.stock -= quantity;
+    await product_variant.save({ transaction });
+    const product = await db.products.findByPk(product_variant.product_id);
+    product.stock -= quantity;
+    await product.save({ transaction });
     if (product_variant.stock >= quantity) {
       await db.order_details.create(
         {

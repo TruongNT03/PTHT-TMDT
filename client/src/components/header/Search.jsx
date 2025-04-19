@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { RiSearch2Line } from "react-icons/ri";
 import { IoMdClose } from "react-icons/io";
 import { useNavigate } from "react-router-dom";
@@ -9,6 +9,7 @@ import getAllProduct from "../../services/productService/getAllProduct";
 const Search = () => {
   const [keyword, setKeyword] = useState("");
   const [products, setProducts] = useState([]);
+  const inputRef = useRef();
   const navigate = useNavigate();
   const handleChange = (e) => {
     setKeyword(e.target.value);
@@ -39,6 +40,7 @@ const Search = () => {
         className="w-[400px] px-8 outline-none bg-white py-3 rounded-l-full"
         value={keyword}
         onChange={handleChange}
+        ref={inputRef}
         onBlur={() => setIsShow(false)}
         onFocus={() => setIsShow(true)}
       />
@@ -52,7 +54,12 @@ const Search = () => {
         />
       )}
       <div className="bg-[#FE9614] hover:bg-opacity-50 px-5 rounded-r-full  h-[44px] text-[20px] text-white flex items-center justify-center cursor-pointer">
-        <RiSearch2Line className="text-2xl" />
+        <RiSearch2Line
+          className="text-2xl"
+          onClick={() => {
+            navigate(`/product?keyword=${keyword}`);
+          }}
+        />
       </div>
       {isShow && (
         <div className="absolute top-[50px] bg-light-blue w-full max-h-[300px] overflow-auto rounded-b-lg z-50">
@@ -63,9 +70,8 @@ const Search = () => {
               onMouseDown={(e) => e.preventDefault()}
               onClick={() => {
                 navigate(`/product/${product.id}`);
-                setKeyword("");
-                setProducts([]);
                 setIsShow(false);
+                inputRef.current.blur();
               }}
             >
               <div className="flex items-center gap-5 p-4 cursor-pointer">
