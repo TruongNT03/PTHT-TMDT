@@ -3,6 +3,15 @@ import { getAllOrder } from "../../services/order";
 
 const Order = ({ className }) => {
   const [orders, setOrders] = useState([]);
+  const formatDate = (isoDate) => {
+    const date = new Date(isoDate);
+    const hours = String(date.getHours()).padStart(2, "0");
+    const minutes = String(date.getMinutes()).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const year = date.getFullYear();
+    return `${hours}:${minutes} ${day}/${month}/${year}`;
+  };
   useEffect(() => {
     const getData = async () => {
       const response = await getAllOrder();
@@ -17,24 +26,35 @@ const Order = ({ className }) => {
   return (
     <div className={` ${className}`}>
       <div className="uppercase text-xl">Đơn hàng của bạn</div>
-      <table className="w-full table-auto mt-8 font-semibold text-sm text-white border border-gray-light">
+      <table className="w-full table-auto mt-8 text-sm text-white border border-gray-light">
         <thead>
           <tr className="">
             <th className="bg-secondary border-x py-1">ID</th>
             {/* <th className="bg-secondary border-x">Ngày</th> */}
             {/* <th className="bg-secondary border-x">Địa chỉ</th> */}
             <th className="bg-secondary border-x">Giá trị đơn hàng</th>
+            <th className="bg-secondary border-x">Trạng thái thanh toán</th>
             <th className="bg-secondary border-x">Trạng thái</th>
+            <th className="bg-secondary border-x">Ngày đặt hàng</th>
             {/* <th className="bg-secondary border-x">TT Thanh toán</th> */}
             {/* <th className="bg-secondary border-x">TT Vận Chuyển</th> */}
           </tr>
         </thead>
-        <tbody className="text-dark">
+        <tbody className="text-dark font-light ">
           {orders.map((value, index) => (
-            <tr key={index}>
-              <th>{value.id}</th>
-              <th>{value.total_price}</th>
-              <th>{value.status}</th>
+            <tr key={index} className="border-b-[1px] border-gray font-light">
+              <th className="py-2 font-medium">{"#" + value.id}</th>
+              <th className="font-medium">
+                {new Intl.NumberFormat().format(value.total_price * 1000)} đ
+              </th>
+              <th className="font-medium">
+                {value.payment ? "Đã thanh toán" : "Chưa thanh toán"}
+              </th>
+              <th className="font-medium">
+                {value.status.substring(0, 1).toUpperCase() +
+                  value.status.substring(1)}
+              </th>
+              <th className="font-medium">{formatDate(value.createdAt)}</th>
             </tr>
           ))}
         </tbody>

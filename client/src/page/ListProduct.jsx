@@ -4,18 +4,31 @@ import { Pagination } from "antd";
 
 import getAllProduct from "../services/productService/getAllProduct";
 import Card from "../components/card/Card";
+import { useLocation } from "react-router-dom";
 
 const Product = () => {
+  const location = useLocation();
+  const [totalItem, setTotalItem] = useState(0);
+  const [page, setPage] = useState(1);
+  const [sortBy, setSortBy] = useState("createdAt");
+  const [sortOrder, setSortOrder] = useState("ASC");
+  const searchParams = new URLSearchParams(location.search);
   const [products, setProducts] = useState([]);
   useEffect(() => {
     const fetchProducts = async () => {
-      const response = await getAllProduct();
+      const response = await getAllProduct({
+        keyword: searchParams.get("keyword"),
+        page: page,
+        sortBy: sortBy,
+        sortOrder: sortOrder,
+      });
       if (response?.data) {
         setProducts(response.data);
+        setTotalItem(response.totalItem);
       }
     };
     fetchProducts();
-  }, []);
+  }, [location, page, sortBy, sortOrder]);
   return (
     <div className="w-full max-w-[1110px] mx-auto">
       <div className="mx-auto flex flex-col gap-3 items-center my-8">
@@ -40,10 +53,30 @@ const Product = () => {
         </div>
         <div className="flex gap-3">
           <div className="font-medium">Sắp xếp theo:</div>
-          <select name="" id="" className="bg-transparent outline-0">
-            <option value="">Mới nhất</option>
-            <option value="">Giá tăng dần</option>
-            <option value="">Giá giảm dần</option>
+          <select
+            name=""
+            id=""
+            className="bg-transparent outline-0"
+            onChange={(e) => {
+              switch (e.target.value) {
+                case "createdAt":
+                  setSortBy("createdAt");
+                  setSortOrder("ASC");
+                  break;
+                case "priceDown":
+                  setSortBy("price");
+                  setSortOrder("DESC");
+                  break;
+                case "priceUp":
+                  setSortBy("price");
+                  setSortOrder("ASC");
+                  break;
+              }
+            }}
+          >
+            <option value="createdAt">Mới nhất</option>
+            <option value="priceUp">Giá tăng dần</option>
+            <option value="priceDown">Giá giảm dần</option>
           </select>
         </div>
       </div>
@@ -55,7 +88,13 @@ const Product = () => {
         ))}
       </div>
       <div className="py-5">
-        <Pagination align="center" />
+        <Pagination
+          align="center"
+          total={totalItem}
+          onChange={(page) => {
+            setPage(page);
+          }}
+        />
       </div>
     </div>
   );

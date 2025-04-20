@@ -159,7 +159,7 @@
 
 // export default Product;
 
-import { Button, Table } from "antd";
+import { Button, Table, Pagination } from "antd";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Spin, Input } from "antd";
@@ -244,13 +244,19 @@ const columns = [
 
 const Product = () => {
   const [data, setData] = useState();
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPage, setTotalPage] = useState(1);
+  const [totalItem, setTotalItem] = useState(1);
   useEffect(() => {
     const getData = async () => {
-      const response = await getAllProduct();
+      const response = await getAllProduct({ page: currentPage });
+      setCurrentPage(response.currentPage);
+      setTotalPage(response.totalPage);
+      setTotalItem(response.totalItem);
       setData(response.data);
     };
     getData();
-  }, []);
+  }, [currentPage]);
   return (
     <div className="w-full mt-5">
       <div className="w-full px-8">
@@ -262,12 +268,24 @@ const Product = () => {
           </Link>
         </div>
         {data ? (
-          <Table
-            dataSource={data}
-            columns={columns}
-            size="middle"
-            className="bg-white rounded-xl p-5"
-          />
+          <div>
+            <Table
+              dataSource={data}
+              columns={columns}
+              pagination={false}
+              size="middle"
+              className="bg-white rounded-xl p-5 pb-[50px]"
+            />
+            <Pagination
+              align="end"
+              defaultCurrent={currentPage}
+              total={totalItem}
+              onChange={(page) => {
+                setCurrentPage(page);
+              }}
+              className="-mt-10 mr-4"
+            />
+          </div>
         ) : (
           <Spin
             indicator={<LoadingOutlined spin />}

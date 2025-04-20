@@ -64,6 +64,7 @@ const ProductDetail = ({ className }) => {
   let sliderRef1 = useRef(null);
   let sliderRef2 = useRef(null);
   const imageRef = useRef(null);
+  console.log(imageRef);
 
   const onCart = () => {
     const token = Cookies.get("token");

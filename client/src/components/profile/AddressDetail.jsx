@@ -35,7 +35,7 @@ const AddressDetail = ({
           <div className="flex items-center font-bold mt-5">
             Họ tên:
             <div className="font-normal ml-2">{name}</div>
-            {is_default ? (
+            {is_default === "1" ? (
               <div className="font-normal text-[10px] text-primary ml-4">
                 Địa chỉ mặc định
               </div>

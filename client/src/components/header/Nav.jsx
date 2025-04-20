@@ -37,7 +37,7 @@ const Nav = () => {
                 className="w-12 h-12 object-cover rounded-md"
               />
               <div>
-                <div>{value.name}</div>
+                <div className="max-w-[180px] truncate">{value.name}</div>
                 <div>
                   Giá:{" "}
                   {new Intl.NumberFormat().format(

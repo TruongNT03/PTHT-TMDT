@@ -43,6 +43,13 @@ const Search = () => {
         ref={inputRef}
         onBlur={() => setIsShow(false)}
         onFocus={() => setIsShow(true)}
+        onKeyDown={(e) => {
+          if (e.key === "Enter") {
+            navigate(`/product?keyword=${keyword}`);
+            setIsShow(false);
+            inputRef.current.blur();
+          }
+        }}
       />
       {keyword && (
         <IoMdClose

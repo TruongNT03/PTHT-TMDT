@@ -14,7 +14,7 @@ dotenv.config();
 
 const insertOrder = async (req, res) => {
   const user = req.user;
-  const { card_item_ids, method } = req.body;
+  const { card_item_ids, method, address_id } = req.body;
   console.log(method);
   const transaction = await db.sequelize.transaction();
   // Tao order
@@ -23,6 +23,7 @@ const insertOrder = async (req, res) => {
     {
       user_id: user.id,
       total_price: 0,
+      address_id: address_id,
       status: "Ordered",
     },
     { transaction }
@@ -86,7 +87,7 @@ const getAllOrder = async (req, res) => {
     where: {
       user_id: user.id,
     },
-    attributes: ["id", "total_price", "status"],
+    attributes: ["id", "total_price", "status", "payment", "createdAt"],
   });
   return res.status(200).json({ message: "Thành công", data: orderList });
 };

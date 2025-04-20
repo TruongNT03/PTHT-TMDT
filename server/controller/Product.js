@@ -141,7 +141,12 @@ const updateProduct = async (req, res) => {
 };
 
 const getProduct = async (req, res) => {
-  const { page = 1, keyword, sortBy = "name", sortOrder = "ASC" } = req.query;
+  const {
+    page = 1,
+    keyword,
+    sortBy = "createdAt",
+    sortOrder = "ASC",
+  } = req.query;
   const limit = 10;
   const offset = (page - 1) * limit;
   const whereCondition = keyword
@@ -153,7 +158,7 @@ const getProduct = async (req, res) => {
     : {};
   const { count, rows } = await db.products.findAndCountAll({
     where: whereCondition,
-    attributes: ["id", "name", "description", "stock", "price"],
+    attributes: ["id", "name", "description", "stock", "price", "createdAt"],
     distinct: true,
     include: [
       {
@@ -242,7 +247,7 @@ const getProductById = async (req, res) => {
     const listVariant = [];
     for (let i = 0; i < sku_arr.length; i++) {
       const dataFind = await db.variant_values.findByPk(sku_arr[i], {
-        attributes: ["id", "name"],
+        attributes: ["id", "name", "image"],
         include: [
           {
             model: db.variants,
@@ -254,6 +259,7 @@ const getProductById = async (req, res) => {
         id: dataFind.id,
         value: dataFind.name,
         name: dataFind.variant.name,
+        image: dataFind.image,
       });
     }
     variant_value_data.push(listVariant);

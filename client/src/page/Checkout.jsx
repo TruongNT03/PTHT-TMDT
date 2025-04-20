@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import { HiOutlineLocationMarker } from "react-icons/hi";
 import { MdOutlinePayment } from "react-icons/md";
 import { AiFillProduct } from "react-icons/ai";
-import { Radio } from "antd";
+import { Radio, Modal } from "antd";
 import { useNavigate } from "react-router-dom";
 
 import getAddress from "../services/addressService/getAddress";
@@ -12,11 +12,24 @@ import Button from "../components/button/Button";
 import { CartToCheckoutContext } from "../contexts/CartToCheckoutContext";
 
 const Checkout = () => {
-  const navigate = useNavigate();
-  const { selected, setSelected } = useContext(CartToCheckoutContext);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [pay, setPay] = useState("COD");
   const [address, setAddress] = useState([]);
+  const [tempId, setTmpId] = useState();
+  const [addressChoose, setAddressChoose] = useState({});
   const [cart, setCart] = useState([]);
+  const showModal = () => {
+    setIsModalOpen(true);
+  };
+  const handleOk = () => {
+    setAddressChoose(tempId);
+    setIsModalOpen(false);
+  };
+  const handleCancel = () => {
+    setIsModalOpen(false);
+  };
+  const navigate = useNavigate();
+  const { selected, setSelected } = useContext(CartToCheckoutContext);
   const onSubmit = async () => {
     const card_item_ids = [];
     selected.forEach((value) => {
@@ -25,6 +38,7 @@ const Checkout = () => {
     const response = await insertOrder({
       card_item_ids: card_item_ids,
       method: pay,
+      address_id: addressChoose.id,
     });
     if (response.checkoutUrl) {
       window.location.href = response.checkoutUrl;
@@ -42,6 +56,7 @@ const Checkout = () => {
         alert(response?.error);
       } else {
         setAddress(response.data);
+        setAddressChoose(response.data[0]);
       }
     };
     getData();
@@ -69,18 +84,56 @@ const Checkout = () => {
         </div>
         <div className="flex justify-between">
           <div className="font-medium">
-            <div>{address[0]?.name}</div>
-            <div>{address[0]?.phone}</div>
+            <div>{addressChoose?.name}</div>
+            <div>{addressChoose?.phone}</div>
           </div>
-          <div>{address[0]?.address}</div>
-          {address[0]?.is_default ? (
+          <div>{addressChoose?.address}</div>
+          {addressChoose?.is_default === "1" ? (
             <div className="text-xs text-red">Mặc định</div>
           ) : (
             <></>
           )}
-          <div className="cursor-pointer text-blue-500">Chỉnh sửa</div>
+          <div
+            className="cursor-pointer text-blue-500"
+            onClick={() => {
+              setIsModalOpen(true);
+            }}
+          >
+            Chỉnh sửa
+          </div>
         </div>
       </div>
+      <Modal open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
+        <div>
+          <div className="text-xl font-medium uppercase mb-5">Sổ địa chỉ</div>
+          {address.map((value, index) => (
+            <div
+              className="border-t-[1px] border-gray border-opacity-50 py-5 flex gap-5 text-base"
+              key={index}
+            >
+              <input
+                onChange={() => setTmpId(value)}
+                name="address"
+                type="radio"
+                defaultChecked={value.id === addressChoose.id}
+              />
+              <div className="w-full flex flex-col gap-3">
+                <div className="flex justify-between items-center">
+                  <div className="flex items-center gap-4">
+                    <div className="font-medium">{value.name}</div>
+                    <div className="w-[1px] bg-gray bg-opacity-50 h-[16px]"></div>
+                    <div>{value.phone}</div>
+                  </div>
+                  <div className="text-xs text-red mr-5">
+                    {value.is_default === "1" ? "Mặc định" : ""}
+                  </div>
+                </div>
+                <div>{value.address}</div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </Modal>
       <div className="bg-white mt-10 p-5">
         <div className="flex gap-3 items-center text-lg font-medium text-secondary">
           <AiFillProduct />
@@ -122,16 +175,6 @@ const Checkout = () => {
           <MdOutlinePayment />
           <div>Phương thức thanh toán</div>
         </div>
-        {/* <div className="my-5">
-          <input type="radio" id="COD" className="ml-1" />
-          <label htmlFor="COD" className="ml-3">
-            Thanh toán khi nhận hàng
-          </label>
-        </div>
-        <div className="text-text ml-5">
-          Thanh toán khi nhận hàng Phí thu hộ: ₫0 VNĐ. Ưu đãi về phí vận chuyển
-          (nếu có) áp dụng cả với phí thu hộ.
-        </div> */}
         <Radio.Group
           defaultValue="COD"
           buttonStyle="outline"
@@ -147,7 +190,7 @@ const Checkout = () => {
           </Radio.Button>
           <Radio.Button value="QR">VietQR</Radio.Button>
         </Radio.Group>
-        {pay === "cod" && (
+        {pay === "COD" && (
           <div className="text-text mt-5">
             Thanh toán khi nhận hàng: Phí thu hộ: ₫0 VNĐ. Ưu đãi về phí vận
             chuyển (nếu có) áp dụng cả với phí thu hộ.

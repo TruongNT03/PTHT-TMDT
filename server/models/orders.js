@@ -20,7 +20,9 @@ module.exports = (sequelize, DataTypes) => {
     {
       user_id: DataTypes.INTEGER,
       total_price: DataTypes.FLOAT,
-      status: DataTypes.STRING,
+      status: { type: DataTypes.STRING, defaultValue: "ordered" },
+      payment: { type: DataTypes.BOOLEAN, defaultValue: false },
+      address_id: DataTypes.INTEGER,
     },
     {
       sequelize,

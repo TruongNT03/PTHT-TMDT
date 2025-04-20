@@ -20,7 +20,19 @@ module.exports = {
         type: Sequelize.FLOAT,
       },
       status: {
-        type: Sequelize.STRING,
+        type: Sequelize.ENUM("ordered", "prepare", "shipping", "completed"),
+        default: "ordered",
+      },
+      payment: {
+        type: Sequelize.BOOLEAN,
+        default: false,
+      },
+      address_id: {
+        type: Sequelize.INTEGER,
+        references: {
+          model: "addresses",
+          key: "id",
+        },
       },
       createdAt: {
         allowNull: false,

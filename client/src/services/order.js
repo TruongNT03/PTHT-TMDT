@@ -5,8 +5,12 @@ const getAllOrder = async () => {
   return response;
 };
 
-const insertOrder = async ({ card_item_ids, method }) => {
-  const response = await instance.post("/order", { card_item_ids, method });
+const insertOrder = async ({ card_item_ids, method, address_id }) => {
+  const response = await instance.post("/order", {
+    card_item_ids,
+    method,
+    address_id,
+  });
   return response;
 };
 

@@ -11,6 +11,9 @@ module.exports = (sequelize, DataTypes) => {
       address.belongsTo(models.users, {
         foreignKey: "user_id",
       });
+      address.belongsTo(models.orders, {
+        foreignKey: "address_id",
+      });
     }
   }
   address.init(
