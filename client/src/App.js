@@ -16,6 +16,7 @@ import PublicRoute from "./routes/PublicRoute";
 import AdminLayout from "./layout/AdminLayout";
 import Product from "./page/admin/Product";
 import Dashboard from "./page/admin/Dashboard";
+import AdminOrder from "./page/admin/Order";
 import ProductProvide from "./contexts/ProductContext";
 import ProductDetail from "./page/ProductDetail";
 import NotFound from "./page/NotFound";
@@ -41,6 +42,7 @@ function App() {
                 <Route path="product/new" element={<CreateProduct />} />
                 <Route path="category" element={<Category />} />
                 <Route path="section" element={<Section />} />
+                <Route path="order" element={<AdminOrder />} />
                 <Route
                   path="product"
                   element={

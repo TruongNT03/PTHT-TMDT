@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { RiSearch2Line } from "react-icons/ri";
 import { IoMdClose } from "react-icons/io";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import useDebounce from "../../hooks/useDebounce";
 import getAllProduct from "../../services/productService/getAllProduct";
@@ -33,7 +33,7 @@ const Search = () => {
     }
   }, [debouncedKeyword]);
   return (
-    <div className="flex items-center text-sm h-[44px] relative">
+    <div className="flex w-fit items-center text-sm h-[44px] relative">
       <input
         type="text"
         placeholder="Tìm sản phẩm bạn mong muốn"
@@ -69,34 +69,50 @@ const Search = () => {
         />
       </div>
       {isShow && (
-        <div className="absolute top-[50px] bg-light-blue w-full max-h-[300px] overflow-auto rounded-b-lg z-50">
-          {products?.map((product, index) => (
+        <div className="absolute top-[50px] bg-light-blue w-fit max-h-[300px] overflow-auto rounded-b-lg z-50">
+          {products?.map(
+            (product, index) =>
+              index <= 5 && (
+                <div
+                  className="text-text hover:bg-blue-300 cursor-pointer"
+                  key={index}
+                  onMouseDown={(e) => e.preventDefault()}
+                  onClick={() => {
+                    navigate(`/product/${product.id}`);
+                    setIsShow(false);
+                    inputRef.current.blur();
+                  }}
+                >
+                  <div className="flex items-center gap-5 p-4 cursor-pointer">
+                    <img
+                      src={
+                        process.env.REACT_APP_SERVER_URL +
+                        product.product_images[0].path
+                      }
+                      alt={product.name}
+                      className="w-[50px] h-[50px] object-cover rounded-lg"
+                    />
+                    <div className="flex flex-col">
+                      <span className="font-semibold">{product.name}</span>
+                      <span className="text-gray-500">{product.price}</span>
+                    </div>
+                  </div>
+                </div>
+              )
+          )}
+          {products.length > 0 && (
             <div
-              className="text-text hover:bg-blue-300 cursor-pointer"
-              key={index}
-              onMouseDown={(e) => e.preventDefault()}
-              onClick={() => {
-                navigate(`/product/${product.id}`);
+              onMouseDown={(e) => {
+                e.preventDefault();
+                navigate(`/product?keyword=${keyword}`);
                 setIsShow(false);
                 inputRef.current.blur();
               }}
+              className="w-full bg-secondary py-2 text-center cursor-pointer"
             >
-              <div className="flex items-center gap-5 p-4 cursor-pointer">
-                <img
-                  src={
-                    process.env.REACT_APP_SERVER_URL +
-                    product.product_images[0].path
-                  }
-                  alt={product.name}
-                  className="w-[50px] h-[50px] object-cover rounded-lg"
-                />
-                <div className="flex flex-col">
-                  <span className="font-semibold">{product.name}</span>
-                  <span className="text-gray-500">{product.price}</span>
-                </div>
-              </div>
+              Xem thêm
             </div>
-          ))}
+          )}
         </div>
       )}
     </div>

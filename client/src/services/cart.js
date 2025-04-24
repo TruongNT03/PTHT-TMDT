@@ -15,4 +15,12 @@ const deleteCartItem = async (id) => {
   return response;
 };
 
-export { addToCart, getAllCart, deleteCartItem };
+const updateCartItem = async (id, quantity) => {
+  const response = await instance.put("/cart", {
+    id: id,
+    quantity: quantity,
+  });
+  return response;
+};
+
+export { addToCart, getAllCart, deleteCartItem, updateCartItem };

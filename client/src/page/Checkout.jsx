@@ -30,6 +30,10 @@ const Checkout = () => {
   };
   const navigate = useNavigate();
   const { selected, setSelected } = useContext(CartToCheckoutContext);
+  let totalMoney = 0;
+  selected?.forEach((value) => {
+    totalMoney += (value?.price || value?.old_price) * value.quantity;
+  });
   const onSubmit = async () => {
     const card_item_ids = [];
     selected.forEach((value) => {
@@ -164,9 +168,7 @@ const Checkout = () => {
             </div>
             <div className="flex-[1]">{value?.price || value?.old_price}</div>
             <div className="flex-[1]">{value?.quantity}</div>
-            <div className="flex-[1]">
-              {(value?.price || value?.old_price) * value?.quantity}
-            </div>
+            <div className="flex-[1]">{value?.price * value?.quantity}</div>
           </div>
         ))}
       </div>
@@ -196,12 +198,20 @@ const Checkout = () => {
             chuyển (nếu có) áp dụng cả với phí thu hộ.
           </div>
         )}
-
+        {pay === "QR" && (
+          <div className="text-text mt-5">
+            Thanh toán qua mã QR: Phí thu hộ: ₫0 VNĐ. Ưu đãi về phí vận chuyển
+            (nếu có) áp dụng cả với phí thu hộ.
+          </div>
+        )}
         <div className="w-full bg-gray-light h-[1px] my-5"></div>
         <div className="flex flex-col items-end">
           <div className="flex gap-5 items-center my-5">
             <div>Tổng thanh toán:</div>
-            <div className="text-2xl font-semibold text-red">120, 000đ</div>
+            <div className="text-2xl font-semibold text-red">
+              {new Intl.NumberFormat().format(totalMoney * 1000)}
+              {"đ"}
+            </div>
           </div>
           <Button label="Đặt hàng" className="px-5" onClick={onSubmit} />
         </div>

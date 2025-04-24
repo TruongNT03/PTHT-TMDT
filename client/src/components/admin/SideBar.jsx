@@ -2,6 +2,7 @@ import { GrHomeRounded } from "react-icons/gr";
 import { BsBox } from "react-icons/bs";
 import { TbCategoryMinus } from "react-icons/tb";
 import { AiOutlineUnorderedList } from "react-icons/ai";
+import { IoBagCheckOutline } from "react-icons/io5";
 
 import { Link, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
@@ -9,6 +10,7 @@ import { useEffect, useState } from "react";
 const SideBar = ({ className }) => {
   const [active, setActive] = useState([
     "border-l-secondary",
+    "border-l-transparent",
     "border-l-transparent",
     "border-l-transparent",
     "border-l-transparent",
@@ -21,9 +23,19 @@ const SideBar = ({ className }) => {
         "border-l-transparent",
         "border-l-transparent",
         "border-l-transparent",
+        "border-l-transparent",
       ]);
     } else if (location.includes("product")) {
       setActive([
+        "border-l-transparent",
+        "border-l-secondary",
+        "border-l-transparent",
+        "border-l-transparent",
+        "border-l-transparent",
+      ]);
+    } else if (location.includes("order")) {
+      setActive([
+        "border-l-transparent",
         "border-l-transparent",
         "border-l-secondary",
         "border-l-transparent",
@@ -33,11 +45,13 @@ const SideBar = ({ className }) => {
       setActive([
         "border-l-transparent",
         "border-l-transparent",
+        "border-l-transparent",
         "border-l-secondary",
         "border-l-transparent",
       ]);
     } else if (location.includes("section")) {
       setActive([
+        "border-l-transparent",
         "border-l-transparent",
         "border-l-transparent",
         "border-l-transparent",
@@ -72,15 +86,22 @@ const SideBar = ({ className }) => {
           <div>Product</div>
         </Link>
         <Link
-          to={"category"}
+          to="/admin/order"
           className={`flex items-center ml-3 gap-3 px-4 py-1 ${active[2]} border-l-4`}
+        >
+          <IoBagCheckOutline />
+          <div>Order</div>
+        </Link>
+        <Link
+          to={"/admin/category"}
+          className={`flex items-center ml-3 gap-3 px-4 py-1 ${active[3]} border-l-4`}
         >
           <TbCategoryMinus />
           <div>Category</div>
         </Link>
         <Link
-          to={"section"}
-          className={`flex items-center ml-3 gap-3 px-4 py-1 ${active[3]} border-l-4`}
+          to={"/admin/section"}
+          className={`flex items-center ml-3 gap-3 px-4 py-1 ${active[4]} border-l-4`}
         >
           <AiOutlineUnorderedList />
           <div>Section</div>

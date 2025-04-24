@@ -147,7 +147,8 @@ const getProduct = async (req, res) => {
     sortBy = "createdAt",
     sortOrder = "ASC",
   } = req.query;
-  const limit = 10;
+  let { limit = 10 } = req.query;
+  limit = Number.parseInt(limit);
   const offset = (page - 1) * limit;
   const whereCondition = keyword
     ? {

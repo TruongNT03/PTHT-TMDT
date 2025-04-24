@@ -64,7 +64,13 @@ const ProductDetail = ({ className }) => {
   let sliderRef1 = useRef(null);
   let sliderRef2 = useRef(null);
   const imageRef = useRef(null);
-  console.log(imageRef);
+
+  const onMinusClick = (value) => {
+    setCounter(value);
+  };
+  const onPlusClick = (value) => {
+    setCounter(value);
+  };
 
   const onCart = () => {
     const token = Cookies.get("token");
@@ -295,6 +301,8 @@ const ProductDetail = ({ className }) => {
               onMinus={onMinus}
               onPlus={onPlus}
               setState={setCounter}
+              onMinusClick={onMinusClick}
+              onPlusClick={onPlusClick}
             />
           </div>
           <div className="text-red text-xs mb-5">{message}</div>

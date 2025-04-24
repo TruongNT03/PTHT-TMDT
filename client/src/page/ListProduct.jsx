@@ -21,6 +21,7 @@ const Product = () => {
         page: page,
         sortBy: sortBy,
         sortOrder: sortOrder,
+        limit: 20,
       });
       if (response?.data) {
         setProducts(response.data);
@@ -37,7 +38,7 @@ const Product = () => {
         <div className="w-[80px] h-1 bg-black"></div>
       </div>
       <div className="flex justify-between text-sm">
-        <div className="flex gap-5">
+        {/* <div className="flex gap-5">
           <div className="uppercase">Bộ lọc:</div>
           <div className="cursor-pointer">
             Màu sắc <IoMdArrowDropdown className="inline-block ml-1" />
@@ -50,7 +51,7 @@ const Product = () => {
             Khoảng giá
             <IoMdArrowDropdown className="inline-block ml-1" />
           </div>
-        </div>
+        </div> */}
         <div className="flex gap-3">
           <div className="font-medium">Sắp xếp theo:</div>
           <select

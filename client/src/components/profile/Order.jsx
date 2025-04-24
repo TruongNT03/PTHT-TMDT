@@ -1,17 +1,9 @@
 import { useEffect, useState } from "react";
 import { getAllOrder } from "../../services/order";
+import formatDate from "../../utils/formatDate";
 
 const Order = ({ className }) => {
   const [orders, setOrders] = useState([]);
-  const formatDate = (isoDate) => {
-    const date = new Date(isoDate);
-    const hours = String(date.getHours()).padStart(2, "0");
-    const minutes = String(date.getMinutes()).padStart(2, "0");
-    const day = String(date.getDate()).padStart(2, "0");
-    const month = String(date.getMonth() + 1).padStart(2, "0");
-    const year = date.getFullYear();
-    return `${hours}:${minutes} ${day}/${month}/${year}`;
-  };
   useEffect(() => {
     const getData = async () => {
       const response = await getAllOrder();

@@ -36,6 +36,32 @@ const Home = () => {
         ) : (
           <Loading />
         )}
+        {data ? (
+          <Section>
+            {data.map((value, index) => (
+              <Card
+                key={index}
+                image={value?.product_images[0]?.path}
+                data={value}
+              />
+            ))}
+          </Section>
+        ) : (
+          <Loading />
+        )}
+        {data ? (
+          <Section>
+            {data.map((value, index) => (
+              <Card
+                key={index}
+                image={value?.product_images[0]?.path}
+                data={value}
+              />
+            ))}
+          </Section>
+        ) : (
+          <Loading />
+        )}
       </div>
     </div>
   );

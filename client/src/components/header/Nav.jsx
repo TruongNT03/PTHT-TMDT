@@ -23,9 +23,9 @@ const Nav = () => {
   const content = (
     <div>
       {contextHolder}
-      {cart?.map((value, index) => {
-        if (index <= 4)
-          return (
+      {cart?.map(
+        (value, index) =>
+          index < 4 && (
             <Link
               to={`/product/${value.product_id}`}
               key={index}
@@ -53,8 +53,8 @@ const Nav = () => {
                 Xóa
               </div>
             </Link>
-          );
-      })}
+          )
+      )}
       <div className="flex gap-5 items-center">
         <div>{cart?.length} sản phẩm trong giỏ hàng</div>
         <Link to="/cart">
@@ -127,7 +127,9 @@ const Nav = () => {
           color="orange"
           showZero={false}
         >
-          <BsCart2 className="text-xl cursor-pointer text-white hover:text-secondary" />
+          <Link to="/cart">
+            <BsCart2 className="text-xl cursor-pointer text-white hover:text-secondary" />
+          </Link>
         </Badge>
       </Popover>
     </div>

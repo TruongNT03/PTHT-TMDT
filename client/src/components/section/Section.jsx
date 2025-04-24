@@ -1,6 +1,7 @@
 import Card from "../card/Card";
 import Button from "../button/Button";
 import { MdArrowBack, MdArrowForward } from "react-icons/md";
+import { Link } from "react-router-dom";
 
 const Section = ({ children }) => {
   return (
@@ -10,7 +11,7 @@ const Section = ({ children }) => {
         <div className="uppercase font-bold text-primary text-[40px] py-7">
           SẢN PHẨM HOT
         </div>
-        <div className="flex font-semibold gap-[10px] items-center">
+        {/* <div className="flex font-semibold gap-[10px] items-center">
           <MdArrowBack fontSize={20} className="mr-3" />
           <div className="bg-secondary py-2 px-5 rounded-lg text-white">
             Quần áo
@@ -28,13 +29,15 @@ const Section = ({ children }) => {
             Bé trai
           </div>
           <MdArrowForward fontSize={20} className="ml-3" />
-        </div>
+        </div> */}
       </div>
       <div className="w-full flex justify-between flex-wrap gap-y-6">
         {children}
       </div>
       <div className="w-[241px] h-[62px] mx-auto mt-10 font-bold">
-        <Button label={"Xem tất cả"} className={"px-5"} />
+        <Link to="/product">
+          <Button label={"Xem tất cả"} className={"px-5"} />
+        </Link>
       </div>
     </div>
   );

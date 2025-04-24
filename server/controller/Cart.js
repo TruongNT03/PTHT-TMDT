@@ -168,6 +168,7 @@ const getCart = async (req, res) => {
       old_price: value.product_variant_value.old_price,
       image: product_images[0].path,
       quantity: value.quantity,
+      stock: value.product_variant_value.stock,
       variant: variant,
     });
   }
@@ -192,4 +193,12 @@ const deleteCartItem = async (req, res) => {
   return res.status(200).json({ message: "Xóa thành công" });
 };
 
-export { insertItem, getCart, deleteCartItem };
+const updateCart = async (req, res) => {
+  const { id, quantity } = req.body;
+  const cart_item = await db.cart_items.findByPk(id);
+  cart_item.quantity = quantity;
+  await cart_item.save();
+  return res.status(200).json({ message: "Thành công" });
+};
+
+export { insertItem, getCart, deleteCartItem, updateCart };

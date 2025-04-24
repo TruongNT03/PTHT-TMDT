@@ -7,6 +7,7 @@ import verifyToken from "../middlewares/verifyToken";
 const router = Router();
 
 router.post("", verifyToken, asyncHandler(CartController.insertItem));
+router.put("", verifyToken, asyncHandler(CartController.updateCart));
 router.get("", verifyToken, asyncHandler(CartController.getCart));
 router.delete("/:id", verifyToken, asyncHandler(CartController.deleteCartItem));
 
