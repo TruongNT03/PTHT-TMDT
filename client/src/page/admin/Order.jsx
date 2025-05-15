@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Spin, Input, Modal } from "antd";
 import { LoadingOutlined } from "@ant-design/icons";
-import { getAllOrder } from "../../services/order";
+import { getAllOrder, updateOrder } from "../../services/order";
 import formatDate from "../../utils/formatDate";
 const { Search } = Input;
 
@@ -13,24 +13,40 @@ const Order = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPage, setTotalPage] = useState(1);
   const [totalItem, setTotalItem] = useState(1);
+  const [status, setStatus] = useState("ordered");
+  const [payment, setPayment] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const getData = async () => {
+    const response = await getAllOrder({ page: currentPage });
+    setCurrentPage(response.currentPage);
+    setTotalPage(response.totalPage);
+    setTotalItem(response.totalItem);
+    setData(response.data);
+  };
   const showModal = () => {
     setIsModalOpen(true);
   };
   const handleOk = () => {
     setIsModalOpen(false);
+    const putData = async () => {
+      const response = await updateOrder({
+        id: selected,
+        status: status,
+        payment: payment,
+      });
+      if (response?.error) {
+        alert(response.message);
+      } else {
+        getData();
+        alert("Thành công");
+      }
+    };
+    putData();
   };
   const handleCancel = () => {
     setIsModalOpen(false);
   };
   useEffect(() => {
-    const getData = async () => {
-      const response = await getAllOrder({ page: currentPage });
-      setCurrentPage(response.currentPage);
-      setTotalPage(response.totalPage);
-      setTotalItem(response.totalItem);
-      setData(response.data);
-    };
     getData();
   }, [currentPage]);
 
@@ -116,15 +132,17 @@ const Order = () => {
         <div className="flex flex-col gap-2">
           <div>Thanh toán:</div>
           <Select
-            defaultValue={1}
+            onChange={(value) => setPayment(value)}
+            defaultValue={0}
             options={[
-              { value: 1, label: "Chưa thanh toán" },
-              { value: 0, label: "Đã thanh toán" },
+              { value: 0, label: "Chưa thanh toán" },
+              { value: 1, label: "Đã thanh toán" },
             ]}
           />
           <div>Trạng thái:</div>
           <Select
             defaultValue={"orderd"}
+            onChange={(value) => setStatus(value)}
             options={[
               { value: "orderd", label: "Đặt hàng" },
               { value: "prepare", label: "Chuẩn bị" },

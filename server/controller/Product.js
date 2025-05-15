@@ -78,14 +78,10 @@ const insertProduct = async (req, res) => {
           name: variantItem.value,
         },
       });
-      const path = variant_images[i]
-        ? "/images/" + variant_images[i].filename
-        : null;
       if (!vari_value) {
         vari_value = await db.variant_values.create(
           {
             name: variantItem.value,
-            image: path,
             variant_id: vari.id,
           },
           { transaction }
@@ -94,11 +90,13 @@ const insertProduct = async (req, res) => {
       sku += vari_value.id.toString() + "-";
     }
     sku = sku.substring(0, sku.length - 1);
+    const path = "/images/" + variant_images[i].filename;
     const product_variant_value = await db.product_variant_values.create(
       {
         product_id: product.id,
         price: variants[i].price,
         old_price: variants[i].old_price,
+        image: path,
         stock: variants[i].stock,
         sku: sku,
       },
@@ -226,7 +224,7 @@ const getProductById = async (req, res) => {
         where: {
           product_id: id,
         },
-        attributes: ["id", "price", "old_price", "stock", "sku"],
+        attributes: ["id", "price", "old_price", "image", "stock", "sku"],
         required: false,
       },
       {
@@ -248,7 +246,7 @@ const getProductById = async (req, res) => {
     const listVariant = [];
     for (let i = 0; i < sku_arr.length; i++) {
       const dataFind = await db.variant_values.findByPk(sku_arr[i], {
-        attributes: ["id", "name", "image"],
+        attributes: ["id", "name"],
         include: [
           {
             model: db.variants,
@@ -260,7 +258,6 @@ const getProductById = async (req, res) => {
         id: dataFind.id,
         value: dataFind.name,
         name: dataFind.variant.name,
-        image: dataFind.image,
       });
     }
     variant_value_data.push(listVariant);

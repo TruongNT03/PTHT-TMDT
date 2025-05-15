@@ -8,6 +8,8 @@ import insertProduct from "../../services/productService/insertProduct";
 import getAllDropDown from "../../services/productService/getAllDropDown";
 import { useNavigate, useParams } from "react-router-dom";
 
+import { Editor } from "@tinymce/tinymce-react";
+
 const CreateProduct = () => {
   const { id } = useParams();
   const [categories, setCategories] = useState([]);
@@ -15,6 +17,7 @@ const CreateProduct = () => {
   const [sections, setSections] = useState([]);
   const [category, setCategory] = useState(1);
   const [section, setSection] = useState(1);
+  const [description, setDescription] = useState("");
   const [variants, setVariants] = useState([
     {
       variantList: [{ variant: "", value: "" }],
@@ -44,7 +47,7 @@ const CreateProduct = () => {
       });
       const data = {
         name: values.name,
-        description: values.description,
+        description: description,
         category_id: category,
         section_id: section,
         variants: variants,
@@ -81,6 +84,7 @@ const CreateProduct = () => {
         });
       }
     } catch (error) {
+      console.log(error);
       toast.error("Có lỗi xảy ra", {
         position: "top-right",
         autoClose: 3000,
@@ -121,7 +125,7 @@ const CreateProduct = () => {
               >
                 <Input />
               </Form.Item>
-              <Form.Item
+              {/* <Form.Item
                 label="Product Description:"
                 name="description"
                 rules={[
@@ -132,7 +136,37 @@ const CreateProduct = () => {
                 ]}
               >
                 <Input.TextArea autoSize={{ maxRows: 10, minRows: 10 }} />
-              </Form.Item>
+              </Form.Item> */}
+              <div>
+                <Editor
+                  onEditorChange={(content, editor) => {
+                    setDescription(content);
+                  }}
+                  apiKey="6p39nxjk9unxi9dguqp0bl9rdb52mgyo5tjr30yo6agxqd1a"
+                  init={{
+                    plugins: [
+                      "anchor",
+                      "autolink",
+                      "charmap",
+                      "codesample",
+                      "emoticons",
+                      "image",
+                      "link",
+                      "lists",
+                      "searchreplace",
+                      "table",
+                      "visualblocks",
+                      "wordcount",
+                    ],
+                    toolbar:
+                      "undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table | align lineheight | numlist bullist indent outdent | emoticons charmap | removeformat",
+                    menubar: false,
+                    content_style:
+                      "body { font-family:SF Pro Display, sans-serif; font-size:14px }",
+                  }}
+                />
+              </div>
+
               <div className="h-[2px] bg-gray-light my-14"></div>
               <div className="text-2xl font-semibold mb-5">Images</div>
               <Form.Item

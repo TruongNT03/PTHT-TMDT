@@ -54,7 +54,15 @@ const getCart = async (req, res) => {
     include: [
       {
         model: db.product_variant_values,
-        attributes: ["id", "product_id", "price", "old_price", "stock", "sku"],
+        attributes: [
+          "id",
+          "product_id",
+          "price",
+          "old_price",
+          "image",
+          "stock",
+          "sku",
+        ],
         include: {
           model: db.products,
           attributes: ["id", "name"],
@@ -166,7 +174,7 @@ const getCart = async (req, res) => {
       product_id: value.product_variant_value.product_id,
       price: value.product_variant_value.price,
       old_price: value.product_variant_value.old_price,
-      image: product_images[0].path,
+      image: value.product_variant_value.image,
       quantity: value.quantity,
       stock: value.product_variant_value.stock,
       variant: variant,

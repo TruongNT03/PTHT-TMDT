@@ -25,6 +25,9 @@ module.exports = {
       stock: {
         type: Sequelize.INTEGER,
       },
+      image: {
+        type: Sequelize.STRING,
+      },
       sku: {
         type: Sequelize.STRING,
       },

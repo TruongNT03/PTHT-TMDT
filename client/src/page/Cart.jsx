@@ -12,6 +12,7 @@ import { CartToCheckoutContext } from "../contexts/CartToCheckoutContext";
 const Cart = () => {
   const { cart, getCart } = useContext(HeaderContext);
   const { selected, setSelected } = useContext(CartToCheckoutContext);
+  console.log(selected);
   // let totalMoney = 0;
   // selected?.forEach((value) => {
   //   totalMoney += (value?.price || value?.old_price) * value.quantity;

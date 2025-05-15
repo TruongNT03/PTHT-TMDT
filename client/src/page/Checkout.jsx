@@ -35,9 +35,12 @@ const Checkout = () => {
     totalMoney += (value?.price || value?.old_price) * value.quantity;
   });
   const onSubmit = async () => {
+    if (!addressChoose) {
+      return alert("Vui lòng chọn địa chỉ!");
+    }
     const card_item_ids = [];
     selected.forEach((value) => {
-      card_item_ids.push(value.id);
+      card_item_ids.push(value?.id);
     });
     const response = await insertOrder({
       card_item_ids: card_item_ids,

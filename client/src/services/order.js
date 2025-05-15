@@ -14,4 +14,12 @@ const insertOrder = async ({ card_item_ids, method, address_id }) => {
   return response;
 };
 
-export { getAllOrder, insertOrder };
+const updateOrder = async ({ id, payment, status }) => {
+  const response = await instance.put("/order", {
+    id,
+    status,
+    payment,
+  });
+};
+
+export { getAllOrder, insertOrder, updateOrder };

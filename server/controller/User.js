@@ -44,7 +44,7 @@ const login = async (req, res) => {
     },
   });
   if (user) {
-    const comparePass = bcrypt.compare(req.body.password, user.password);
+    const comparePass = await bcrypt.compare(req.body.password, user.password);
     if (!comparePass) {
       return res.status(401).json({
         message: "Tài khoản mật khẩu không chính xác.",

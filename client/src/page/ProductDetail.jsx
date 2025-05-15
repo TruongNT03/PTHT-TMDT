@@ -1,6 +1,7 @@
 import Slider from "react-slick";
 import { useState, useRef, useEffect, useContext } from "react";
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
+import { MdKeyboardArrowDown } from "react-icons/md";
 import { useNavigate, useParams } from "react-router";
 import Cookies from "js-cookie";
 
@@ -11,6 +12,7 @@ import getProductById from "../services/productService/getProductById";
 import { addToCart } from "../services/cart";
 import { HeaderContext } from "../contexts/HeaderContext";
 import { MessageContext } from "../contexts/MesageContext";
+import Accordion from "../components/accordion/Accordion";
 
 function SamplePrevArrow(props) {
   const { className, onClick } = props;
@@ -41,6 +43,7 @@ const ProductDetail = ({ className }) => {
   const [message, setMessage] = useState("");
   const [stock, setStock] = useState();
   const [counter, setCounter] = useState(1);
+  const [displayDes, setDisplayDes] = useState(false);
   const navigate = useNavigate();
   // console.log(data);
   // console.log(variantSeclect);
@@ -315,6 +318,12 @@ const ProductDetail = ({ className }) => {
           />
         </div>
       </div>
+      <Accordion title={"Mô tả sản phẩm"}>
+        <div
+          dangerouslySetInnerHTML={{ __html: data.description }}
+          className="pt-4"
+        />
+      </Accordion>
     </div>
   );
 };

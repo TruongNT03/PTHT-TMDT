@@ -92,4 +92,14 @@ const getAllOrder = async (req, res) => {
   return res.status(200).json({ message: "Thành công", data: orderList });
 };
 
-export { insertOrder, getAllOrder };
+const updateOrder = async (req, res) => {
+  const { id, status, payment } = req.body;
+  const order = await db.orders.findByPk(id);
+  await order.update({
+    status,
+    payment,
+  });
+  return res.status(200).json({ message: "Thành công" });
+};
+
+export { insertOrder, getAllOrder, updateOrder };
