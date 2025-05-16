@@ -138,33 +138,35 @@ const CreateProduct = () => {
                 <Input.TextArea autoSize={{ maxRows: 10, minRows: 10 }} />
               </Form.Item> */}
               <div>
-                <Editor
-                  onEditorChange={(content, editor) => {
-                    setDescription(content);
-                  }}
-                  apiKey="6p39nxjk9unxi9dguqp0bl9rdb52mgyo5tjr30yo6agxqd1a"
-                  init={{
-                    plugins: [
-                      "anchor",
-                      "autolink",
-                      "charmap",
-                      "codesample",
-                      "emoticons",
-                      "image",
-                      "link",
-                      "lists",
-                      "searchreplace",
-                      "table",
-                      "visualblocks",
-                      "wordcount",
-                    ],
-                    toolbar:
-                      "undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table | align lineheight | numlist bullist indent outdent | emoticons charmap | removeformat",
-                    menubar: false,
-                    content_style:
-                      "body { font-family:SF Pro Display, sans-serif; font-size:14px }",
-                  }}
-                />
+                <Form.Item label="Product Description">
+                  <Editor
+                    onEditorChange={(content, editor) => {
+                      setDescription(content);
+                    }}
+                    apiKey="6p39nxjk9unxi9dguqp0bl9rdb52mgyo5tjr30yo6agxqd1a"
+                    init={{
+                      plugins: [
+                        "anchor",
+                        "autolink",
+                        "charmap",
+                        "codesample",
+                        "emoticons",
+                        "image",
+                        "link",
+                        "lists",
+                        "searchreplace",
+                        "table",
+                        "visualblocks",
+                        "wordcount",
+                      ],
+                      toolbar:
+                        "undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table | align lineheight | numlist bullist indent outdent | emoticons charmap | removeformat",
+                      menubar: false,
+                      content_style:
+                        "body { font-family:SF Pro Display, sans-serif; font-size:14px }",
+                    }}
+                  />
+                </Form.Item>
               </div>
 
               <div className="h-[2px] bg-gray-light my-14"></div>

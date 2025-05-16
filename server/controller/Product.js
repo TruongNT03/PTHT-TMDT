@@ -241,9 +241,10 @@ const getProductById = async (req, res) => {
     return res.status(200).json({ message: "Không tồn tại sản phẩm" });
   }
   const variant_value_data = [];
+  const available_attributes = {};
   for (const element of product.product_variant_values) {
     const sku_arr = element.sku.split("-").map((value) => parseInt(value));
-    const listVariant = [];
+    let listVariant = [];
     for (let i = 0; i < sku_arr.length; i++) {
       const dataFind = await db.variant_values.findByPk(sku_arr[i], {
         attributes: ["id", "name"],
@@ -254,6 +255,16 @@ const getProductById = async (req, res) => {
           },
         ],
       });
+      if (available_attributes.hasOwnProperty(dataFind.variant.name)) {
+        if (
+          !available_attributes[dataFind.variant.name].includes(dataFind.name)
+        ) {
+          available_attributes[dataFind.variant.name].push(dataFind.name);
+        }
+      } else {
+        available_attributes[dataFind.variant.name] = [dataFind.name];
+      }
+
       listVariant.push({
         id: dataFind.id,
         value: dataFind.name,
@@ -272,6 +283,7 @@ const getProductById = async (req, res) => {
     section_id: product.section_id,
     product_variants: [],
     product_images: product.product_images,
+    available_attributes,
   };
   for (let i = 0; i < product.product_variant_values.length; i++) {
     response.product_variants.push({

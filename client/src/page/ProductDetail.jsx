@@ -39,6 +39,7 @@ const ProductDetail = ({ className }) => {
   const { id } = useParams();
   const [data, setData] = useState({});
   const [variantSeclect, setVariantSelect] = useState({});
+  const [availableAttributes, setAvailableAttributes] = useState([]);
   const [choose, setChoose] = useState();
   const [message, setMessage] = useState("");
   const [stock, setStock] = useState();
@@ -137,6 +138,7 @@ const ProductDetail = ({ className }) => {
       const response = await getProductById(id);
       setStock(response?.data?.stock);
       setData(response?.data);
+      setAvailableAttributes(response?.data?.available_attributes);
     };
     getData();
     setNav1(sliderRef1);
@@ -232,7 +234,42 @@ const ProductDetail = ({ className }) => {
               </div>
             )}
           </div>
-          {Array.from(variant_of_product.variant).map((name, index1) => (
+          {Object.entries(availableAttributes).map(([key, values]) => (
+            <div key={key} className="flex mb-5">
+              <div className="flex-[1]">{key}</div>
+              <div className="flex flex-[4] gap-2 flex-wrap">
+                {values.map((value) => (
+                  <button
+                    key={value}
+                    onClick={() => {
+                      console.log(value);
+                      if (variantSeclect[value] === value) {
+                        setVariantSelect((prev) => {
+                          const obj = { ...prev };
+                          delete obj[value];
+                          return { ...obj };
+                        });
+                      } else {
+                        setVariantSelect((prev) => ({
+                          ...prev,
+                          [value]: value,
+                        }));
+                      }
+                      findVariant(variantSeclect);
+                    }}
+                    className={`border rounded-sm px-2 text-text ${
+                      variantSeclect[value] === value
+                        ? "border-secondary"
+                        : "border-gray-light"
+                    }`}
+                  >
+                    {value}
+                  </button>
+                ))}
+              </div>
+            </div>
+          ))}
+          {/* {Array.from(variant_of_product.variant).map((name, index1) => (
             <div key={index1} className="flex mb-5">
               <div className="flex-[1]">{name}</div>
               <div className="flex flex-[4] gap-2 flex-wrap">
@@ -266,7 +303,7 @@ const ProductDetail = ({ className }) => {
                 ))}
               </div>
             </div>
-          ))}
+          ))} */}
           <div className="flex mb-[40px]">
             <div className="flex-[1]">
               <img
