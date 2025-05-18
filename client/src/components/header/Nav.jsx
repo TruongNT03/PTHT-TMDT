@@ -3,56 +3,66 @@ import { useContext } from "react";
 import { Link } from "react-router-dom";
 import { BsCart2 } from "react-icons/bs";
 import { Popover, Badge, Button } from "antd";
+import { Bounce, toast } from "react-toastify";
 
 import { HeaderContext } from "../../contexts/HeaderContext";
-import { MessageContext } from "../../contexts/MesageContext";
 import { deleteCartItem } from "../../services/cart";
 
 const Nav = () => {
   const { user, setUser, cart, getCart, setCart } = useContext(HeaderContext);
-  const { openNotification, contextHolder } = useContext(MessageContext);
   const handleDetele = async (id) => {
     const response = await deleteCartItem(id);
     if (response?.error) {
-      openNotification({ message: response?.error });
+      toast.error(response?.error, {
+        autoClose: 2000,
+        hideProgressBar: true,
+        transition: Bounce,
+        closeButton: false,
+      });
     } else {
-      openNotification({ message: "Xóa sản phẩm thành công!" });
+      toast.success("Xóa sản phẩm thành công!", {
+        autoClose: 2000,
+        hideProgressBar: true,
+        transition: Bounce,
+        closeButton: false,
+      });
     }
     getCart();
   };
   const content = (
     <div>
-      {contextHolder}
       {cart?.map(
         (value, index) =>
           index < 4 && (
-            <Link
-              to={`/product/${value.product_id}`}
-              key={index}
-              className="flex gap-2 p-2 mb-2 rounded-md cursor-pointer hover:bg-primary hover:bg-opacity-20 hover:text-text"
-            >
-              <img
-                src={process.env.REACT_APP_SERVER_URL + value.image}
-                alt=""
-                className="w-12 h-12 object-cover rounded-md"
-              />
-              <div>
-                <div className="max-w-[180px] truncate">{value.name}</div>
+            <div className="flex items-center rounded-md cursor-pointer hover:bg-primary hover:bg-opacity-20 ">
+              <Link
+                to={`/product/${value.product_id}`}
+                key={index}
+                className="flex gap-2 p-2 mb-2 hover:text-text"
+              >
+                <img
+                  src={process.env.REACT_APP_SERVER_URL + value.image}
+                  alt=""
+                  className="w-12 h-12 object-cover rounded-md"
+                />
                 <div>
-                  Giá:{" "}
-                  {new Intl.NumberFormat().format(
-                    (value?.price ? value.price : value.old_price) * 1000
-                  )}
-                  đ
+                  <div className="max-w-[180px] truncate">{value.name}</div>
+                  <div>
+                    Giá:{" "}
+                    {new Intl.NumberFormat().format(
+                      (value?.price ? value.price : value.old_price) * 1000
+                    )}
+                    đ
+                  </div>
                 </div>
-              </div>
+              </Link>
               <div
-                className="flex-auto text-right cursor-pointer text-blue-500 hover:text-red"
+                className="flex-auto text-right mr-3 cursor-pointer text-blue-500 hover:text-red"
                 onClick={() => handleDetele(value.id)}
               >
                 Xóa
               </div>
-            </Link>
+            </div>
           )
       )}
       <div className="flex gap-5 items-center">

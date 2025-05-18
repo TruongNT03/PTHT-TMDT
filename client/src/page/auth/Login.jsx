@@ -3,16 +3,16 @@ import { ImGoogle2 } from "react-icons/im";
 import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { useContext, useState } from "react";
+import { Bounce, ToastContainer, toast } from "react-toastify";
+import ReCAPTCHA from "react-google-recaptcha";
 
 import Button from "../../components/button/Button";
 import Input from "../../components/input/Input";
 import login from "../../services/authService/login";
 import { HeaderContext } from "../../contexts/HeaderContext";
-import { MessageContext } from "../../contexts/MesageContext";
 
 const Login = () => {
   const navigate = useNavigate();
-  const { openNotification, contextHolder } = useContext(MessageContext);
   const { getCart } = useContext(HeaderContext);
   const { handleGet } = useContext(HeaderContext);
   const {
@@ -29,7 +29,12 @@ const Login = () => {
       getCart();
       navigate("/");
     } else {
-      openNotification({ message: "Tài khoản mật khẩu không chính xác!" });
+      toast.error("Tài khoản hoặc mật khẩu không chính xác!", {
+        autoClose: 2000,
+        transition: Bounce,
+        closeButton: false,
+        hideProgressBar: true,
+      });
     }
   };
 
@@ -44,7 +49,7 @@ const Login = () => {
 
   return (
     <div className="w-full py-16">
-      {contextHolder}
+      <ToastContainer />
       <form
         onSubmit={handleSubmit(onSubmit)}
         className="flex flex-col w-[368px] items-center gap-[15px] p-6 rounded-xl mx-auto shadow-2xl"
@@ -113,7 +118,11 @@ const Login = () => {
               })}
               errorMessage={errors.remail?.message}
             />
-            <Button label={"Lấy lại mật khẩu"} className={"mt-[15px]"} />
+            <div className="my-5 w-full flex justify-center">
+              <ReCAPTCHA sitekey={process.env.REACT_APP_SITE_KEY} />
+            </div>
+
+            <Button label={"Lấy lại mật khẩu"} className={"mt-[15px] w-full"} />
           </div>
         )}
 

@@ -64,7 +64,14 @@ function App() {
                   <Route path="changepassword" element={<ChangePassword />} />
                   <Route path="address" element={<Address />} />
                 </Route>
-                <Route path="/product/:id" element={<ProductDetail />} />
+                <Route
+                  path="/product/:id"
+                  element={
+                    <CartToCheckoutProvider>
+                      <ProductDetail />
+                    </CartToCheckoutProvider>
+                  }
+                />
                 <Route path="/product" element={<ListProduct />} />
               </Route>
               <Route element={<ProtectedRoute />}>

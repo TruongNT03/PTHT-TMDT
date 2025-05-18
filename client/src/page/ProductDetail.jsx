@@ -4,6 +4,7 @@ import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 import { MdKeyboardArrowDown } from "react-icons/md";
 import { useNavigate, useParams } from "react-router";
 import Cookies from "js-cookie";
+import { Bounce, toast, ToastContainer } from "react-toastify";
 
 import Navigate from "../components/navigate/Navigate";
 import Button from "../components/button/Button";
@@ -11,8 +12,8 @@ import Counter from "../components/counter/Counter";
 import getProductById from "../services/productService/getProductById";
 import { addToCart } from "../services/cart";
 import { HeaderContext } from "../contexts/HeaderContext";
-import { MessageContext } from "../contexts/MesageContext";
 import Accordion from "../components/accordion/Accordion";
+import { CartToCheckoutContext } from "../contexts/CartToCheckoutContext";
 
 function SamplePrevArrow(props) {
   const { className, onClick } = props;
@@ -35,7 +36,7 @@ function SampleNextArrow(props) {
 
 const ProductDetail = ({ className }) => {
   const { getCart } = useContext(HeaderContext);
-  const { openNotification, contextHolder } = useContext(MessageContext);
+  const { selected, setSelected } = useContext(CartToCheckoutContext);
   const { id } = useParams();
   const [data, setData] = useState({});
   const [variantSeclect, setVariantSelect] = useState({});
@@ -68,13 +69,28 @@ const ProductDetail = ({ className }) => {
   let sliderRef1 = useRef(null);
   let sliderRef2 = useRef(null);
   const imageRef = useRef(null);
-
   const onMinusClick = (value) => {
     setCounter(value);
   };
   const onPlusClick = (value) => {
     setCounter(value);
   };
+
+  // const onBuy = () => {
+  //   const token = Cookies.get("token");
+  //   if (!token) {
+  //     navigate("/login");
+  //   }
+  //   if (choose === undefined) {
+  //     return setMessage("Vui lòng chọn phân loại sản phẩm!");
+  //   }
+  //   if (counter > stock || counter <= 0) {
+  //     return setMessage("Số lượng sản phẩm không hợp lệ!");
+  //   }
+  //   setSelected([choose]);
+  //   console.log(choose);
+  //   navigate("/checkout");
+  // };
 
   const onCart = () => {
     const token = Cookies.get("token");
@@ -92,7 +108,13 @@ const ProductDetail = ({ className }) => {
       if (response.error) {
         alert(response.message);
       } else {
-        openNotification({ message: "Thêm vào giỏ hàng thành công!" });
+        toast.success("Thêm vào giỏ hàng thành công!", {
+          position: "top-right",
+          autoClose: 2000,
+          hideProgressBar: true,
+          closeButton: false,
+          transition: Bounce,
+        });
       }
       await getCart();
     };
@@ -156,7 +178,7 @@ const ProductDetail = ({ className }) => {
   }, [variantSeclect, choose, counter]);
   return (
     <div className="w-full max-w-[1110px] mx-auto py-10">
-      {contextHolder}
+      <ToastContainer />
       <Navigate className={"w-full mb-4"} />
       <div className="w-full flex gap-5">
         <div className="flex-1 max-w-[600px]">
@@ -170,7 +192,10 @@ const ProductDetail = ({ className }) => {
                 <div key={index} className="w-[600px] h-[600px]">
                   <img
                     ref={imageRef}
-                    src={process.env.REACT_APP_SERVER_URL + value.path}
+                    src={
+                      process.env.REACT_APP_SERVER_URL +
+                      (choose ? choose.image : value.path)
+                    }
                     alt=""
                     className="w-full h-full object-cover"
                   />
@@ -202,12 +227,7 @@ const ProductDetail = ({ className }) => {
         </div>
         <div className="flex-1">
           <div className="text-[22px] font-semibold mb-[10px]">{data.name}</div>
-          <div className="flex items-center text-text mb-[20px]">
-            <div className="flex-[1]">Có sẵn</div>
-            <div className="flex flex-[4]">
-              <div className="text-red mr-1">{stock}</div> Sản phẩm
-            </div>
-          </div>
+
           <div className="flex gap-5 text-red text-[28px] font-semibold bg-light-blue p-3 my-3">
             {choose?.old_price && (
               <div className="flex">
@@ -242,23 +262,25 @@ const ProductDetail = ({ className }) => {
                   <button
                     key={value}
                     onClick={() => {
-                      console.log(value);
-                      if (variantSeclect[value] === value) {
+                      console.log(key);
+                      if (variantSeclect[key] === value) {
                         setVariantSelect((prev) => {
                           const obj = { ...prev };
-                          delete obj[value];
+                          delete obj[key];
                           return { ...obj };
                         });
                       } else {
-                        setVariantSelect((prev) => ({
-                          ...prev,
-                          [value]: value,
-                        }));
+                        setVariantSelect((prev) => {
+                          return {
+                            ...prev,
+                            [key]: value,
+                          };
+                        });
                       }
                       findVariant(variantSeclect);
                     }}
                     className={`border rounded-sm px-2 text-text ${
-                      variantSeclect[value] === value
+                      variantSeclect[key] === value
                         ? "border-secondary"
                         : "border-gray-light"
                     }`}
@@ -345,12 +367,22 @@ const ProductDetail = ({ className }) => {
               onPlusClick={onPlusClick}
             />
           </div>
+          <div className="flex items-center text-text mb-[20px]">
+            <div className="flex-[1]">Có sẵn</div>
+            <div className="flex flex-[4]">
+              <div className="text-red mr-1">{stock}</div> Sản phẩm
+            </div>
+          </div>
           <div className="text-red text-xs mb-5">{message}</div>
-          <Button label={"Mua ngay"} className={"w-full mb-5"} />
+          {/* <Button
+            label={"Mua ngay"}
+            className={"w-full mb-5"}
+            onClick={onBuy}
+          /> */}
           <Button
             label={"Thêm vào giỏ hàng"}
             className={"w-full"}
-            variant="white"
+            variant="green"
             onClick={onCart}
           />
         </div>

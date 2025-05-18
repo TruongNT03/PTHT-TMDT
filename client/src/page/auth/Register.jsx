@@ -1,17 +1,17 @@
 import { Link, useNavigate } from "react-router-dom";
 import { FaFacebookSquare } from "react-icons/fa";
 import { ImGoogle2 } from "react-icons/im";
-import { useForm } from "react-hook-form";
+import { set, useForm } from "react-hook-form";
+import ReCAPTCHA from "react-google-recaptcha";
+import { Bounce, ToastContainer, toast } from "react-toastify";
 
 import Input from "../../components/input/Input";
 import Button from "../../components/button/Button";
 import signIn from "../../services/authService/register";
-import { useContext } from "react";
-import { MessageContext } from "../../contexts/MesageContext";
+import { useRef } from "react";
 
 const Register = ({ classname }) => {
   const navigate = useNavigate();
-  const { openNotification, contextHolder } = useContext(MessageContext);
   const {
     register,
     handleSubmit,
@@ -20,20 +20,59 @@ const Register = ({ classname }) => {
   } = useForm();
 
   const onSubmit = async (data) => {
-    const response = await signIn(data);
-    if (response?.data) {
-      openNotification({ message: "Đăng ký thành công" });
-      navigate("/login");
-    } else {
-      alert(response.message);
+    try {
+      const captchaValue = captchaRef.current?.getValue();
+      if (!captchaValue) {
+        toast.error("Vui lòng xác minh CAPTCHA!", {
+          autoClose: 2000,
+          transition: Bounce,
+          closeButton: false,
+          hideProgressBar: true,
+        });
+        return;
+      }
+      const response = await signIn(data);
+      if (response?.data) {
+        toast.success(
+          <>
+            Đăng ký thành công! <br />
+            Đang chuyển hướng đến trang đăng nhập...
+          </>,
+          {
+            autoClose: 2000,
+            transition: Bounce,
+            closeButton: false,
+            hideProgressBar: true,
+          }
+        );
+        setTimeout(() => {
+          navigate("/login");
+        }, 2000);
+      } else {
+        toast.error(response.message, {
+          autoClose: 2000,
+          transition: Bounce,
+          closeButton: false,
+          hideProgressBar: true,
+        });
+      }
+    } catch (error) {
+      toast.error("Đã xảy ra lỗi, vui lòng thử lại sau!", {
+        autoClose: 2000,
+        transition: Bounce,
+        closeButton: false,
+        hideProgressBar: true,
+      });
     }
   };
+
+  const captchaRef = useRef(null);
 
   const password = watch("password");
 
   return (
     <div className={`${classname}w-full py-16`}>
-      {contextHolder}
+      <ToastContainer />
       <form
         onSubmit={handleSubmit(onSubmit)}
         className="flex flex-col w-[368px] items-center gap-[15px] p-6 rounded-xl mx-auto shadow-2xl"
@@ -114,6 +153,7 @@ const Register = ({ classname }) => {
           })}
           errorMessage={errors.rePassword?.message}
         />
+        <ReCAPTCHA ref={captchaRef} sitekey={process.env.REACT_APP_SITE_KEY} />
         <Button label={"Đăng ký"} className={"w-full"} />
         <div>Hoặc đăng nhập bằng</div>
         <div className="w-full p-2 flex items-center justify-center gap-2 bg-[#4267B2] rounded-xl text-white">
