@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { getAllOrder } from "../../services/order";
 import formatDate from "../../utils/formatDate";
+import { toast, ToastContainer, Bounce } from "react-toastify";
 
 const Order = ({ className }) => {
   const [orders, setOrders] = useState([]);
@@ -8,7 +9,13 @@ const Order = ({ className }) => {
     const getData = async () => {
       const response = await getAllOrder();
       if (response.error) {
-        alert(response.message);
+        toast.error(response.message, {
+          position: "top-right",
+          autoClose: 2000,
+          hideProgressBar: true,
+          closeButton: false,
+          theme: "light",
+        });
       } else {
         setOrders(response.data);
       }
@@ -17,6 +24,7 @@ const Order = ({ className }) => {
   }, []);
   return (
     <div className={` ${className}`}>
+      <ToastContainer />
       <div className="uppercase text-xl">Đơn hàng của bạn</div>
       <table className="w-full table-auto mt-8 text-sm text-white border border-gray-light">
         <thead>

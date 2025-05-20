@@ -143,24 +143,27 @@ const getCart = async (req, res) => {
   // }
   const resData = [];
   for (const value of cart_items) {
-    const variant_value_id = value.product_variant_value.sku
-      .split("-")
-      .map((value) => Number.parseInt(value));
+    console.log(value);
     let variant = [];
-    for (const value of variant_value_id) {
-      const variant_value = await db.variant_values.findByPk(value, {
-        include: [
-          {
-            model: db.variants,
-            attributes: ["name"],
-          },
-        ],
-      });
+    if (value.product_variant_value.sku !== "") {
+      const variant_value_id = value.product_variant_value.sku
+        .split("-")
+        .map((value) => Number.parseInt(value));
+      for (const value of variant_value_id) {
+        const variant_value = await db.variant_values.findByPk(value, {
+          include: [
+            {
+              model: db.variants,
+              attributes: ["name"],
+            },
+          ],
+        });
 
-      variant.push({
-        name: variant_value.variant.name,
-        value: variant_value.name,
-      });
+        variant.push({
+          name: variant_value.variant.name,
+          value: variant_value.name,
+        });
+      }
     }
     const product_id = value.product_variant_value.product.id;
     const product_images = await db.product_images.findAll({

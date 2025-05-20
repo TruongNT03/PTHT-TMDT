@@ -5,6 +5,8 @@ import { Spin, Input, Modal } from "antd";
 import { LoadingOutlined } from "@ant-design/icons";
 import { getAllOrder, updateOrder } from "../../services/order";
 import formatDate from "../../utils/formatDate";
+import { toast, ToastContainer, Bounce } from "react-toastify";
+
 const { Search } = Input;
 
 const Order = () => {
@@ -35,10 +37,22 @@ const Order = () => {
         payment: payment,
       });
       if (response?.error) {
-        alert(response.message);
+        toast.error(response.message, {
+          position: "top-right",
+          autoClose: 2000,
+          hideProgressBar: true,
+          closeButton: false,
+          theme: "light",
+        });
       } else {
         getData();
-        alert("Thành công");
+        toast.success("Cập nhật thành công!", {
+          position: "top-right",
+          autoClose: 2000,
+          hideProgressBar: true,
+          closeButton: false,
+          theme: "light",
+        });
       }
     };
     putData();
@@ -123,6 +137,7 @@ const Order = () => {
 
   return (
     <div className="w-full mt-5">
+      <ToastContainer />
       <Modal
         title={`MÃ ĐƠN HÀNG:  #${selected}`}
         open={isModalOpen}

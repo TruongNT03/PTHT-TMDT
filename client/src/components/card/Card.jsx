@@ -4,7 +4,7 @@ const Card = ({ className, image, data }) => {
   return (
     <div className={`${className}`}>
       <div className="w-[206px] h-[206px] rounded-xl overflow-hidden mb-[10px] relative group cursor-pointer">
-        <Link to={`/product/${data.id}`}>
+        <Link to={`/product/${data?.id}`}>
           <img
             src={process.env.REACT_APP_SERVER_URL + image}
             alt=""
@@ -41,10 +41,10 @@ const Card = ({ className, image, data }) => {
         </Link>
       </div>
       <div className="font-semibold text-[14px] mb-[8px] truncate w-[200px] overflow-hidden">
-        {data.name}
+        {data?.name}
       </div>
       <div className="flex gap-2 text-base font-semibold text-secondary">
-        {new Intl.NumberFormat().format(data.price * 1000)} Đ
+        {new Intl.NumberFormat().format(data?.price * 1000)} Đ
         {/* <del className="text text-[14px] font-light text-black">130.000Đ</del> */}
       </div>
     </div>

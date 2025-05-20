@@ -1,28 +1,47 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { IoMdArrowDropdown } from "react-icons/io";
 import { Pagination } from "antd";
 
 import getAllProduct from "../services/productService/getAllProduct";
 import Card from "../components/card/Card";
-import { useLocation } from "react-router-dom";
+import { useLocation, useSearchParams } from "react-router-dom";
+import { LoadingContext } from "../contexts/LoadingContext";
 
 const Product = () => {
   const location = useLocation();
   const [totalItem, setTotalItem] = useState(0);
+  const { setLoading } = useContext(LoadingContext);
   const [page, setPage] = useState(1);
   const [sortBy, setSortBy] = useState("createdAt");
   const [sortOrder, setSortOrder] = useState("ASC");
   const searchParams = new URLSearchParams(location.search);
   const [products, setProducts] = useState([]);
+  const [params] = useSearchParams();
+  const checkSetion = (section) => {
+    switch (params.get("section")) {
+      case "nam":
+        return 1;
+      case "nu":
+        return 2;
+      default:
+        return undefined;
+    }
+  };
+  const section_id = checkSetion(params.get("section"));
   useEffect(() => {
     const fetchProducts = async () => {
+      setLoading(true);
       const response = await getAllProduct({
         keyword: searchParams.get("keyword"),
         page: page,
         sortBy: sortBy,
         sortOrder: sortOrder,
         limit: 20,
+        section_id,
       });
+      setTimeout(() => {
+        setLoading(false);
+      }, 1000);
       if (response?.data) {
         setProducts(response.data);
         setTotalItem(response.totalItem);

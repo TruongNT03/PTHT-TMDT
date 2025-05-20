@@ -11,31 +11,93 @@ const SubNav = () => {
         >
           Trang chủ
         </Link>
-        <Link
-          className="py-1 flex items-center gap-1 hover:text-secondary group"
-          to="/product"
-        >
-          Thời trang Nam
-          <IoMdArrowDropdown
-            fontSize={20}
-            className="group-hover:rotate-180 transition duration-700 ease-in-out"
-          />
-        </Link>
-        <Link
-          className="py-1 flex items-center gap-1 hover:text-secondary group"
-          to="/product"
-        >
-          Thời trang Nữ
-          <IoMdArrowDropdown
-            fontSize={20}
-            className="group-hover:rotate-180 transition duration-700 ease-in-out"
-          />
-        </Link>
-        <Link className="py-1 hover:text-secondary" to="/product">
+        <div className="group relative cursor-pointer">
+          <Link
+            className="py-1 flex items-center gap-1 hover:text-secondary"
+            to="/product?section=man"
+          >
+            Thời trang Nam
+            <IoMdArrowDropdown
+              fontSize={20}
+              className="group-hover:rotate-180 transition duration-700 ease-in-out"
+            />
+          </Link>
+
+          <div className="absolute top-[30px] z-10 flex flex-col gap-2 bg-light w-full overflow-hidden transition-all duration-700 max-h-0 group-hover:max-h-[200px]">
+            <Link
+              className="hover:bg-primary hover:text-secondary p-2"
+              to="/product?section=nam&category=ao"
+            >
+              Áo
+            </Link>
+            <Link
+              className="hover:bg-primary hover:text-secondary p-2"
+              to="/product?section=nam&category=quan"
+            >
+              Quần
+            </Link>
+            <Link
+              className="hover:bg-primary hover:text-secondary p-2"
+              to="/product?section=nam&category=giay"
+            >
+              Giày
+            </Link>
+            <Link
+              className="hover:bg-primary hover:text-secondary p-2"
+              to="/product?section=nam&category=phukien"
+            >
+              Phụ kiện
+            </Link>
+          </div>
+        </div>
+        <div className="group relative cursor-pointer">
+          <Link
+            className="py-1 flex items-center gap-1 hover:text-secondary"
+            to="/product?section=nu"
+          >
+            Thời trang Nữ
+            <IoMdArrowDropdown
+              fontSize={20}
+              className="group-hover:rotate-180 transition duration-700 ease-in-out"
+            />
+          </Link>
+
+          <div className="absolute top-[30px] z-10 flex flex-col gap-2 bg-light w-full overflow-hidden transition-all duration-700 max-h-0 group-hover:max-h-[200px]">
+            <Link
+              className="hover:bg-primary hover:text-secondary p-2"
+              to="/product?section=nu&category=ao"
+            >
+              Áo
+            </Link>
+            <Link
+              className="hover:bg-primary hover:text-secondary p-2"
+              to="/product?section=nu&category=quan"
+            >
+              Quần
+            </Link>
+            <Link
+              className="hover:bg-primary hover:text-secondary p-2"
+              to="/product?section=nu&category=giay"
+            >
+              Giày
+            </Link>
+            <Link
+              className="hover:bg-primary hover:text-secondary p-2"
+              to="/product?section=nu&category=phukien"
+            >
+              Phụ kiện
+            </Link>
+          </div>
+        </div>
+        <Link className="py-1 hover:text-secondary" to="/product?section=kid">
           Trẻ em
         </Link>
-        <Link className="py-1 hover:text-secondary">Tin tức</Link>
-        <Link className="py-1 hover:text-secondary">Liên hệ</Link>
+        <Link className="py-1 hover:text-secondary" to="/">
+          Tin tức
+        </Link>
+        <Link className="py-1 hover:text-secondary" to="/">
+          Liên hệ
+        </Link>
       </ul>
       <div className="flex items-center gap-2 before:content-[''] before:w-[1px] before:h-[24px] before:inline-block before:bg-primary before:mr-6">
         <svg

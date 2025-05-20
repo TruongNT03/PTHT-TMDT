@@ -8,6 +8,7 @@ import Counter from "../components/counter/Counter";
 import Button from "../components/button/Button";
 import { deleteCartItem, updateCartItem } from "../services/cart";
 import { CartToCheckoutContext } from "../contexts/CartToCheckoutContext";
+import { toast, ToastContainer } from "react-toastify";
 
 const Cart = () => {
   const { cart, getCart } = useContext(HeaderContext);
@@ -25,7 +26,13 @@ const Cart = () => {
 
   const handleDelete = async (id) => {
     const response = await deleteCartItem(id);
-    alert(response.message);
+    toast.success("Cập nhật thành công!", {
+      position: "top-right",
+      autoClose: 2000,
+      hideProgressBar: true,
+      closeButton: false,
+      theme: "light",
+    });
     getCart();
   };
   const handleUpdateQuantity = async (id, newQuantity) => {
@@ -46,6 +53,7 @@ const Cart = () => {
   }, [setSelected]);
   return (
     <div className="w-full max-w-[1110px] bg-light-blue pt-8 mx-auto pb-[50px]">
+      <ToastContainer />
       <div className="text-2xl text-primary font-medium flex gap-4">
         <BsCart2 />
         <div>Giỏ hàng</div>
@@ -62,7 +70,7 @@ const Cart = () => {
           </tr>
         </thead>
         <tbody>
-          {cart.map((value, index) => (
+          {cart?.map((value, index) => (
             <tr key={index} className=" border-y-[1px] border-gray-light">
               <td>
                 <Checkbox

@@ -10,10 +10,14 @@ import Navigate from "../components/navigate/Navigate";
 import Button from "../components/button/Button";
 import Counter from "../components/counter/Counter";
 import getProductById from "../services/productService/getProductById";
+import getRecommnedProduct from "../services/productService/getRecommned";
 import { addToCart } from "../services/cart";
 import { HeaderContext } from "../contexts/HeaderContext";
 import Accordion from "../components/accordion/Accordion";
 import { CartToCheckoutContext } from "../contexts/CartToCheckoutContext";
+import { LoadingContext } from "../contexts/LoadingContext";
+import Section from "../components/section/Section";
+import Card from "../components/card/Card";
 
 function SamplePrevArrow(props) {
   const { className, onClick } = props;
@@ -45,7 +49,9 @@ const ProductDetail = ({ className }) => {
   const [message, setMessage] = useState("");
   const [stock, setStock] = useState();
   const [counter, setCounter] = useState(1);
+  const [recommend, setRecommend] = useState([]);
   const [displayDes, setDisplayDes] = useState(false);
+  const { setLoading } = useContext(LoadingContext);
   const navigate = useNavigate();
   // console.log(data);
   // console.log(variantSeclect);
@@ -97,7 +103,7 @@ const ProductDetail = ({ className }) => {
     if (!token) {
       navigate("/login");
     }
-    if (choose === undefined) {
+    if (choose === undefined && availableAttributes.length > 0) {
       return setMessage("Vui lòng chọn phân loại sản phẩm!");
     }
     if (counter > stock || counter <= 0) {
@@ -106,7 +112,13 @@ const ProductDetail = ({ className }) => {
     const postData = async (data) => {
       const response = await addToCart(data);
       if (response.error) {
-        alert(response.message);
+        toast.error(response.message, {
+          position: "top-right",
+          autoClose: 2000,
+          hideProgressBar: true,
+          closeButton: false,
+          theme: "light",
+        });
       } else {
         toast.success("Thêm vào giỏ hàng thành công!", {
           position: "top-right",
@@ -119,7 +131,7 @@ const ProductDetail = ({ className }) => {
       await getCart();
     };
     postData({
-      product_variant_id: choose.id,
+      product_variant_id: choose?.id || data?.product_variants[0]?.id,
       quantity: counter,
     });
   };
@@ -131,7 +143,7 @@ const ProductDetail = ({ className }) => {
     // Duyet tung bien the san pham API tra ve
     for (const variant of product_variants) {
       // Dieu kien de ko bi loi
-      if (variant.variant.length > 0) {
+      if (variant?.variant?.length > 0) {
         // Duyet tung gia tri trong moi bien the san pham
         let check = true;
         for (const element of variant.variant) {
@@ -157,14 +169,28 @@ const ProductDetail = ({ className }) => {
   };
   useEffect(() => {
     const getData = async () => {
+      setLoading(true);
       const response = await getProductById(id);
       setStock(response?.data?.stock);
       setData(response?.data);
       setAvailableAttributes(response?.data?.available_attributes);
+      setTimeout(() => {
+        setLoading(false);
+      }, [1000]);
     };
     getData();
     setNav1(sliderRef1);
     setNav2(sliderRef2);
+  }, [id]);
+
+  useEffect(() => {
+    const getRecommend = async () => {
+      const response = await getRecommnedProduct(id);
+      if (response?.data) {
+        setRecommend(response?.data);
+      }
+    };
+    getRecommend();
   }, [id]);
   useEffect(() => {
     findVariant(variantSeclect);
@@ -393,6 +419,21 @@ const ProductDetail = ({ className }) => {
           className="pt-4"
         />
       </Accordion>
+      <Section title="Sản phẩm liên quan" button={false}>
+        {recommend?.map((value, index) => {
+          return (
+            <Card
+              key={index}
+              className={"w-[200px] h-[300px]"}
+              data={value}
+              image={value?.product_images[0]?.path}
+              onClick={() => {
+                navigate(`/product/${value.id}`);
+              }}
+            />
+          );
+        })}
+      </Section>
     </div>
   );
 };

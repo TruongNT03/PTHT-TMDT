@@ -10,6 +10,7 @@ import { getAllCart } from "../services/cart";
 import { insertOrder } from "../services/order";
 import Button from "../components/button/Button";
 import { CartToCheckoutContext } from "../contexts/CartToCheckoutContext";
+import { toast, ToastContainer } from "react-toastify";
 
 const Checkout = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -51,7 +52,13 @@ const Checkout = () => {
     if (response.checkoutUrl) {
       window.location.href = response.checkoutUrl;
     } else {
-      alert(response.message);
+      toast.success("Đặt hàng thành công!", {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: true,
+        closeButton: false,
+        theme: "light",
+      });
       setTimeout(() => {
         navigate("/");
       }, [1000]);
@@ -61,7 +68,13 @@ const Checkout = () => {
     const getData = async () => {
       const response = await getAddress();
       if (response?.error) {
-        alert(response?.error);
+        toast.error(response?.mesage, {
+          position: "top-right",
+          autoClose: 2000,
+          hideProgressBar: true,
+          closeButton: false,
+          theme: "light",
+        });
       } else {
         setAddress(response.data);
         setAddressChoose(response.data[0]);
@@ -82,6 +95,7 @@ const Checkout = () => {
   // }, []);
   return (
     <div className="w-full max-w-[1110px] mx-auto pb-[100px]">
+      <ToastContainer />
       <div className="w-fit text-2xl font-medium pt-5 mb-5 py-3 text-primary border-b-primary border-b-[2px]">
         Thanh toán
       </div>

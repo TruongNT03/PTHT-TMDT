@@ -20,7 +20,7 @@ const HeaderProvider = ({ children }) => {
   const getCart = () => {
     const getData = async () => {
       const response = await getAllCart();
-      setCart(response.data);
+      setCart(response?.data);
     };
     if (Cookies.get("token")) {
       getData();

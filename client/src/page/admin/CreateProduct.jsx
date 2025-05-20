@@ -1,4 +1,4 @@
-import { Form, Input, Upload, Checkbox, Button } from "antd";
+import { Form, Input, Upload, Checkbox, Button, Switch } from "antd";
 import { toast, ToastContainer, Bounce } from "react-toastify";
 import { useEffect, useState } from "react";
 import { CgSoftwareUpload } from "react-icons/cg";
@@ -13,7 +13,7 @@ import { Editor } from "@tinymce/tinymce-react";
 const CreateProduct = () => {
   const { id } = useParams();
   const [categories, setCategories] = useState([]);
-  // const [hasVariant, setHasVariant] = useState(false);
+  const [hasVariant, setHasVariant] = useState(false);
   const [sections, setSections] = useState([]);
   const [category, setCategory] = useState(1);
   const [section, setSection] = useState(1);
@@ -26,10 +26,10 @@ const CreateProduct = () => {
       stock: "",
     },
   ]);
-  // const toogleOnChange = (checked) => {
-  //   console.log(checked);
-  //   setHasVariant(checked);
-  // };
+  const toogleOnChange = (checked) => {
+    console.log(checked);
+    setHasVariant(checked);
+  };
   const navigate = useNavigate();
   const formData = new FormData();
   const onFinish = async (values) => {
@@ -191,62 +191,10 @@ const CreateProduct = () => {
               <div className="text-2xl font-semibold mb-5">
                 Different Options
               </div>
-              {/* <div className="flex mb-5 gap-5">
+              <div className="flex mb-5 gap-5">
                 <Switch onChange={toogleOnChange} />
                 <div>This product has variant</div>
-              </div> */}
-              {/* {!hasVariant && (
-                <div className="w-full flex gap-5">
-                  <Form.Item
-                    className="flex-[1]"
-                    label="Price:"
-                    name="price"
-                    rules={[
-                      {
-                        pattern: /^\d+$/,
-                        message: "Price includes numbers only!",
-                      },
-                      {
-                        required: true,
-                        message: "Please input Product Price!",
-                      },
-                    ]}
-                  >
-                    <Input />
-                  </Form.Item>
-                  <Form.Item
-                    className="flex-[1]"
-                    label="Discount Price:"
-                    name="discount_price"
-                    rules={[
-                      {
-                        pattern: /^\d+$/,
-                        message: "Price includes numbers only!",
-                      },
-                      {
-                        required: false,
-                        message: "Please input Discount Price",
-                      },
-                    ]}
-                  >
-                    <Input />
-                  </Form.Item>
-                  <Form.Item
-                    className="flex-[1]"
-                    label="Stock:"
-                    name="stock"
-                    rules={[
-                      {
-                        pattern: /^\d+$/,
-                        message: "Stock includes numbers only!",
-                      },
-                      { required: true, message: "Please input Stock!" },
-                    ]}
-                  >
-                    <Input />
-                  </Form.Item>
-                </div>
-              )} */}
+              </div>
               {/* {hasVariant && */}
               {variants.map((value, index1) =>
                 index1 === 0 ? (
@@ -255,6 +203,7 @@ const CreateProduct = () => {
                     variants={variants}
                     setVariants={setVariants}
                     indexOfVariantProduct={index1}
+                    hasVariant={hasVariant}
                   />
                 ) : (
                   <>
@@ -278,27 +227,26 @@ const CreateProduct = () => {
                   </>
                 )
               )}
-              {/* )} */}
-              {/* {hasVariant && ( */}
-              <div
-                className="text-blue-500 cursor-pointer"
-                onClick={() => {
-                  setVariants((prev) => {
-                    return [
-                      ...prev,
-                      {
-                        variantList: [{ variant: "", value: "" }],
-                        price: "",
-                        old_price: "",
-                        stock: "",
-                      },
-                    ];
-                  });
-                }}
-              >
-                Add More
-              </div>
-              {/* )} */}
+              {hasVariant && (
+                <div
+                  className="text-blue-500 cursor-pointer"
+                  onClick={() => {
+                    setVariants((prev) => {
+                      return [
+                        ...prev,
+                        {
+                          variantList: [{ variant: "", value: "" }],
+                          price: "",
+                          old_price: "",
+                          stock: "",
+                        },
+                      ];
+                    });
+                  }}
+                >
+                  Add More
+                </div>
+              )}
             </div>
             <div className="flex-[1] flex flex-col gap-10">
               <div className="bg-white rounded-2xl p-8">

@@ -1,6 +1,7 @@
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { useContext } from "react";
+import { toast, ToastContainer, Bounce } from "react-toastify";
 
 import Input from "../input/Input";
 import Button from "../button/Button";
@@ -20,7 +21,13 @@ const ChangePassword = ({ className }) => {
   const onSubmit = async (data) => {
     const response = await changePassword(data);
     if (response.message === "Đổi mật khẩu thành công") {
-      alert(response.message);
+      toast.success("Đổi mật khẩu thành công", {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: true,
+        closeButton: false,
+        theme: "light",
+      });
       setUser("");
       localStorage.removeItem("token");
       navigate("/");

@@ -22,7 +22,7 @@ const Banner = () => {
   };
   return (
     <div className="w-full object-scale-down">
-      <Slider {...settings} autoplay={true} autoplaySpeed={1000}>
+      <Slider {...settings} autoplay={true} autoplaySpeed={3000}>
         <img
           src="https://bizweb.dktcdn.net/100/455/315/themes/894917/assets/slider_2.jpg?1724746453440"
           alt=""

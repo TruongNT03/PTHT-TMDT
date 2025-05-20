@@ -28,6 +28,7 @@ import Section from "./page/admin/Section";
 import Cart from "./page/Cart";
 import Checkout from "./page/Checkout";
 import CartToCheckoutProvider from "./contexts/CartToCheckoutContext";
+import LoadingPrivider from "./contexts/LoadingContext";
 
 function App() {
   return (
@@ -36,7 +37,14 @@ function App() {
         <BrowserRouter>
           <Routes>
             <Route element={<AdminRoute />}>
-              <Route path="/admin" element={<AdminLayout />}>
+              <Route
+                path="/admin"
+                element={
+                  <LoadingPrivider>
+                    <AdminLayout />
+                  </LoadingPrivider>
+                }
+              >
                 <Route path="" element={<Dashboard />} />
                 <Route path="product/edit/:id" element={<EditProduct />} />
                 <Route path="product/new" element={<CreateProduct />} />
@@ -53,7 +61,14 @@ function App() {
                 />
               </Route>
             </Route>
-            <Route path="/" element={<MainLayout />}>
+            <Route
+              path="/"
+              element={
+                <LoadingPrivider>
+                  <MainLayout />
+                </LoadingPrivider>
+              }
+            >
               <Route element={<PublicRoute />}>
                 <Route index element={<Home />} />
                 <Route path="/login" element={<Login />} />

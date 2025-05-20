@@ -8,7 +8,7 @@ import insertProduct from "../../services/productService/insertProduct";
 import getAllDropDown from "../../services/productService/getAllDropDown";
 import { useNavigate, useParams } from "react-router-dom";
 import getProductById from "../../services/productService/getProductById";
-
+import { Editor } from "@tinymce/tinymce-react";
 const EditProduct = () => {
   const { id } = useParams();
   const [categories, setCategories] = useState([]);
@@ -26,6 +26,7 @@ const EditProduct = () => {
   ]);
   const navigate = useNavigate();
   const formData = new FormData();
+  const [form] = Form.useForm();
   const onFinish = async (values) => {
     try {
       values?.product_images?.fileList.forEach((value) => {
@@ -45,46 +46,42 @@ const EditProduct = () => {
         variants: variants,
       };
       formData.append("data", JSON.stringify(data));
-      const response = await insertProduct(formData);
-      if (!response?.errors || !response?.error) {
-        toast.error(response?.message || "Có lỗi xảy ra", {
-          position: "top-right",
-          autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-          transition: Bounce,
-        });
-      } else {
-        toast.success("Thêm mới thành công!", {
-          position: "top-right",
-          autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-          transition: Bounce,
-          onClose: () => {
-            navigate("/admin/product");
-          },
-        });
-      }
+      console.log("formData", formData);
+      // if (!response?.errors || !response?.error) {
+      //   toast.error(response?.message || "Có lỗi xảy ra", {
+      //     position: "top-right",
+      //     autoClose: 3000,
+      //     hideProgressBar: false,
+      //     closeOnClick: true,
+      //     pauseOnHover: true,
+      //     draggable: true,
+      //     progress: undefined,
+      //     theme: "light",
+      //     transition: Bounce,
+      //   });
+      // } else {
+      //   toast.success("Thêm mới thành công!", {
+      //     position: "top-right",
+      //     autoClose: 3000,
+      //     hideProgressBar: false,
+      //     closeOnClick: true,
+      //     pauseOnHover: true,
+      //     draggable: true,
+      //     progress: undefined,
+      //     theme: "light",
+      //     transition: Bounce,
+      //     onClose: () => {
+      //       navigate("/admin/product");
+      //     },
+      //   });
+      // }
     } catch (error) {
       toast.error("Có lỗi xảy ra", {
         position: "top-right",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
+        autoClose: 2000,
+        hideProgressBar: true,
+        closeButton: false,
         theme: "light",
-        transition: Bounce,
       });
     }
   };
@@ -99,15 +96,26 @@ const EditProduct = () => {
     };
     getData();
   }, []);
+  useEffect(() => {
+    if (product) {
+      form.setFieldsValue({
+        name: product.name,
+        description: product.description,
+        category_id: category,
+        section_id: section,
+      });
+    }
+  }, [product, category, section]);
   return (
     <div className="w-full">
       <div className="">
-        <ToastContainer
-          onClick={() => {
-            navigate("/admin/product");
-          }}
-        />
-        <Form className="w-full p-8" layout="vertical" onFinish={onFinish}>
+        <ToastContainer />
+        <Form
+          className="w-full p-8"
+          layout="vertical"
+          onFinish={onFinish}
+          form={form}
+        >
           <div className="flex gap-10">
             <div className="flex-[3] bg-white p-8 rounded-2xl">
               <div className="text-2xl font-semibold mb-5">
@@ -120,7 +128,7 @@ const EditProduct = () => {
                   { required: true, message: "Please input product name!" },
                 ]}
               >
-                <Input defaultValue={product.name} />
+                <Input />
               </Form.Item>
               <Form.Item
                 label="Product Description:"
@@ -132,80 +140,84 @@ const EditProduct = () => {
                   },
                 ]}
               >
-                <Input.TextArea
-                  autoSize={{ maxRows: 10, minRows: 10 }}
-                  defaultValue={product.description}
+                <Editor
+                  // onEditorChange={(content, editor) => {
+                  //   setDescription(content);
+                  // }}
+                  initialValue={product.description}
+                  apiKey="6p39nxjk9unxi9dguqp0bl9rdb52mgyo5tjr30yo6agxqd1a"
+                  init={{
+                    plugins: [
+                      "anchor",
+                      "autolink",
+                      "charmap",
+                      "codesample",
+                      "emoticons",
+                      "image",
+                      "link",
+                      "lists",
+                      "searchreplace",
+                      "table",
+                      "visualblocks",
+                      "wordcount",
+                    ],
+                    toolbar:
+                      "undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table | align lineheight | numlist bullist indent outdent | emoticons charmap | removeformat",
+                    menubar: false,
+                    content_style:
+                      "body { font-family:SF Pro Display, sans-serif; font-size:14px }",
+                  }}
                 />
               </Form.Item>
               <div className="h-[2px] bg-gray-light my-14"></div>
               <div className="text-2xl font-semibold mb-5">Images</div>
-              <Form.Item
-                name="product_images"
-                rules={[
-                  { required: true, message: "Please input product images!" },
-                ]}
-              >
-                <Upload
-                  beforeUpload={() => false}
-                  multiple
-                  className="w-full h-[200px] flex items-center justify-center border-dashed border-[2px] rounded-md border-gray-light"
-                >
-                  <Button icon={<CgSoftwareUpload fontSize={24} />}>
-                    Click to Upload
-                  </Button>
-                </Upload>
-              </Form.Item>
+              <div className="flex flex-wrap gap-4">
+                {product?.product_images?.map((value, index) => (
+                  <img
+                    src={process.env.REACT_APP_SERVER_URL + value?.path}
+                    alt=""
+                    className="w-32 h-32 object-cover rounded-md shadow"
+                  />
+                ))}
+              </div>
+
               <div className="h-[2px] bg-gray-light my-14"></div>
               <div className="text-2xl font-semibold mb-5">
                 Variant Products
-              </div>
-              {variants.map((value, index1) =>
-                index1 === 0 ? (
-                  <VariantOption
-                    key={index1}
-                    variants={variants}
-                    setVariants={setVariants}
-                    indexOfVariantProduct={index1}
-                  />
-                ) : (
-                  <>
-                    <div className="flex items-center gap-2">
-                      <div className="flex-[1] h-[2px] bg-gray-light my-14"></div>
-                      <CiCircleMinus
-                        className="text-rose-500 text-2xl cursor-pointer"
-                        onClick={() =>
-                          setVariants((prev) =>
-                            prev.filter((item, index2) => (index1 = index2))
-                          )
-                        }
+                {product?.product_variants?.map((value, index) => {
+                  return (
+                    <div className="my-3">
+                      {value?.variant?.map((value, index) => (
+                        <div className="font-normal text-base">
+                          <div>Variant: {value?.name}</div>
+                          <div>Value: {value?.value}</div>
+                        </div>
+                      ))}
+
+                      <div>
+                        <span>{value?.variant?.value}</span>
+                        <span>{value?.variant?.name}</span>
+                      </div>
+                      <img
+                        src={process.env.REACT_APP_SERVER_URL + value?.image}
+                        alt=""
+                        className="w-32 h-32 object-cover rounded-md shadow"
                       />
+                      <div className="flex justify-between items-center">
+                        <span className="text-sm font-semibold">
+                          {value?.price}
+                        </span>
+                        <span className="text-sm font-semibold">
+                          {value?.old_price}
+                        </span>
+                        <span className="text-sm font-semibold">
+                          {value?.stock}
+                        </span>
+                      </div>
+                      <div className="h-[2px] bg-gray-light my-14"></div>
                     </div>
-                    <VariantOption
-                      variants={variants}
-                      setVariants={setVariants}
-                      indexOfVariantProduct={index1}
-                      formData={formData}
-                    />
-                  </>
-                )
-              )}
-              <div
-                className="text-blue-500 cursor-pointer"
-                onClick={() => {
-                  setVariants((prev) => {
-                    return [
-                      ...prev,
-                      {
-                        variantList: [{ variant: "", value: "" }],
-                        price: "",
-                        discount_price: "",
-                        stock: "",
-                      },
-                    ];
-                  });
-                }}
-              >
-                Add More
+                  );
+                })}
               </div>
             </div>
             <div className="flex-[1] flex flex-col gap-10">
@@ -216,7 +228,7 @@ const EditProduct = () => {
                     <>
                       <Checkbox
                         key={index}
-                        checked={value.id === category}
+                        checked={value.id === product?.category_id}
                         onClick={() => setCategory(value.id)}
                       >
                         {value.name}
@@ -233,7 +245,7 @@ const EditProduct = () => {
                     <>
                       <Checkbox
                         key={index}
-                        checked={value.id === section}
+                        checked={value.id === product?.section_id}
                         onClick={() => setSection(value.id)}
                       >
                         {value.name}

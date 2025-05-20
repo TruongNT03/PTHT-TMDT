@@ -1,6 +1,7 @@
 import { Button, Form, Input, Modal, Upload } from "antd";
 import { useEffect, useState } from "react";
 import { MdUpload } from "react-icons/md";
+import { ToastContainer, toast, Bounce } from "react-toastify";
 
 import { getAllSection, insertSection } from "../../services/section";
 import Card from "../../components/category/Card";
@@ -17,9 +18,21 @@ const Section = () => {
   const onFinish = async (data) => {
     const response = await insertSection({ name: data.name });
     if (response.error) {
-      alert(response.message);
+      toast.error(response?.message, {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: true,
+        closeButton: false,
+        theme: "light",
+      });
     } else {
-      alert(response.message);
+      toast.success("Thêm mới thành công!", {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: true,
+        closeButton: false,
+        theme: "light",
+      });
       setIsOpen(false);
       getData();
     }
@@ -29,6 +42,7 @@ const Section = () => {
   }, []);
   return (
     <div className="w-full p-8">
+      <ToastContainer />
       <div className="flex justify-between items-center mb-8">
         <div className="text-2xl font-semibold mb-5">Section</div>
         <Button

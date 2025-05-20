@@ -1,4 +1,5 @@
 import { useContext } from "react";
+import { ToastContainer, toast, Bounce } from "react-toastify";
 
 import { AddressContext } from "../../contexts/AddressContext";
 import deleteAddress from "../../services/addressService/deleteAddress";
@@ -24,11 +25,18 @@ const AddressDetail = ({
   };
   const handleDelete = async () => {
     const response = await deleteAddress(id);
-    alert(response.message);
+    toast.success("Cập nhật thành công!", {
+      position: "top-right",
+      autoClose: 2000,
+      hideProgressBar: true,
+      closeButton: false,
+      theme: "light",
+    });
     setData({ id: 0, name: "", address: "", phone: "", is_default: false });
   };
   return (
     <div>
+      <ToastContainer />
       <div className="h-[1px] w-full bg-dark mt-10"></div>
       <div className="flex justify-between items-center text-sm">
         <div>

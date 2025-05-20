@@ -60,34 +60,36 @@ const insertProduct = async (req, res) => {
     let sku = "";
     for (const variantItem of variants[i].variantList) {
       console.log(variantItem);
-      let vari = await db.variants.findOne({
-        where: {
-          name: variantItem.variant,
-        },
-      });
-      if (!vari) {
-        vari = await db.variants.create(
-          {
+      if (variantItem.variant !== "" && variantItem.value !== "") {
+        let vari = await db.variants.findOne({
+          where: {
             name: variantItem.variant,
           },
-          { transaction }
-        );
-      }
-      let vari_value = await db.variant_values.findOne({
-        where: {
-          name: variantItem.value,
-        },
-      });
-      if (!vari_value) {
-        vari_value = await db.variant_values.create(
-          {
+        });
+        if (!vari) {
+          vari = await db.variants.create(
+            {
+              name: variantItem.variant,
+            },
+            { transaction }
+          );
+        }
+        let vari_value = await db.variant_values.findOne({
+          where: {
             name: variantItem.value,
-            variant_id: vari.id,
           },
-          { transaction }
-        );
+        });
+        if (!vari_value) {
+          vari_value = await db.variant_values.create(
+            {
+              name: variantItem.value,
+              variant_id: vari.id,
+            },
+            { transaction }
+          );
+        }
+        sku += vari_value.id.toString() + "-";
       }
-      sku += vari_value.id.toString() + "-";
     }
     sku = sku.substring(0, sku.length - 1);
     const path = "/images/" + variant_images[i].filename;
@@ -144,19 +146,26 @@ const getProduct = async (req, res) => {
     keyword,
     sortBy = "createdAt",
     sortOrder = "ASC",
+    category_id,
+    section_id,
   } = req.query;
   let { limit = 10 } = req.query;
   limit = Number.parseInt(limit);
   const offset = (page - 1) * limit;
-  const whereCondition = keyword
-    ? {
+  console.log(category_id, section_id);
+  let whereCondition = {};
+  keyword
+    ? (whereCondition = {
+        ...whereCondition,
         name: {
           [Op.like]: `%${keyword}%`,
         },
-      }
+      })
     : {};
+  category_id ? (whereCondition = { ...whereCondition, category_id }) : {};
+  section_id ? (whereCondition = { ...whereCondition, section_id }) : {};
   const { count, rows } = await db.products.findAndCountAll({
-    where: whereCondition,
+    where: { ...whereCondition },
     attributes: ["id", "name", "description", "stock", "price", "createdAt"],
     distinct: true,
     include: [
@@ -232,7 +241,7 @@ const getProductById = async (req, res) => {
         where: {
           product_id: id,
         },
-        attributes: ["path"],
+        attributes: ["id", "path"],
         required: false,
       },
     ],
@@ -243,35 +252,39 @@ const getProductById = async (req, res) => {
   const variant_value_data = [];
   const available_attributes = {};
   for (const element of product.product_variant_values) {
-    const sku_arr = element.sku.split("-").map((value) => parseInt(value));
-    let listVariant = [];
-    for (let i = 0; i < sku_arr.length; i++) {
-      const dataFind = await db.variant_values.findByPk(sku_arr[i], {
-        attributes: ["id", "name"],
-        include: [
-          {
-            model: db.variants,
-            attributes: ["name"],
-          },
-        ],
-      });
-      if (available_attributes.hasOwnProperty(dataFind.variant.name)) {
-        if (
-          !available_attributes[dataFind.variant.name].includes(dataFind.name)
-        ) {
-          available_attributes[dataFind.variant.name].push(dataFind.name);
+    const sku = element.sku;
+    if (sku !== "") {
+      const sku_arr = element.sku.split("-").map((value) => parseInt(value));
+      console.log(sku_arr.length);
+      let listVariant = [];
+      for (let i = 0; i < sku_arr.length; i++) {
+        const dataFind = await db.variant_values.findByPk(sku_arr[i], {
+          attributes: ["id", "name"],
+          include: [
+            {
+              model: db.variants,
+              attributes: ["name"],
+            },
+          ],
+        });
+        if (available_attributes.hasOwnProperty(dataFind.variant.name)) {
+          if (
+            !available_attributes[dataFind.variant.name].includes(dataFind.name)
+          ) {
+            available_attributes[dataFind.variant.name].push(dataFind.name);
+          }
+        } else {
+          available_attributes[dataFind.variant.name] = [dataFind.name];
         }
-      } else {
-        available_attributes[dataFind.variant.name] = [dataFind.name];
-      }
 
-      listVariant.push({
-        id: dataFind.id,
-        value: dataFind.name,
-        name: dataFind.variant.name,
-      });
+        listVariant.push({
+          id: dataFind.id,
+          value: dataFind.name,
+          name: dataFind.variant.name,
+        });
+      }
+      variant_value_data.push(listVariant);
     }
-    variant_value_data.push(listVariant);
   }
   let response = {
     id: product.id,
@@ -298,10 +311,42 @@ const getProductById = async (req, res) => {
   return res.status(200).json({ message: "Thành công", data: response });
 };
 
+const recommendProduct = async (req, res) => {
+  const { id } = req.params;
+  const product = await db.products.findByPk(id);
+  if (!product) {
+    return res.status(200).json({ message: "Không tồn tại sản phẩm" });
+  }
+  const name = product.name;
+  const keywords = name.split(" ");
+  const recommendProduct = await db.products.findAll({
+    where: {
+      [Op.or]: keywords.map((keyword) => ({
+        name: {
+          [Op.like]: `%${keyword}%`,
+        },
+      })),
+    },
+    include: [
+      {
+        model: db.product_images,
+        attributes: ["id", "path"],
+      },
+    ],
+    attributes: ["id", "name", "description", "stock", "price", "createdAt"],
+    limit: 5,
+  });
+  return res.status(200).json({
+    message: "Thành công",
+    data: recommendProduct,
+  });
+};
+
 export {
   insertProduct,
   updateProduct,
   getProduct,
   deleteProduct,
   getProductById,
+  recommendProduct,
 };

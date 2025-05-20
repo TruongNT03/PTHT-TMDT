@@ -30,4 +30,6 @@ router.delete(
 );
 router.get("/:id", asyncHandler(ProductController.getProductById));
 
+router.get("/recommend/:id", asyncHandler(ProductController.recommendProduct));
+
 export default router;
