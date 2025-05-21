@@ -107,4 +107,20 @@ const changePassword = async (req, res) => {
   });
 };
 
-export { register, login, getUserData, changePassword };
+const updateUser = async (req, res) => {
+  const { id } = req.user;
+  const { firstname, lastname } = req.body;
+  const user = await db.users.findByPk(id);
+  if (user) {
+    await user.update({
+      firstname,
+      lastname,
+    });
+    await user.save();
+  }
+  return res.status(200).json({
+    message: "Cập nhật thông tin thành công",
+  });
+};
+
+export { register, login, getUserData, changePassword, updateUser };

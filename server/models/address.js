@@ -14,6 +14,9 @@ module.exports = (sequelize, DataTypes) => {
       address.belongsTo(models.orders, {
         foreignKey: "address_id",
       });
+      address.hasMany(models.orders, {
+        foreignKey: "address_id",
+      });
     }
   }
   address.init(

@@ -143,7 +143,6 @@ const getCart = async (req, res) => {
   // }
   const resData = [];
   for (const value of cart_items) {
-    console.log(value);
     let variant = [];
     if (value.product_variant_value.sku !== "") {
       const variant_value_id = value.product_variant_value.sku

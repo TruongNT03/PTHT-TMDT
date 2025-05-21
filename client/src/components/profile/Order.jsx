@@ -5,6 +5,20 @@ import { toast, ToastContainer, Bounce } from "react-toastify";
 
 const Order = ({ className }) => {
   const [orders, setOrders] = useState([]);
+  const statusTranslate = (value) => {
+    switch (value) {
+      case "ordered":
+        return "Đã đặt hàng";
+      case "prepare":
+        return "Đang chuẩn bị";
+      case "shipping":
+        return "Đang giao hàng";
+      case "completed":
+        return "Đã giao hàng";
+      default:
+        return "Không xác định";
+    }
+  };
   useEffect(() => {
     const getData = async () => {
       const response = await getAllOrder();
@@ -35,6 +49,9 @@ const Order = ({ className }) => {
             <th className="bg-secondary border-x">Giá trị đơn hàng</th>
             <th className="bg-secondary border-x">Trạng thái thanh toán</th>
             <th className="bg-secondary border-x">Trạng thái</th>
+            <th className="bg-secondary border-x">Tên người nhận</th>
+            <th className="bg-secondary border-x">Địa chỉ</th>
+            <th className="bg-secondary border-x">Số điện thoại</th>
             <th className="bg-secondary border-x">Ngày đặt hàng</th>
             {/* <th className="bg-secondary border-x">TT Thanh toán</th> */}
             {/* <th className="bg-secondary border-x">TT Vận Chuyển</th> */}
@@ -50,10 +67,10 @@ const Order = ({ className }) => {
               <th className="font-medium">
                 {value.payment ? "Đã thanh toán" : "Chưa thanh toán"}
               </th>
-              <th className="font-medium">
-                {value.status.substring(0, 1).toUpperCase() +
-                  value.status.substring(1)}
-              </th>
+              <th className="font-medium">{statusTranslate(value.status)}</th>
+              <th className="py-2 font-medium">{value.address.name}</th>
+              <th className="py-2 font-medium">{value.address.address}</th>
+              <th className="py-2 font-medium">{value.address.phone}</th>
               <th className="font-medium">{formatDate(value.createdAt)}</th>
             </tr>
           ))}

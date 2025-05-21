@@ -8,6 +8,12 @@ import authorizeAdmin from "../middlewares/authorizeAdmin";
 const router = Router();
 
 router.get("/", verifyToken, asyncHandler(OrderController.getAllOrder));
+router.get(
+  "/all",
+  verifyToken,
+  authorizeAdmin,
+  asyncHandler(OrderController.adminGetAllOrder)
+);
 router.post("/", verifyToken, asyncHandler(OrderController.insertOrder));
 router.put(
   "/",

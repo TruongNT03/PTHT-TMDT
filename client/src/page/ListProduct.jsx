@@ -27,7 +27,22 @@ const Product = () => {
         return undefined;
     }
   };
+  const checkCategory = (category) => {
+    switch (params.get("category")) {
+      case "ao":
+        return 1;
+      case "quan":
+        return 2;
+      case "giay":
+        return 3;
+      case "phukien":
+        return 4;
+      default:
+        return undefined;
+    }
+  };
   const section_id = checkSetion(params.get("section"));
+  const category_id = checkCategory(params.get("category"));
   useEffect(() => {
     const fetchProducts = async () => {
       setLoading(true);
@@ -38,6 +53,7 @@ const Product = () => {
         sortOrder: sortOrder,
         limit: 20,
         section_id,
+        category_id,
       });
       setTimeout(() => {
         setLoading(false);
@@ -53,7 +69,7 @@ const Product = () => {
     <div className="w-full max-w-[1110px] mx-auto">
       <div className="mx-auto flex flex-col gap-3 items-center my-8">
         <div className="text-3xl font-semibold">Tìm kiếm</div>
-        <div className="text-sm text-gray">Có 20 sản phẩm</div>
+        <div className="text-sm text-gray">Có {totalItem} sản phẩm</div>
         <div className="w-[80px] h-1 bg-black"></div>
       </div>
       <div className="flex justify-between text-sm">

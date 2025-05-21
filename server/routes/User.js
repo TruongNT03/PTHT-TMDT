@@ -9,6 +9,7 @@ const route = Router();
 
 route.post("/register", asyncHandler(User.register));
 route.post("/login", asyncHandler(User.login));
+route.put("/", verifyToken, asyncHandler(User.updateUser));
 route.get("/", verifyToken, asyncHandler(User.getUserData));
 route.put("/changepassword", verifyToken, asyncHandler(User.changePassword));
 route.get(

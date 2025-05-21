@@ -5,6 +5,13 @@ const getAllOrder = async () => {
   return response;
 };
 
+const getAllOrderAdmin = async (searchParams) => {
+  const response = await instance.get("/order/all", {
+    params: searchParams,
+  });
+  return response;
+};
+
 const insertOrder = async ({ card_item_ids, method, address_id }) => {
   const response = await instance.post("/order", {
     card_item_ids,
@@ -22,4 +29,4 @@ const updateOrder = async ({ id, payment, status }) => {
   });
 };
 
-export { getAllOrder, insertOrder, updateOrder };
+export { getAllOrder, insertOrder, updateOrder, getAllOrderAdmin };

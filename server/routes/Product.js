@@ -12,7 +12,7 @@ router.post(
   authorizeAdmin,
   upload.fields([
     { name: "product_images", maxCount: 5 },
-    { name: "variant_images", maxCount: 10 },
+    { name: "variant_images", maxCount: 20 },
   ]),
   asyncHandler(ProductController.insertProduct)
 );

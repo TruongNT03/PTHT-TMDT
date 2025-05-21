@@ -1,6 +1,7 @@
 import db from "../models";
 import PayOS from "@payos/node";
 import dotenv from "dotenv";
+import { cast, col, Op, or, where } from "sequelize";
 
 dotenv.config();
 
@@ -36,30 +37,30 @@ const insertOrder = async (req, res) => {
     const product_variant = await db.product_variant_values.findByPk(
       product_variant_id
     );
-    product_variant.stock -= quantity;
-    await product_variant.save({ transaction });
-    const product = await db.products.findByPk(product_variant.product_id);
-    product.stock -= quantity;
-    await product.save({ transaction });
     if (product_variant.stock >= quantity) {
       await db.order_details.create(
         {
           order_id: order.id,
           product_variant_id: product_variant.id,
           quantity: quantity,
+          price: product_variant.price,
         },
         { transaction }
       );
       total_price += product_variant.price * quantity;
     }
+    product_variant.stock -= quantity;
+    await product_variant.save({ transaction });
+    const product = await db.products.findByPk(product_variant.product_id);
+    product.stock -= quantity;
+    await product.save({ transaction });
   }
   // Cap nhap total_price cho order
   order.total_price = total_price;
   await order.save({ transaction });
 
-  await transaction.commit();
-
   if (method === "COD") {
+    await transaction.commit();
     return res.status(201).json({
       message: "Thành công",
       data: order,
@@ -74,10 +75,49 @@ const insertOrder = async (req, res) => {
       returnUrl: "http://localhost:3000",
     };
     const paymentLink = await payos.createPaymentLink(orderPay);
-    return res.status(201).json({
+    res.status(201).json({
       message: "Tạo liên kết thanh toán thành công",
       checkoutUrl: paymentLink.checkoutUrl,
     });
+
+    let isChecking = false;
+
+    const interval = setInterval(() => {
+      if (isChecking) return;
+      isChecking = true;
+
+      (async () => {
+        try {
+          const orderInfo = await payos.getPaymentLinkInformation(order.id);
+          console.log("Trạng thái đơn hàng:", orderInfo.status);
+
+          if (orderInfo.status === "PAID") {
+            await order.update({ payment: true }, { transaction });
+            await transaction.commit();
+            console.log("Đơn hàng đã thanh toán. Dừng kiểm tra.");
+            clearInterval(interval);
+          } else if (orderInfo.status === "CANCELLED") {
+            await transaction.rollback();
+            console.log("Đơn hàng bị huỷ. Dừng kiểm tra.");
+            clearInterval(interval);
+          } else {
+            console.log("Chưa thanh toán hoặc đang chờ.");
+          }
+        } catch (err) {
+          console.error("Lỗi khi kiểm tra đơn hàng:", err);
+          await transaction.rollback(); // nếu cần
+          clearInterval(interval);
+        } finally {
+          isChecking = false;
+        }
+      })();
+    }, 2000);
+
+    // Thêm giới hạn 5 phút tự dừng
+    setTimeout(() => {
+      console.log("Quá thời gian kiểm tra. Dừng lại.");
+      clearInterval(interval);
+    }, 300000);
   }
 };
 
@@ -88,6 +128,46 @@ const getAllOrder = async (req, res) => {
       user_id: user.id,
     },
     attributes: ["id", "total_price", "status", "payment", "createdAt"],
+    include: [
+      {
+        model: db.address,
+        attributes: ["id", "name", "phone", "address"],
+      },
+    ],
+  });
+  return res.status(200).json({ message: "Thành công", data: orderList });
+};
+
+const adminGetAllOrder = async (req, res) => {
+  const { keyword = "" } = req.query;
+  const keywordCondition =
+    keyword !== ""
+      ? {
+          [Op.or]: [
+            where(cast(db.Sequelize.col("orders.id"), "CHAR"), {
+              [Op.like]: `%${keyword}%`,
+            }),
+            where(cast(col("orders.total_price"), "CHAR"), {
+              [Op.like]: `%${keyword}%`,
+            }),
+            where(col("address.name"), {
+              [Op.like]: `%${keyword}%`,
+            }),
+            where(col("address.address"), {
+              [Op.like]: `%${keyword}%`,
+            }),
+          ],
+        }
+      : {};
+  const orderList = await db.orders.findAll({
+    where: keywordCondition,
+    attributes: ["id", "total_price", "status", "payment", "createdAt"],
+    include: [
+      {
+        model: db.address,
+        attributes: ["id", "name", "phone", "address"],
+      },
+    ],
   });
   return res.status(200).json({ message: "Thành công", data: orderList });
 };
@@ -102,4 +182,4 @@ const updateOrder = async (req, res) => {
   return res.status(200).json({ message: "Thành công" });
 };
 
-export { insertOrder, getAllOrder, updateOrder };
+export { insertOrder, getAllOrder, updateOrder, adminGetAllOrder };

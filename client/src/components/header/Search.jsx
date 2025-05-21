@@ -69,12 +69,12 @@ const Search = () => {
         />
       </div>
       {isShow && (
-        <div className="absolute top-[50px] bg-light-blue w-fit max-h-[300px] overflow-auto rounded-b-lg z-50">
+        <div className="absolute top-[50px] bg-light-blue w-full max-h-[300px] overflow-auto rounded-b-lg z-50">
           {products?.map(
             (product, index) =>
               index <= 5 && (
                 <div
-                  className="text-text hover:bg-blue-300 cursor-pointer"
+                  className="text-text  hover:bg-blue-300 cursor-pointer"
                   key={index}
                   onMouseDown={(e) => e.preventDefault()}
                   onClick={() => {

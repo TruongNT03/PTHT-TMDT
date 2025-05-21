@@ -1,5 +1,5 @@
 "use strict";
-const { Model } = require("sequelize");
+const { Model, or } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class orders extends Model {
     /**
@@ -13,6 +13,9 @@ module.exports = (sequelize, DataTypes) => {
       });
       orders.belongsTo(models.users, {
         foreignKey: "user_id",
+      });
+      orders.belongsTo(models.address, {
+        foreignKey: "address_id",
       });
     }
   }

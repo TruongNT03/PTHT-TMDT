@@ -152,7 +152,6 @@ const getProduct = async (req, res) => {
   let { limit = 10 } = req.query;
   limit = Number.parseInt(limit);
   const offset = (page - 1) * limit;
-  console.log(category_id, section_id);
   let whereCondition = {};
   keyword
     ? (whereCondition = {

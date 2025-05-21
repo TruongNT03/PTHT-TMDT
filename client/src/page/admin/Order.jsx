@@ -3,7 +3,11 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Spin, Input, Modal } from "antd";
 import { LoadingOutlined } from "@ant-design/icons";
-import { getAllOrder, updateOrder } from "../../services/order";
+import {
+  getAllOrder,
+  updateOrder,
+  getAllOrderAdmin,
+} from "../../services/order";
 import formatDate from "../../utils/formatDate";
 import { toast, ToastContainer, Bounce } from "react-toastify";
 
@@ -18,8 +22,11 @@ const Order = () => {
   const [status, setStatus] = useState("ordered");
   const [payment, setPayment] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const getData = async () => {
-    const response = await getAllOrder({ page: currentPage });
+  const getData = async (keyword = "") => {
+    const response = await getAllOrderAdmin({
+      page: currentPage,
+      keyword: keyword,
+    });
     setCurrentPage(response.currentPage);
     setTotalPage(response.totalPage);
     setTotalItem(response.totalItem);
@@ -84,14 +91,7 @@ const Order = () => {
         </>
       ),
     },
-    {
-      title: "Tổng tiền",
-      dataIndex: "total_price",
-      key: "total_price",
-      render: (value) => (
-        <div>{new Intl.NumberFormat().format(value * 1000)} đ</div>
-      ),
-    },
+
     {
       title: "Trạng thái",
       dataIndex: "status",
@@ -107,6 +107,38 @@ const Order = () => {
           case "completed":
             return <Tag color="green">Hoàn thành</Tag>;
         }
+      },
+    },
+    {
+      title: "Tổng tiền",
+      dataIndex: "total_price",
+      key: "total_price",
+      render: (value) => (
+        <div>{new Intl.NumberFormat().format(value * 1000)} đ</div>
+      ),
+    },
+    {
+      title: "Người nhận",
+      dataIndex: "address",
+      key: "name",
+      render: (value) => {
+        return <div>{value.name}</div>;
+      },
+    },
+    {
+      title: "Địa chỉ",
+      dataIndex: "address",
+      key: "address",
+      render: (value) => {
+        return <div>{value.address}</div>;
+      },
+    },
+    {
+      title: "Số điện thoại",
+      dataIndex: "address",
+      key: "phone",
+      render: (value) => {
+        return <div>{value.phone}</div>;
       },
     },
     {
@@ -170,7 +202,17 @@ const Order = () => {
       <div className="w-full px-8">
         <div className="text-2xl font-semibold">Product</div>
         <div className="flex justify-between items-center">
-          <Search className="w-[500px] my-5" />
+          <Search
+            className="w-[500px] my-5"
+            onInput={(e) => {
+              const value = e.target.value;
+              if (value.length > 0) {
+                getData(value);
+              } else {
+                getData();
+              }
+            }}
+          />
         </div>
         {data ? (
           <div>
