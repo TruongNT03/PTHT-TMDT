@@ -8,7 +8,6 @@
 
 ## 🗃️ Mô hình cơ sở dữ liệu
 
-![Database Diagram]
 ![alt text](image.png)
 
 ---
@@ -65,14 +64,6 @@
 ### 10. **Address**
 
 - Mỗi người dùng có thể có nhiều địa chỉ giao hàng.
-
----
-
-## ⚠️ Ghi chú quan trọng
-
-- **Khóa ngoại quan trọng:**
-  - `product_variant_id` trong `order_details` và `cart_items` ràng buộc chặt với `product_variant_values`.
-  - Khi xóa `product`, bạn **không thể xóa** nếu vẫn còn đơn hàng liên quan đến các `product_variant_values` trừ khi bạn xử lý ràng buộc `ON DELETE CASCADE` hoặc kiểm tra thủ công.
 
 ---
 
