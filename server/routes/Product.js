@@ -17,14 +17,13 @@ router.post(
   asyncHandler(ProductController.insertProduct)
 );
 router.put(
-  "/",
+  "/:id",
   authorizeAdmin,
-  upload.single("image"),
   asyncHandler(ProductController.updateProduct)
 );
 router.get("/", asyncHandler(ProductController.getProduct));
 router.delete(
-  "/",
+  "/:id",
   authorizeAdmin,
   asyncHandler(ProductController.deleteProduct)
 );

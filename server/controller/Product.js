@@ -1,4 +1,4 @@
-import db, { Sequelize } from "../models/index";
+import db, { sequelize, Sequelize } from "../models/index";
 import * as ProductSchema from "../dtos/Product";
 import totalPageCaculate from "../utils/totalPageCaculate";
 import { Op } from "sequelize";
@@ -125,16 +125,26 @@ const insertProduct = async (req, res) => {
 };
 
 const updateProduct = async (req, res) => {
-  const { id, name, description, category_id, section_id } = req.body;
-  const { error } = ProductSchema.update.validate(req.body);
-  if (error) {
-    return res.status(400).json({ message: "Validate Error", errors: error });
-  }
+  const { name, description, category_id, section_id, product_variants } =
+    req.body;
+  const { id } = req.params;
   const product = await db.products.findByPk(id);
   if (!product) {
     return res.status(400).json({ message: "Không tồn tại product" });
   }
-  await product.update({ ...req.body });
+  await product.update({ name, description, category_id, section_id });
+  for (const product_variant of product_variants) {
+    const { id, price, old_price, stock } = product_variant;
+    const product_variant_value = await db.product_variant_values.findByPk(id);
+    if (!product_variant_value) {
+      return res.status(400).json({ message: "Không tồn tại biến thể" });
+    }
+    await product_variant_value.update({
+      price,
+      old_price,
+      stock,
+    });
+  }
   return res.status(201).json({
     message: "Cập nhập product thành công",
   });
@@ -201,16 +211,31 @@ const getProduct = async (req, res) => {
 };
 
 const deleteProduct = async (req, res) => {
-  const { id } = req.body;
-  const { error } = ProductSchema.del.validate(req.body);
-  if (error) {
-    return res.status(400).json({ message: "Validate Error", errors: error });
-  }
+  let { id } = req.params;
+  id = Number.parseInt(id);
   const product = await db.products.findByPk(id);
   if (!product) {
     return res.status(400).json({ message: "Product không tồn tại" });
   }
-  await product.destroy();
+  const transaction = await db.sequelize.transaction();
+  const product_variant_values = await db.product_variant_values.findAll({
+    where: {
+      product_id: product.id,
+    },
+  });
+  const product_images = await db.product_images.findAll({
+    where: {
+      product_id: product.id,
+    },
+  });
+  for (const product_image of product_images) {
+    await product_image.destroy({ transaction });
+  }
+  for (const product_variant_value of product_variant_values) {
+    await product_variant_value.destroy({ transaction });
+  }
+  await product.destroy({ transaction });
+  transaction.commit();
   return res.status(200).json({ message: "Xóa product thành công" });
 };
 

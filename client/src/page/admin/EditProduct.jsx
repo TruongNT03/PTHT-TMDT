@@ -1,14 +1,46 @@
-import { Form, Input, Upload, Checkbox, Button } from "antd";
-import { toast, ToastContainer, Bounce } from "react-toastify";
+import { Form, Input, Checkbox, Button } from "antd";
+import { toast, ToastContainer } from "react-toastify";
 import { useEffect, useState } from "react";
-import { CgSoftwareUpload } from "react-icons/cg";
-import VariantOption from "../../components/dialog/VariantOption";
-import { CiCircleMinus } from "react-icons/ci";
-import insertProduct from "../../services/productService/insertProduct";
 import getAllDropDown from "../../services/productService/getAllDropDown";
 import { useNavigate, useParams } from "react-router-dom";
 import getProductById from "../../services/productService/getProductById";
 import { Editor } from "@tinymce/tinymce-react";
+
+import updateProduct from "../../services/productService/updateProduct";
+
+const EditorField = ({ value = "", onChange }) => {
+  return (
+    <Editor
+      value={value}
+      onEditorChange={(content, editor) => {
+        onChange(content);
+      }}
+      apiKey="6p39nxjk9unxi9dguqp0bl9rdb52mgyo5tjr30yo6agxqd1a"
+      init={{
+        plugins: [
+          "anchor",
+          "autolink",
+          "charmap",
+          "codesample",
+          "emoticons",
+          "image",
+          "link",
+          "lists",
+          "searchreplace",
+          "table",
+          "visualblocks",
+          "wordcount",
+        ],
+        toolbar:
+          "undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table | align lineheight | numlist bullist indent outdent | emoticons charmap | removeformat",
+        menubar: false,
+        content_style:
+          "body { font-family:SF Pro Display, sans-serif; font-size:14px }",
+      }}
+    />
+  );
+};
+
 const EditProduct = () => {
   const { id } = useParams();
   const [categories, setCategories] = useState([]);
@@ -16,68 +48,21 @@ const EditProduct = () => {
   const [product, setProduct] = useState({});
   const [category, setCategory] = useState(1);
   const [section, setSection] = useState(1);
-  const [variants, setVariants] = useState([
-    {
-      variantList: [{ variant: "", value: "" }],
-      price: "",
-      discount_price: "",
-      stock: "",
-    },
-  ]);
+
   const navigate = useNavigate();
-  const formData = new FormData();
   const [form] = Form.useForm();
   const onFinish = async (values) => {
-    try {
-      values?.product_images?.fileList.forEach((value) => {
-        formData.append(`product_images`, value.originFileObj);
+    console.log("values", values);
+    const response = await updateProduct(values, product.id);
+    if (response?.error || response?.erorrs) {
+      toast.error("Có lỗi xảy ra!", {
+        autoClose: 2000,
+        hideProgressBar: true,
+        closeButton: false,
+        theme: "light",
       });
-      variants.forEach((_value, index) => {
-        formData.append(
-          "variant_images",
-          values[`variant_images_${index}`].fileList[0].originFileObj
-        );
-      });
-      const data = {
-        name: values.name,
-        description: values.description,
-        category_id: category,
-        section_id: section,
-        variants: variants,
-      };
-      formData.append("data", JSON.stringify(data));
-      console.log("formData", formData);
-      // if (!response?.errors || !response?.error) {
-      //   toast.error(response?.message || "Có lỗi xảy ra", {
-      //     position: "top-right",
-      //     autoClose: 3000,
-      //     hideProgressBar: false,
-      //     closeOnClick: true,
-      //     pauseOnHover: true,
-      //     draggable: true,
-      //     progress: undefined,
-      //     theme: "light",
-      //     transition: Bounce,
-      //   });
-      // } else {
-      //   toast.success("Thêm mới thành công!", {
-      //     position: "top-right",
-      //     autoClose: 3000,
-      //     hideProgressBar: false,
-      //     closeOnClick: true,
-      //     pauseOnHover: true,
-      //     draggable: true,
-      //     progress: undefined,
-      //     theme: "light",
-      //     transition: Bounce,
-      //     onClose: () => {
-      //       navigate("/admin/product");
-      //     },
-      //   });
-      // }
-    } catch (error) {
-      toast.error("Có lỗi xảy ra", {
-        position: "top-right",
+    } else if (response.message === "Cập nhập product thành công") {
+      toast.success("Cập nhập thành công!", {
         autoClose: 2000,
         hideProgressBar: true,
         closeButton: false,
@@ -92,10 +77,12 @@ const EditProduct = () => {
       const product = await getProductById(id);
       setCategories(categoryList.data);
       setSections(sectionList.data);
+      setCategory(product.data.category_id);
+      setSection(product.data.section_id);
       setProduct(product.data);
     };
     getData();
-  }, []);
+  }, [id]);
   useEffect(() => {
     if (product) {
       form.setFieldsValue({
@@ -103,9 +90,15 @@ const EditProduct = () => {
         description: product.description,
         category_id: category,
         section_id: section,
+        product_variants: product?.product_variants?.map((variant) => ({
+          id: variant.id,
+          price: variant.price,
+          old_price: variant.old_price,
+          stock: variant.stock,
+        })),
       });
     }
-  }, [product, category, section]);
+  }, [product, category, section, form]);
   return (
     <div className="w-full">
       <div className="">
@@ -140,40 +133,14 @@ const EditProduct = () => {
                   },
                 ]}
               >
-                <Editor
-                  // onEditorChange={(content, editor) => {
-                  //   setDescription(content);
-                  // }}
-                  initialValue={product.description}
-                  apiKey="6p39nxjk9unxi9dguqp0bl9rdb52mgyo5tjr30yo6agxqd1a"
-                  init={{
-                    plugins: [
-                      "anchor",
-                      "autolink",
-                      "charmap",
-                      "codesample",
-                      "emoticons",
-                      "image",
-                      "link",
-                      "lists",
-                      "searchreplace",
-                      "table",
-                      "visualblocks",
-                      "wordcount",
-                    ],
-                    toolbar:
-                      "undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table | align lineheight | numlist bullist indent outdent | emoticons charmap | removeformat",
-                    menubar: false,
-                    content_style:
-                      "body { font-family:SF Pro Display, sans-serif; font-size:14px }",
-                  }}
-                />
+                <EditorField />
               </Form.Item>
               <div className="h-[2px] bg-gray-light my-14"></div>
               <div className="text-2xl font-semibold mb-5">Images</div>
               <div className="flex flex-wrap gap-4">
                 {product?.product_images?.map((value, index) => (
                   <img
+                    key={index}
                     src={process.env.REACT_APP_SERVER_URL + value?.path}
                     alt=""
                     className="w-32 h-32 object-cover rounded-md shadow"
@@ -186,11 +153,24 @@ const EditProduct = () => {
                 Variant Products
                 {product?.product_variants?.map((value, index) => {
                   return (
-                    <div className="my-3">
+                    <div className="my-3" key={index}>
+                      <Form.Item
+                        name={["product_variants", index, "id"]}
+                        hidden
+                      >
+                        <Input />
+                      </Form.Item>
+
                       {value?.variant?.map((value, index) => (
-                        <div className="font-normal text-base">
-                          <div>Variant: {value?.name}</div>
-                          <div>Value: {value?.value}</div>
+                        <div className="font-normal text-base" key={index}>
+                          <div className="flex gap-1">
+                            <div className="font-medium">Variant:</div>{" "}
+                            {value?.name}
+                          </div>
+                          <div className="flex gap-1">
+                            <div className="font-medium">Value:</div>{" "}
+                            {value?.value}
+                          </div>
                         </div>
                       ))}
 
@@ -201,18 +181,33 @@ const EditProduct = () => {
                       <img
                         src={process.env.REACT_APP_SERVER_URL + value?.image}
                         alt=""
-                        className="w-32 h-32 object-cover rounded-md shadow"
+                        className="w-32 h-32 object-cover rounded-md shadow my-3"
                       />
-                      <div className="flex justify-between items-center">
-                        <span className="text-sm font-semibold">
-                          {value?.price}
-                        </span>
-                        <span className="text-sm font-semibold">
-                          {value?.old_price}
-                        </span>
-                        <span className="text-sm font-semibold">
-                          {value?.stock}
-                        </span>
+                      <div className="flex items-center gap-10 mt-8 font-normal">
+                        <Form.Item
+                          name={["product_variants", index, "price"]}
+                          label="Price"
+                          className="flex-1"
+                          required
+                        >
+                          <Input />
+                        </Form.Item>
+                        <Form.Item
+                          name={["product_variants", index, "old_price"]}
+                          label="Old Price"
+                          className="flex-1"
+                          required
+                        >
+                          <Input />
+                        </Form.Item>
+                        <Form.Item
+                          name={["product_variants", index, "stock"]}
+                          label="Stock"
+                          className="flex-1"
+                          required
+                        >
+                          <Input />
+                        </Form.Item>
                       </div>
                       <div className="h-[2px] bg-gray-light my-14"></div>
                     </div>
@@ -223,35 +218,35 @@ const EditProduct = () => {
             <div className="flex-[1] flex flex-col gap-10">
               <div className="bg-white rounded-2xl p-8">
                 <div className="text-2xl font-semibold mb-5">Categories</div>
-                <Form.Item>
+                <Form.Item name="category_id">
                   {categories.map((value, index) => (
-                    <>
+                    <div key={index}>
                       <Checkbox
                         key={index}
-                        checked={value.id === product?.category_id}
+                        checked={value.id === category}
                         onClick={() => setCategory(value.id)}
                       >
                         {value.name}
                       </Checkbox>
                       <br />
-                    </>
+                    </div>
                   ))}
                 </Form.Item>
               </div>
               <div className="bg-white rounded-2xl p-8">
                 <div className="text-2xl font-semibold mb-5">Section</div>
-                <Form.Item>
+                <Form.Item name="section_id">
                   {sections.map((value, index) => (
-                    <>
+                    <div key={index}>
                       <Checkbox
                         key={index}
-                        checked={value.id === product?.section_id}
+                        checked={value.id === section}
                         onClick={() => setSection(value.id)}
                       >
                         {value.name}
                       </Checkbox>
                       <br />
-                    </>
+                    </div>
                   ))}
                 </Form.Item>
               </div>
