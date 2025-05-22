@@ -8,7 +8,8 @@
 
 ## 🗃️ Mô hình cơ sở dữ liệu
 
-![Database Diagram](./e97f0203-590d-4532-933d-2a6c3b83722a.png)
+![Database Diagram]
+![alt text](image.png)
 
 ---
 
