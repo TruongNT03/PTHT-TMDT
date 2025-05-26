@@ -10,15 +10,12 @@ import { LoadingContext } from "../contexts/LoadingContext";
 
 const Home = () => {
   const [data, setData] = useState();
+  // eslint-disable-next-line
   const { setLoading } = useContext(LoadingContext);
   useEffect(() => {
     const getData = async () => {
-      setLoading(true);
       const response = await getAllProduct();
       setData(response?.data);
-      setTimeout(() => {
-        setLoading(false);
-      }, 1000);
     };
     getData();
   }, []);
@@ -29,45 +26,45 @@ const Home = () => {
         <Service />
       </div>
       <div className="w-full bg-light">
-        {data ? (
-          <Section>
-            {data.map((value, index) => (
-              <Card
-                key={index}
-                image={value?.product_images[0]?.path}
-                data={value}
-              />
-            ))}
-          </Section>
-        ) : (
+        {/* {data ? ( */}
+        <Section>
+          {data?.map((value, index) => (
+            <Card
+              key={index}
+              image={value?.product_images[0]?.path}
+              data={value}
+            />
+          ))}
+        </Section>
+        {/* ) : (
           <Loading />
-        )}
-        {data ? (
-          <Section>
-            {data.map((value, index) => (
-              <Card
-                key={index}
-                image={value?.product_images[0]?.path}
-                data={value}
-              />
-            ))}
-          </Section>
-        ) : (
+        )} */}
+        {/* {data ? ( */}
+        <Section>
+          {data?.map((value, index) => (
+            <Card
+              key={index}
+              image={value?.product_images[0]?.path}
+              data={value}
+            />
+          ))}
+        </Section>
+        {/* ) : (
           <Loading />
-        )}
-        {data ? (
-          <Section>
-            {data.map((value, index) => (
-              <Card
-                key={index}
-                image={value?.product_images[0]?.path}
-                data={value}
-              />
-            ))}
-          </Section>
-        ) : (
+        )} */}
+        {/* {data ? ( */}
+        <Section>
+          {data?.map((value, index) => (
+            <Card
+              key={index}
+              image={value?.product_images[0]?.path}
+              data={value}
+            />
+          ))}
+        </Section>
+        {/* ) : (
           <Loading />
-        )}
+        )} */}
       </div>
     </div>
   );

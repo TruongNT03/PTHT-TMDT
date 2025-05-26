@@ -21,7 +21,10 @@ instance.interceptors.request.use(
 
 instance.interceptors.response.use(
   (response) => {
-    return response?.data;
+    return {
+      status: response.status,
+      ...response?.data,
+    };
   },
   (error) => {
     return error?.response?.data;

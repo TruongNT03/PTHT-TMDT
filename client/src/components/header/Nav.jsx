@@ -34,7 +34,10 @@ const Nav = () => {
       {cart?.map(
         (value, index) =>
           index < 4 && (
-            <div className="flex items-center rounded-md cursor-pointer hover:bg-primary hover:bg-opacity-20 ">
+            <div
+              key={index}
+              className="flex items-center rounded-md cursor-pointer hover:bg-primary hover:bg-opacity-20 "
+            >
               <Link
                 to={`/product/${value.product_id}`}
                 key={index}

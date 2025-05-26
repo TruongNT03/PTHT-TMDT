@@ -61,7 +61,7 @@ const EditProduct = () => {
         closeButton: false,
         theme: "light",
       });
-    } else if (response.message === "Cập nhập product thành công") {
+    } else {
       toast.success("Cập nhập thành công!", {
         autoClose: 2000,
         hideProgressBar: true,

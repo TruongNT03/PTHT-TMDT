@@ -1,7 +1,6 @@
 import Slider from "react-slick";
 import { useState, useRef, useEffect, useContext } from "react";
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
-import { MdKeyboardArrowDown } from "react-icons/md";
 import { useNavigate, useParams } from "react-router";
 import Cookies from "js-cookie";
 import { Bounce, toast, ToastContainer } from "react-toastify";
@@ -40,6 +39,7 @@ function SampleNextArrow(props) {
 
 const ProductDetail = ({ className }) => {
   const { getCart } = useContext(HeaderContext);
+  // eslint-disable-next-line
   const { selected, setSelected } = useContext(CartToCheckoutContext);
   const { id } = useParams();
   const [data, setData] = useState({});
@@ -50,7 +50,6 @@ const ProductDetail = ({ className }) => {
   const [stock, setStock] = useState();
   const [counter, setCounter] = useState(1);
   const [recommend, setRecommend] = useState([]);
-  const [displayDes, setDisplayDes] = useState(false);
   const { setLoading } = useContext(LoadingContext);
   const navigate = useNavigate();
   // console.log(data);
@@ -171,6 +170,10 @@ const ProductDetail = ({ className }) => {
     const getData = async () => {
       setLoading(true);
       const response = await getProductById(id);
+      if (!response?.data || !response.data?.id) {
+        navigate("/");
+        return;
+      }
       setStock(response?.data?.stock);
       setData(response?.data);
       setAvailableAttributes(response?.data?.available_attributes);
@@ -181,7 +184,7 @@ const ProductDetail = ({ className }) => {
     getData();
     setNav1(sliderRef1);
     setNav2(sliderRef2);
-  }, [id]);
+  }, [id, navigate, setLoading]);
 
   useEffect(() => {
     const getRecommend = async () => {
@@ -252,14 +255,16 @@ const ProductDetail = ({ className }) => {
           </Slider>
         </div>
         <div className="flex-1">
-          <div className="text-[22px] font-semibold mb-[10px]">{data.name}</div>
+          <div className="text-[22px] font-semibold mb-[10px]">
+            {data?.name}
+          </div>
 
           <div className="flex gap-5 text-red text-[28px] font-semibold bg-light-blue p-3 my-3">
             {choose?.old_price && (
               <div className="flex">
                 <div className="text-lg leading-10">₫</div>
                 <div className="">
-                  {new Intl.NumberFormat().format(choose.price * 1000)}
+                  {new Intl.NumberFormat().format(choose?.price * 1000)}
                 </div>
               </div>
             )}
@@ -267,7 +272,7 @@ const ProductDetail = ({ className }) => {
               <div className="flex text-slate-400 items-center">
                 <div className="text-lg leading-10">₫</div>
                 <div className="line-through font-normal">
-                  {new Intl.NumberFormat().format(choose.old_price * 1000)}
+                  {new Intl.NumberFormat().format(choose?.old_price * 1000)}
                 </div>
                 <div className="bg-secondary text-sm font-light text-white px-1 ml-5">
                   Sale
@@ -276,11 +281,11 @@ const ProductDetail = ({ className }) => {
             ) : (
               <div className="flex">
                 <div className="text-lg leading-10 ">₫</div>
-                <div>{new Intl.NumberFormat().format(data.price * 1000)}</div>
+                <div>{new Intl.NumberFormat()?.format(data?.price * 1000)}</div>
               </div>
             )}
           </div>
-          {Object.entries(availableAttributes).map(([key, values]) => (
+          {Object?.entries(availableAttributes)?.map(([key, values]) => (
             <div key={key} className="flex mb-5">
               <div className="flex-[1]">{key}</div>
               <div className="flex flex-[4] gap-2 flex-wrap">
