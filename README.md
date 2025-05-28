@@ -1,4 +1,8 @@
-## 🛒 Shop thời trang
+# 🛒 Shop thời trang trang chủ
+![image](https://github.com/user-attachments/assets/46cc0410-84b7-4264-adad-6304ca015359)
+
+![image](https://github.com/user-attachments/assets/cb114040-5ca1-4748-a4c9-44cc3dd76425)
+
 ![image](https://github.com/user-attachments/assets/d1e1a414-2203-495c-9c80-7cbdbcc2b996)
 ## 🧾 Mô tả tổng quan
 
