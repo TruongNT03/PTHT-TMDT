@@ -6,12 +6,15 @@
 
 # Giao diện đăng nhập/đăng ký
 ![image](https://github.com/user-attachments/assets/1a8d94f7-6674-4eab-9e52-1a75e81b420a)
+
 ![image](https://github.com/user-attachments/assets/c7f99ee2-1347-4acc-9842-7c2e3d60fe01)
 
 # Giao diện chi tiết sản phẩm/tìm kiếm sản phẩm
 ![image](https://github.com/user-attachments/assets/8a5cb9c6-39ae-4d5c-aa41-e46b242a6144)
 
 # Giao diện giỏ hàng/thanh toán
+![image](https://github.com/user-attachments/assets/36a2b37c-34aa-4ae9-8ab5-48a31d93525a)
+
 ![image](https://github.com/user-attachments/assets/6c1e28fa-6225-4801-aebd-3bbcbe1a1667)
 
 # Giao diện thông tin cá nhân
@@ -19,15 +22,16 @@
 
 # Giao diện admin
 ![image](https://github.com/user-attachments/assets/e3e0d410-b436-4fcc-a11c-6e72ee30b077)
+
 ![image](https://github.com/user-attachments/assets/7ad4e267-7eb2-4700-ac54-aeb72e14ab9a)
+
 ![image](https://github.com/user-attachments/assets/9428b685-f68c-472c-b9af-8032ddca6321)
+
 ![image](https://github.com/user-attachments/assets/09bfb62a-ee80-4507-a5eb-5152df30a1f3)
+
 ![image](https://github.com/user-attachments/assets/b0c13177-8536-41a5-a57a-69048addbae7)
+
 ![image](https://github.com/user-attachments/assets/e9e7acc0-8f2d-482b-bbe6-23d75cb1b8e4)
-
-
-
-
 
 ---
 
