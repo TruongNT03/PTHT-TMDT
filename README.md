@@ -1,5 +1,5 @@
-![image](https://github.com/user-attachments/assets/d1e1a414-2203-495c-9c80-7cbdbcc2b996)# 🛒 E-Commerce Backend System
-
+## 🛒 Shop thời trang
+![image](https://github.com/user-attachments/assets/d1e1a414-2203-495c-9c80-7cbdbcc2b996)
 ## 🧾 Mô tả tổng quan
 
 Đây là hệ thống backend cho một website thương mại điện tử bao gồm các chức năng quản lý người dùng, sản phẩm, biến thể sản phẩm, giỏ hàng, đơn hàng, đánh giá và địa chỉ giao hàng. Dữ liệu được tổ chức rõ ràng theo mô hình quan hệ và hỗ trợ các thao tác như mua hàng, quản lý tồn kho, và xử lý thanh toán.
