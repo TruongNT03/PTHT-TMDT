@@ -25,12 +25,18 @@ const googleStrategy = new GoogleStrategy(
         avatar: profile.photos[0].value,
       },
     });
-    const token = jwt.sign(
+    const access_token = jwt.sign(
       { id: user.id, email: user.email, role: user.role, type: user.type },
       process.env.JWT_PRIVATE_KEY,
+      { expiresIn: "15m" }
+    );
+    const refresh_token = jwt.sign(
+      { id: user.id, email: user.email, role: user.role, type: user.type },
+      process.env.JWT_REFRESH_KEY,
       { expiresIn: "30d" }
     );
-    user.token = token;
+    user.accessToken = access_token;
+    user.refreshToken = refresh_token;
     return cb(null, user);
   }
 );

@@ -20,6 +20,12 @@ module.exports = (sequelize, DataTypes) => {
       users.hasOne(models.carts, {
         foreignKey: "user_id",
       });
+      users.hasMany(models.chat_messages, {
+        foreignKey: "from",
+      });
+      users.hasMany(models.chat_messages, {
+        foreignKey: "to",
+      });
     }
   }
   users.init(

@@ -98,7 +98,7 @@ const ProductDetail = ({ className }) => {
   // };
 
   const onCart = () => {
-    const token = Cookies.get("token");
+    const token = Cookies.get("accessToken");
     if (!token) {
       navigate("/login");
     }

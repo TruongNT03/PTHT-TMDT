@@ -4,11 +4,12 @@ import Cookies from "js-cookie";
 const instance = axios.create({
   baseURL: "http://localhost:8080/api/v1",
   timeout: 1000,
+  withCredentials: true,
 });
 
 instance.interceptors.request.use(
   (config) => {
-    const token = Cookies.get("token");
+    const token = Cookies.get("accessToken");
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -26,8 +27,27 @@ instance.interceptors.response.use(
       ...response?.data,
     };
   },
-  (error) => {
-    return error?.response?.data;
+  async (error) => {
+    const originalRequest = error.config;
+    if (
+      error.response &&
+      error.response.status === 401 &&
+      !originalRequest._retry
+    ) {
+      originalRequest._retry = true;
+
+      try {
+        await instance.post("/auth/refresh-token");
+        return instance(originalRequest);
+      } catch (refreshError) {
+        console.log(refreshError);
+        // Refresh token cũng hết hạn → logout
+        await instance.post("/auth/logout");
+        window.location.href = "/login";
+        return Promise.reject(refreshError);
+      }
+    }
+    return Promise.reject(error);
   }
 );
 

@@ -54,12 +54,29 @@ const login = async (req, res) => {
       { id: user.id, email: user.email, role: user.role, type: user.type },
       process.env.JWT_PRIVATE_KEY,
       {
+        expiresIn: "15m",
+      }
+    );
+    const refreshToken = jwt.sign(
+      { id: user.id, email: user.email, role: user.role, type: user.type },
+      process.env.JWT_REFRESH_KEY,
+      {
         expiresIn: "30d",
       }
     );
+    res.cookie("accessToken", token, {
+      httpOnly: false,
+      secure: false,
+      maxAge: 15 * 60 * 1000,
+    });
+    res.cookie("refreshToken", refreshToken, {
+      httpOnly: true,
+      secure: false,
+      sameSite: "lax", // bảo vệ CSRF
+      maxAge: 30 * 24 * 60 * 60 * 1000,
+    });
     return res.status(200).json({
       message: "Đăng nhập thành công.",
-      token: token,
       data: {
         firstname: user.firstname,
         lastname: user.lastname,
@@ -123,4 +140,51 @@ const updateUser = async (req, res) => {
   });
 };
 
-export { register, login, getUserData, changePassword, updateUser };
+const logout = async (req, res) => {
+  res.clearCookie("accessToken", {
+    httpOnly: true,
+    secure: true,
+    sameSite: "Strict",
+  });
+  res.clearCookie("refreshToken", {
+    httpOnly: true,
+    secure: true,
+    sameSite: "Strict",
+  });
+  return res.status(200).json({ msg: "Đăng xuất thành công!" });
+};
+
+const refreshToken = async (req, res) => {
+  const refreshToken = req.cookies.refreshToken;
+  if (!refreshToken) {
+    return res.status(401).json({ msg: "Không có refresh token!" });
+  }
+  const { id, email, role, type } = jwt.verify(
+    refreshToken,
+    process.env.JWT_REFRESH_KEY
+  );
+  const newAccessToken = jwt.sign(
+    { id, email, role, type },
+    process.env.JWT_PRIVATE_KEY,
+    {
+      expiresIn: "15m",
+    }
+  );
+  console.log(newAccessToken);
+  res.cookie("accessToken", newAccessToken, {
+    httpOnly: false,
+    secure: false,
+    maxAge: 15 * 60 * 1000,
+  });
+  return res.status(200).json({ msg: "Refresh access token thành công!" });
+};
+
+export {
+  register,
+  login,
+  getUserData,
+  changePassword,
+  updateUser,
+  refreshToken,
+  logout,
+};

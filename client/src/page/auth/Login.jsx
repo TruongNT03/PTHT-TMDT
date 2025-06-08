@@ -24,8 +24,8 @@ const Login = () => {
 
   const onSubmit = async (data) => {
     const res = await login(data);
-    if (res?.token) {
-      console.log(res.status);
+    console.log(res);
+    if (res?.status === 200) {
       handleGet();
       getCart();
       navigate("/");

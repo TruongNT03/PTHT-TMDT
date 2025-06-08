@@ -7,6 +7,7 @@ import { Bounce, toast } from "react-toastify";
 
 import { HeaderContext } from "../../contexts/HeaderContext";
 import { deleteCartItem } from "../../services/cart";
+import logout from "../../services/authService/logout";
 
 const Nav = () => {
   const { user, setUser, cart, getCart, setCart } = useContext(HeaderContext);
@@ -76,9 +77,11 @@ const Nav = () => {
       </div>
     </div>
   );
-  const handleLogout = () => {
-    Cookies.remove("token");
-    setUser();
+  const handleLogout = async () => {
+    const response = await logout();
+    if (response.status === 200) {
+      setUser();
+    }
   };
 
   return (

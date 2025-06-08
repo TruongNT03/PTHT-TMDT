@@ -14,7 +14,7 @@ const HeaderProvider = ({ children }) => {
     if (response?.data) {
       setUser(response.data);
     } else {
-      Cookies.remove("token");
+      Cookies.remove("accessToken");
     }
   };
   const getCart = () => {
@@ -22,12 +22,12 @@ const HeaderProvider = ({ children }) => {
       const response = await getAllCart();
       setCart(response?.data);
     };
-    if (Cookies.get("token")) {
+    if (Cookies.get("accessToken")) {
       getData();
     }
   };
   useEffect(() => {
-    const token = Cookies.get("token");
+    const token = Cookies.get("accessToken");
     if (token) {
       handleGet();
     }

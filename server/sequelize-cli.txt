@@ -12,6 +12,7 @@ npx sequelize-cli model:generate --name carts --attributes user_id:integer
 npx sequelize-cli model:generate --name cart_items --attributes product_variant_id:integer,cart_id:integer,quantity:integer
 npx sequelize-cli model:generate --name variants --attributes name:string
 npx sequelize-cli model:generate --name variant_values --attributes name:string,variant_id:integer
+npx sequelize-cli model:generate --name chat_messages --attributes msg:string,from:integer,to:integer
 
 
 npx sequelize-cli db:migrate

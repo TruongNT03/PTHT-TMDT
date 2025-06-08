@@ -4,10 +4,12 @@ import { FiDelete } from "react-icons/fi";
 import { CgSoftwareUpload } from "react-icons/cg";
 import { LuListPlus, LuListX } from "react-icons/lu";
 
-const options = [
+import { PlusOutlined } from "@ant-design/icons";
+
+const option = [
   {
     label: "Size",
-    value: "Size",
+    value: ["S", "M", "L", "XL"],
   },
   {
     label: "Color",
@@ -21,7 +23,26 @@ const VariantOption = ({
   hasVariant = true,
 }) => {
   const [variant, setVariant] = useState([{ variant: "", value: "" }]);
-  const variantOptionRef = useRef();
+
+  let index = 0;
+  const [items, setItems] = useState(["jack", "lucy"]);
+  const [name, setName] = useState("");
+  const inputRef = useRef(null);
+  const selectRef = useRef(null);
+  console.log(selectRef);
+  const onNameChange = (event) => {
+    setName(event.target.value);
+  };
+  const addItem = (e) => {
+    e.preventDefault();
+    setItems([...items, name || `New item ${index++}`]);
+    setName("");
+    setTimeout(() => {
+      var _a;
+      (_a = inputRef.current) === null || _a === void 0 ? void 0 : _a.focus();
+    }, 0);
+  };
+
   return (
     <>
       {hasVariant && (
@@ -46,7 +67,39 @@ const VariantOption = ({
                 required
                 rules={[{ required: true, message: "Please input variant!" }]}
               >
-                <Input
+                <Select
+                  style={{ width: 300 }}
+                  placeholder="custom dropdown render"
+                  ref={selectRef}
+                  dropdownRender={(menu) => (
+                    <>
+                      {menu}
+                      <Divider style={{ margin: "8px 0" }} />
+                      <Space style={{ padding: "0 8px 4px" }}>
+                        <Input
+                          placeholder="Please enter item"
+                          ref={inputRef}
+                          value={name}
+                          onChange={onNameChange}
+                          onKeyDown={(e) => e.stopPropagation()}
+                        />
+                        <Button
+                          type="text"
+                          icon={<PlusOutlined />}
+                          onClick={addItem}
+                        >
+                          Add item
+                        </Button>
+                      </Space>
+                    </>
+                  )}
+                  options={option.map((item) => ({
+                    label: item.label,
+                    value: item.label,
+                  }))}
+                />
+
+                {/* <Input
                   onChange={(e) =>
                     setVariants((prev) => [
                       ...prev.filter((value, index) => {
@@ -61,7 +114,7 @@ const VariantOption = ({
                       }),
                     ])
                   }
-                />
+                /> */}
               </Form.Item>
 
               <Form.Item
@@ -70,7 +123,37 @@ const VariantOption = ({
                 required
                 rules={[{ required: true, message: "Please input value!" }]}
               >
-                <Input
+                <Select
+                  style={{ width: 300 }}
+                  placeholder={`Select ${selectRef.current.nativeElement.innerText}`}
+                  dropdownRender={(menu) => (
+                    <>
+                      {menu}
+                      <Divider style={{ margin: "8px 0" }} />
+                      <Space style={{ padding: "0 8px 4px" }}>
+                        <Input
+                          placeholder="Please enter item"
+                          ref={inputRef}
+                          value={name}
+                          onChange={onNameChange}
+                          onKeyDown={(e) => e.stopPropagation()}
+                        />
+                        <Button
+                          type="text"
+                          icon={<PlusOutlined />}
+                          onClick={addItem}
+                        >
+                          Add item
+                        </Button>
+                      </Space>
+                    </>
+                  )}
+                  options={option.map((item) => ({
+                    label: item.label,
+                    value: item.label,
+                  }))}
+                />
+                {/* <Input
                   onChange={(e) =>
                     setVariants((prev) => [
                       ...prev.filter((value, index) => {
@@ -85,7 +168,7 @@ const VariantOption = ({
                       }),
                     ])
                   }
-                />
+                /> */}
               </Form.Item>
               {indexOfListVariant === 0 ? (
                 <LuListX className="opacity-0" />

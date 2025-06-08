@@ -8,6 +8,8 @@ import passport from "passport";
 const route = Router();
 
 route.post("/register", asyncHandler(User.register));
+route.post("/logout", asyncHandler(User.logout));
+route.post("/refresh-token", asyncHandler(User.refreshToken));
 route.post("/login", asyncHandler(User.login));
 route.put("/", verifyToken, asyncHandler(User.updateUser));
 route.get("/", verifyToken, asyncHandler(User.getUserData));
@@ -23,7 +25,16 @@ route.get(
     session: false,
   }),
   (req, res) => {
-    res.cookie("token", req.user.token, { maxAge: 24 * 60 * 60 * 1000 * 7 });
+    res.cookie("accessToken", req.user.accessToken, {
+      httpOnly: false,
+      secure: false,
+      maxAge: 15 * 60 * 1000,
+    });
+    res.cookie("refreshToken", req.user.refreshToken, {
+      httpOnly: true,
+      secure: false,
+      maxAge: 30 * 24 * 60 * 60 * 1000,
+    });
     res.redirect("http://localhost:3000");
   }
 );
