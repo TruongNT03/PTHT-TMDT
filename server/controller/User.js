@@ -64,6 +64,7 @@ const login = async (req, res) => {
         expiresIn: "30d",
       }
     );
+    res.cookie("user_id", user.id);
     res.cookie("accessToken", token, {
       httpOnly: false,
       secure: false,

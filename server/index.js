@@ -14,8 +14,10 @@ import ProductRoute from "./routes/Product.js";
 import CartRouter from "./routes/Cart.js";
 import OrderRoute from "./routes/Order.js";
 import DashboardRoute from "./routes/Dashboard.js";
+import ChatRoute from "./routes/Chat.js";
 
 import { googleStrategy, facebookStrategy } from "./passport.js";
+import db from "./models/index.js";
 
 const app = express();
 dotenv.config();
@@ -50,6 +52,7 @@ app.use("/api/v1/product", ProductRoute);
 app.use("/api/v1/cart", CartRouter);
 app.use("/api/v1/order", OrderRoute);
 app.use("/api/v1/dashboard", DashboardRoute);
+app.use("/api/v1/chat", ChatRoute);
 
 const online_users = new Map();
 
@@ -61,14 +64,34 @@ io.on("connection", (socket) => {
 
   console.log(online_users);
 
-  socket.on("chat message", ({ from, to, msg }) => {
+  socket.on("chat message", async ({ from, to, msg }) => {
     const toSocketId = online_users.get(to);
 
-    console.log(toSocketId);
+    const chat_room = await db.chat_rooms.findOrCreate({
+      where: {
+        user_one: from || to,
+        user_two: to || from,
+      },
+      defaults: {
+        from,
+        to,
+      },
+    });
+
+    const message = await db.chat_messages.create({
+      chat_room_id: chat_room[0].id,
+      msg: msg,
+      from: from,
+      to: to,
+    });
 
     if (toSocketId) {
-      io.to(toSocketId).emit("chat message", msg);
+      io.to(toSocketId).emit("chat message", { from, to, msg });
     }
+  });
+
+  socket.on("disconnect", () => {
+    online_users.delete(user_id);
   });
 });
 

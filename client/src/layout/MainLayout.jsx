@@ -46,7 +46,6 @@ const MainLayout = () => {
       <div className="fixed right-5 bottom-5">
         <Chat />
       </div>
-
       <Footer className="w-full" />
     </div>
   );

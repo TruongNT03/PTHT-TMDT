@@ -8,7 +8,7 @@ const AdminRoute = () => {
   const navigate = useNavigate();
   useEffect(() => {
     const checkAdmin = async () => {
-      const token = Cookies.get("token");
+      const token = Cookies.get("accessToken");
       if (!token) {
         navigate("/login");
         return;

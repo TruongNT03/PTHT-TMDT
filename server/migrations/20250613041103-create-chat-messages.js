@@ -9,6 +9,13 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER,
       },
+      chat_room_id: {
+        type: Sequelize.INTEGER,
+        references: {
+          model: "chat_rooms",
+          key: "id",
+        },
+      },
       msg: {
         type: Sequelize.STRING,
       },

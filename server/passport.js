@@ -35,6 +35,7 @@ const googleStrategy = new GoogleStrategy(
       process.env.JWT_REFRESH_KEY,
       { expiresIn: "30d" }
     );
+    user.user_id = user.id;
     user.accessToken = access_token;
     user.refreshToken = refresh_token;
     return cb(null, user);

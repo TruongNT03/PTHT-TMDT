@@ -5,6 +5,7 @@ import Navbar from "../components/admin/Navbar";
 import { useContext, useEffect, useState } from "react";
 import Loading from "../components/loading/Loading";
 import { LoadingContext } from "../contexts/LoadingContext";
+import Chat from "../components/chat/Chat";
 // import Direction from "../components/admin/Direction";
 
 const AdminLayout = () => {
@@ -38,6 +39,9 @@ const AdminLayout = () => {
         <Navbar />
         {/* <Direction /> */}
         {loading ? <Loading /> : <Outlet />}
+      </div>
+      <div className="fixed bottom-5 right-5">
+        <Chat isUser={false} />
       </div>
     </div>
   );
